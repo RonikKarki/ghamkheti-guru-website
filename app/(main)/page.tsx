@@ -10,7 +10,6 @@ import { ChairmanSection } from "@/components/sections/ChairmanSection";
 import { SustainabilitySection } from "@/components/sections/SustainabilitySection";
 import { NewsPreview } from "@/components/sections/NewsPreview";
 import { InvestorCTA } from "@/components/sections/InvestorCTA";
-import { CTABanner } from "@/components/common/CTABanner";
 import { DocumentAnnouncementPopup } from "@/components/sections/DocumentAnnouncementPopup";
 import type { AnnouncementDoc } from "@/components/sections/DocumentAnnouncementPopup";
 
@@ -68,15 +67,6 @@ export default async function HomePage() {
       <SustainabilitySection cms={cms.sustainability} />
       <NewsPreview />
       <InvestorCTA         cms={cms.investor_cta} />
-      <CTABanner
-        badge="Talk to Us"
-        title="Ready to Partner or Invest?"
-        description="Whether you're a developer, investor, or community partner — we'd love to start a conversation."
-        primaryLabel="Contact Our Team"
-        primaryHref="/contact"
-        secondaryLabel="Investor Relations"
-        secondaryHref="/investor-relations"
-      />
 
       {announcements.length > 0 && (
         <DocumentAnnouncementPopup documents={announcements} />
