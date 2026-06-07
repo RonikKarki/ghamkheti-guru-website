@@ -19,3 +19,10 @@ export const POST = withApiHandler(async (req: NextRequest) => {
   const item = await Gallery.create(body);
   return apiSuccess(item, "Media item created", 201);
 });
+
+export const DELETE = withApiHandler(async () => {
+  await assertRole("super_admin");
+  await connectToDatabase();
+  const result = await Gallery.deleteMany({});
+  return apiSuccess({ deleted: result.deletedCount }, "All gallery items cleared");
+});

@@ -8,6 +8,7 @@ import { Grid } from "@/components/common/Grid";
 import { CTABanner } from "@/components/common/CTABanner";
 import { connectToDatabase } from "@/lib/mongodb";
 import News from "@/models/News";
+import { getPageBanner } from "@/lib/get-page-banner";
 
 export const revalidate = 1800;
 
@@ -37,9 +38,10 @@ function fmtDate(d: Date | string) {
 
 export default async function BlogPage() {
   await connectToDatabase();
-  const raw = await News.find({ status: "published" })
-    .sort({ isFeatured: -1, publishedAt: -1 })
-    .lean();
+  const [raw, pageBanner] = await Promise.all([
+    News.find({ status: "published" }).sort({ isFeatured: -1, publishedAt: -1 }).lean(),
+    getPageBanner("blog"),
+  ]);
 
   const articles = (JSON.parse(JSON.stringify(raw)) as Array<{
     _id: string; slug: string; title: string; excerpt: string; content: string;
@@ -67,6 +69,8 @@ export default async function BlogPage() {
         title="News &amp; Insights"
         description="The latest developments, press releases, and updates from Ghamkheti Guru Company Limited."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Blog" }]}
+        bannerImage={pageBanner.imageUrl || undefined}
+        bannerImageAlt={pageBanner.imageAlt}
       />
 
       {articles.length === 0 ? (

@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Save, RefreshCw, Info } from "lucide-react";
+import { Save, RefreshCw, Info, Plus, Trash2 } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Tabs } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { useToast } from "@/lib/toast";
 
 interface Cta { label: string; href: string }
@@ -23,6 +24,7 @@ interface SectionDoc {
 
 const SECTION_TABS = [
   { value: "hero",             label: "Hero" },
+  { value: "hero_images",      label: "Hero Images" },
   { value: "stats",            label: "Statistics" },
   { value: "company_overview", label: "About" },
   { value: "chairman_message", label: "Chairman" },
@@ -242,6 +244,131 @@ export default function HomepageClient({
     );
   }
 
+  function renderHeroImages() {
+    type Slide = { url: string; alt: string; isVisible?: boolean; overlay?: number };
+    const slides = (doc.items ?? []) as Slide[];
+
+    function updateSlide(i: number, field: keyof Slide, value: string | boolean | number) {
+      const next = [...slides];
+      next[i] = { ...next[i], [field]: value };
+      patch({ items: next as Record<string, unknown>[] });
+    }
+
+    function removeSlide(i: number) {
+      patch({ items: slides.filter((_, idx) => idx !== i) as Record<string, unknown>[] });
+    }
+
+    function addSlide() {
+      patch({ items: [...slides, { url: "", alt: "", isVisible: true, overlay: 55 }] as Record<string, unknown>[] });
+    }
+
+    return (
+      <div className="space-y-5">
+        <p className="text-xs text-foreground-muted">
+          Upload photos for the hero slideshow. Use the overlay slider to control how dark the image appears — higher = darker, which makes the text easier to read.
+        </p>
+
+        {slides.map((slide, i) => {
+          const overlayVal = slide.overlay ?? 55;
+          return (
+            <div
+              key={i}
+              className={`rounded-xl border p-4 space-y-4 transition-colors ${
+                slide.isVisible === false ? "border-border bg-surface/40 opacity-60" : "border-border"
+              }`}
+            >
+              {/* Header row */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <p className="text-xs font-semibold text-foreground">Slide {i + 1}</p>
+                  <button
+                    type="button"
+                    onClick={() => updateSlide(i, "isVisible", !(slide.isVisible ?? true))}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-colors ${
+                      slide.isVisible === false
+                        ? "border-amber-500/40 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20"
+                        : "border-primary/40 text-primary bg-primary/10 hover:bg-primary/20"
+                    }`}
+                  >
+                    {slide.isVisible === false ? "Hidden" : "Visible"}
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeSlide(i)}
+                  className="p-1.5 rounded-lg text-foreground-subtle hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
+
+              <FileUpload
+                kind="image"
+                value={slide.url}
+                onChange={(url) => updateSlide(i, "url", url)}
+              />
+
+              <F label="Alt text (for accessibility)">
+                <Input
+                  value={slide.alt}
+                  onChange={(e) => updateSlide(i, "alt", e.target.value)}
+                  placeholder="Sisakhola River hydropower project site"
+                />
+              </F>
+
+              {/* Overlay darkness control */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-medium text-foreground">Image Darkness</span>
+                  <span className="text-xs font-semibold text-primary tabular-nums">{overlayVal}%</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] text-foreground-subtle w-10">Light</span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={90}
+                    step={5}
+                    value={overlayVal}
+                    onChange={(e) => updateSlide(i, "overlay", Number(e.target.value))}
+                    className="flex-1 h-1.5 rounded-full accent-primary cursor-pointer"
+                    style={{ accentColor: "var(--primary)" }}
+                  />
+                  <span className="text-[10px] text-foreground-subtle w-10 text-right">Dark</span>
+                </div>
+                {/* Preview swatch */}
+                <div className="mt-2 h-6 rounded-lg overflow-hidden relative border border-border">
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: `linear-gradient(to right,
+                        hsl(200 60% 40%), hsl(200 60% 40%))`,
+                    }}
+                  />
+                  <div
+                    className="absolute inset-0 bg-black transition-opacity"
+                    style={{ opacity: overlayVal / 100 }}
+                  />
+                  <span className="absolute inset-0 flex items-center justify-center text-[9px] font-semibold text-white drop-shadow">
+                    Preview overlay at {overlayVal}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        <button
+          type="button"
+          onClick={addSlide}
+          className="flex items-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-surface text-sm text-foreground-subtle hover:text-foreground transition-colors"
+        >
+          <Plus className="h-4 w-4" /> Add Slide
+        </button>
+      </div>
+    );
+  }
+
   function renderStats() {
     return (
       <JsonEditor
@@ -399,6 +526,7 @@ export default function HomepageClient({
 
   const editors: Record<string, () => React.ReactNode> = {
     hero:             renderHero,
+    hero_images:      renderHeroImages,
     stats:            renderStats,
     company_overview: renderAbout,
     chairman_message: renderChairman,

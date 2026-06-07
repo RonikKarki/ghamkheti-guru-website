@@ -11,6 +11,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 
 export type HomepageSection =
   | "hero"
+  | "hero_images"
   | "company_overview"
   | "stats"
   | "hydropower"
@@ -53,7 +54,7 @@ const HomepageContentSchema = new Schema<IHomepageContent>(
       required: true,
       unique: true,
       enum:   [
-        "hero", "company_overview", "stats", "hydropower",
+        "hero", "hero_images", "company_overview", "stats", "hydropower",
         "solar", "agriculture", "chairman_message",
         "sustainability", "news_preview", "investor_cta",
       ],

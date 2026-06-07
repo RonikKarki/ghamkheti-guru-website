@@ -6,7 +6,8 @@ export type AboutSection =
   | "mission_vision"
   | "values"
   | "leadership"
-  | "timeline";
+  | "timeline"
+  | "board";
 
 export interface IAboutContent extends Document {
   section:    AboutSection;
@@ -26,7 +27,7 @@ const AboutContentSchema = new Schema<IAboutContent>(
       type:     String,
       required: true,
       unique:   true,
-      enum:     ["banner", "intro", "mission_vision", "values", "leadership", "timeline"],
+      enum:     ["banner", "intro", "mission_vision", "values", "leadership", "timeline", "board"],
     },
     isActive:  { type: Boolean, default: true },
     title:     { type: String, trim: true },

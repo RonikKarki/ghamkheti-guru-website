@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/common/Container";
 import { Badge } from "@/components/ui/badge";
-import { fadeUp, staggerContainer, staggerItem, viewportEager } from "@/lib/animations";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 interface BreadcrumbItem {
   label: string;
@@ -18,10 +19,12 @@ interface PageBannerProps {
   title: string;
   description?: string;
   breadcrumbs?: BreadcrumbItem[];
-  children?: React.ReactNode;         /* optional action buttons */
+  children?: React.ReactNode;
   className?: string;
   size?: "default" | "lg";
   variant?: "default" | "centered";
+  bannerImage?: string;
+  bannerImageAlt?: string;
 }
 
 export function PageBanner({
@@ -33,6 +36,8 @@ export function PageBanner({
   className,
   size = "default",
   variant = "default",
+  bannerImage,
+  bannerImageAlt,
 }: PageBannerProps) {
   const isCentered = variant === "centered";
 
@@ -45,6 +50,20 @@ export function PageBanner({
         className
       )}
     >
+      {/* Optional CMS background image */}
+      {bannerImage && (
+        <>
+          <Image
+            src={bannerImage}
+            alt={bannerImageAlt ?? ""}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-black/60" />
+        </>
+      )}
       {/* Ambient glow blobs */}
       <div className="absolute top-0 left-1/4 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/6 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 h-64 w-64 translate-x-1/2 translate-y-1/2 rounded-full bg-brand-gold/5 blur-3xl pointer-events-none" />

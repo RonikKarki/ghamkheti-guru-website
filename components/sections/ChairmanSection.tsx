@@ -14,19 +14,15 @@ interface CmsChairman {
   items?:    { text?: string }[];
 }
 
-const DEFAULT_PARAGRAPHS = [
-  "Nepal stands at an extraordinary inflection point. With over 83,000 MW of theoretical hydropower potential — barely 3% of which has been harnessed — and a rapidly growing appetite for clean energy across South Asia, the opportunity before us is generational.",
-  "At Ghamkheti Guru, we have spent over fifteen years building the capabilities, relationships, and track record to lead Nepal's energy transition at scale. Our hydropower, solar, and agriculture programmes are not isolated ventures; they are integrated engines of national development.",
-  "We invite our investors, partners, and communities to walk this journey with us — towards a Nepal that powers itself, feeds itself, and leads the region.",
-];
-
 export function ChairmanSection({ cms }: { cms?: CmsChairman | null }) {
-  const chairmanName  = cms?.badge    || "Hon. [Chairman Name]";
-  const chairmanTitle = cms?.subtitle || "Chairman & Managing Director";
+  const chairmanName  = cms?.badge    || "";
+  const chairmanTitle = cms?.subtitle || "";
   const headline      = cms?.title    || null;
   const paragraphs    = cms?.items?.length
     ? cms.items.map((p) => p.text ?? "").filter(Boolean)
-    : DEFAULT_PARAGRAPHS;
+    : [];
+
+  if (!chairmanName && !paragraphs.length) return null;
 
   return (
     <Section variant="alt">
@@ -45,9 +41,11 @@ export function ChairmanSection({ cms }: { cms?: CmsChairman | null }) {
               <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-gold/6 blur-2xl" />
               <div className="relative z-10 text-center px-8">
                 <div className="h-32 w-32 mx-auto rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center mb-4">
-                  <span className="text-5xl font-display font-black text-gradient">GG</span>
+                  <span className="text-5xl font-display font-black text-gradient">
+                    {chairmanName ? chairmanName.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase() : "GG"}
+                  </span>
                 </div>
-                <p className="text-sm font-semibold text-foreground">Honorable Chairman</p>
+                <p className="text-sm font-semibold text-foreground">{chairmanName || "Chairman"}</p>
                 <p className="text-xs text-foreground-subtle">Ghamkheti Guru Company Limited</p>
               </div>
             </div>

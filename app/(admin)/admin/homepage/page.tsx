@@ -8,6 +8,7 @@ export const metadata: Metadata = { title: "Homepage CMS" };
 
 const SECTIONS: HomepageSection[] = [
   "hero",
+  "hero_images",
   "stats",
   "company_overview",
   "chairman_message",

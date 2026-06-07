@@ -9,6 +9,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Tabs } from "@/components/ui/tabs";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { useToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import type { Column } from "@/components/admin/DataTable";
@@ -98,6 +99,7 @@ export default function GalleryClient({ initialData }: { initialData: GalleryIte
   const [editing, setEditing]     = useState<GalleryItem | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<GalleryItem | null>(null);
+  const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const filtered = items.filter((i) => tab === "all" || i.category === tab);
@@ -126,8 +128,12 @@ export default function GalleryClient({ initialData }: { initialData: GalleryIte
   }
 
   function handleSave() {
-    if (!form.title || !form.fileUrl) {
-      error("Validation error", "Title and File URL are required");
+    if (!form.title) {
+      error("Validation error", "Title is required");
+      return;
+    }
+    if (!form.fileUrl) {
+      error("Validation error", "Please upload an image file");
       return;
     }
     startTransition(async () => {
@@ -165,6 +171,17 @@ export default function GalleryClient({ initialData }: { initialData: GalleryIte
       setItems((prev) => prev.filter((i) => i._id !== deleteTarget._id));
       success("Item removed");
       setDeleteTarget(null);
+    });
+  }
+
+  function handleClearAll() {
+    startTransition(async () => {
+      const res = await fetch("/api/admin/gallery", { method: "DELETE" });
+      const json = await res.json();
+      if (!res.ok) { error("Clear failed", json.error); return; }
+      setItems([]);
+      success(`Cleared ${json.data?.deleted ?? "all"} gallery items`);
+      setClearConfirmOpen(false);
     });
   }
 
@@ -258,6 +275,14 @@ export default function GalleryClient({ initialData }: { initialData: GalleryIte
                 <LayoutGrid className="h-4 w-4" />
               </button>
             </div>
+            {items.length > 0 && (
+              <button
+                onClick={() => setClearConfirmOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors"
+              >
+                <Trash2 className="h-3.5 w-3.5" /> Clear All
+              </button>
+            )}
             <button
               onClick={openCreate}
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors"
@@ -413,33 +438,16 @@ export default function GalleryClient({ initialData }: { initialData: GalleryIte
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-medium text-foreground mb-1.5">File URL *</label>
-            <Input
-              value={form.fileUrl}
-              onChange={(e) => setForm({ ...form, fileUrl: e.target.value })}
-              placeholder="https://cdn.ghamkhetiguru.com/gallery/image.jpg"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-foreground mb-1.5">Thumbnail URL</label>
-            <Input
-              value={form.thumbnailUrl}
-              onChange={(e) => setForm({ ...form, thumbnailUrl: e.target.value })}
-              placeholder="https://cdn.ghamkhetiguru.com/gallery/thumb.jpg"
-            />
-          </div>
-
-          {(form.thumbnailUrl || form.fileUrl) && (
-            <div className="rounded-xl border border-border overflow-hidden bg-surface">
-              <img
-                src={form.thumbnailUrl || form.fileUrl}
-                alt="Preview"
-                className="w-full max-h-44 object-cover"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-              />
-            </div>
-          )}
+          <FileUpload
+            label="Image File *"
+            kind="image"
+            value={form.fileUrl}
+            onChange={(url, meta) => setForm({
+              ...form,
+              fileUrl: url,
+              fileSize: meta ? String(meta.size) : form.fileSize,
+            })}
+          />
 
           <div className="grid grid-cols-3 gap-4">
             <div>
@@ -504,6 +512,15 @@ export default function GalleryClient({ initialData }: { initialData: GalleryIte
         title="Remove media item?"
         description={`"${deleteTarget?.title}" will be permanently removed from the gallery.`}
         confirmLabel="Remove"
+      />
+      <ConfirmDialog
+        open={clearConfirmOpen}
+        onClose={() => setClearConfirmOpen(false)}
+        onConfirm={handleClearAll}
+        isLoading={isPending}
+        title="Clear entire gallery?"
+        description={`This will permanently delete all ${items.length} gallery items. This cannot be undone.`}
+        confirmLabel="Clear All"
       />
     </div>
   );

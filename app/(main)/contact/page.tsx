@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageBanner } from "@/components/common/PageBanner";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { CTABanner } from "@/components/common/CTABanner";
+import { getPageBanner } from "@/lib/get-page-banner";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const pageBanner = await getPageBanner("contact");
+
   return (
     <>
       <PageBanner
@@ -18,6 +21,8 @@ export default function ContactPage() {
         title="We'd Love to Hear From You"
         description="Our team is ready to engage with investors, government bodies, media professionals, and community partners. Reach out — we respond within one business day."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact Us" }]}
+        bannerImage={pageBanner.imageUrl || undefined}
+        bannerImageAlt={pageBanner.imageAlt}
       />
       <ContactSection />
       <CTABanner

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, FolderOpen, Newspaper, Images, FileText,
-  Home, MessageSquare, Users, UserRound, Settings, LogOut, Zap, ChevronRight,
+  Home, MessageSquare, Users, UserRound, Settings, LogOut, Zap, ChevronRight, LayoutTemplate,
 } from "lucide-react";
 import { ROLE_LABELS, ROLE_COLORS, canManageUsers, canAccessSettings, canDelete } from "@/lib/role-utils";
 import type { UserRole } from "@/lib/role-utils";
@@ -37,7 +37,8 @@ const NAV_GROUPS: { heading: string; items: NavItem[] }[] = [
     heading: "Management",
     items: [
       { label: "Homepage",  href: "/admin/homepage",  icon: Home,           roles: ["admin", "super_admin"] },
-      { label: "About Us",  href: "/admin/about",     icon: FileText,       roles: ["admin", "super_admin"] },
+      { label: "About Us",     href: "/admin/about",        icon: FileText,         roles: ["admin", "super_admin"] },
+      { label: "Page Banners", href: "/admin/page-banners", icon: LayoutTemplate,   roles: ["admin", "super_admin"] },
       { label: "Services",  href: "/admin/services",  icon: Zap,            roles: ["admin", "super_admin"] },
       { label: "Team",      href: "/admin/team",      icon: UserRound,      roles: ["admin", "super_admin"] },
       { label: "Contacts",  href: "/admin/contacts",  icon: MessageSquare,  roles: ["admin", "super_admin"] },

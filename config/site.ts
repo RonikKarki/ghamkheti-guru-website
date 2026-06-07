@@ -41,6 +41,7 @@ export const navItems: NavItem[] = [
     ],
   },
   { label: "Investor Relations", href: "/investor-relations" },
-  { label: "Media / News",       href: "/media" },
+  { label: "News & Notices",     href: "/media" },
+  { label: "Gallery",            href: "/gallery" },
   { label: "Contact Us",         href: "/contact" },
 ];

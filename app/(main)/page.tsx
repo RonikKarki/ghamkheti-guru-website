@@ -58,9 +58,11 @@ export default async function HomePage() {
     homepageLabel: d.homepageLabel,
   }));
 
+  const heroImages = (cms.hero_images?.items ?? []) as { url: string; alt?: string; isVisible?: boolean; overlay?: number }[];
+
   return (
     <>
-      <HomeHero            cms={cms.hero} />
+      <HomeHero            cms={cms.hero} heroImages={heroImages} />
       <CompanyOverview     cms={cms.company_overview} />
       <HydropowerSection />
       <StatsSection        cms={cms.stats} />

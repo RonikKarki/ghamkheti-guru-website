@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Save, RefreshCw, Info } from "lucide-react";
+import { Save, RefreshCw, Info, Plus, Trash2 } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Tabs } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { useToast } from "@/lib/toast";
 
 interface SectionDoc {
@@ -17,12 +18,12 @@ interface SectionDoc {
 }
 
 const SECTION_TABS = [
-  { value: "banner",          label: "Banner"      },
-  { value: "intro",           label: "Our Story"   },
+  { value: "banner",          label: "Banner"           },
+  { value: "intro",           label: "Our Story"        },
   { value: "mission_vision",  label: "Mission & Vision" },
-  { value: "values",          label: "Core Values" },
-  { value: "leadership",      label: "Leadership"  },
-  { value: "timeline",        label: "Timeline"    },
+  { value: "values",          label: "Core Values"      },
+  { value: "board",           label: "Board of Directors" },
+  { value: "timeline",        label: "Timeline"         },
 ];
 
 function F({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
@@ -213,16 +214,83 @@ export default function AboutClient({ initialData }: { initialData: any[] }) {
     );
   }
 
-  function renderLeadership() {
+  function renderBoard() {
+    const members = (doc.items ?? []) as { name: string; title: string; bio?: string; photo?: string }[];
+
+    function updateMember(i: number, field: keyof typeof members[0], value: string) {
+      const next = [...members] as Record<string, unknown>[];
+      next[i] = { ...next[i], [field]: value };
+      patch({ items: next });
+    }
+
+    function removeMember(i: number) {
+      patch({ items: members.filter((_, idx) => idx !== i) as Record<string, unknown>[] });
+    }
+
+    function addMember() {
+      patch({ items: [...members, { name: "", title: "", bio: "", photo: "" }] as Record<string, unknown>[] });
+    }
+
     return (
       <div className="space-y-5">
-        <p className="text-xs text-foreground-muted">Each entry shows a title/role and a short bio. Up to 8 members.</p>
-        <JsonEditor
-          value={doc.items}
-          onChange={(v) => patch({ items: v })}
-          hint='[{"title":"Chairman & Managing Director","bio":"Visionary entrepreneur with 25+ years…"},…]'
-          rows={14}
-        />
+        <p className="text-xs text-foreground-muted">
+          Board members are displayed in a grid on the About page. Upload a portrait photo for each person.
+        </p>
+
+        {members.map((m, i) => (
+          <div key={i} className="rounded-xl border border-border p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold text-foreground">Member {i + 1}</p>
+              <button
+                type="button"
+                onClick={() => removeMember(i)}
+                className="p-1.5 rounded-lg text-foreground-subtle hover:text-red-400 hover:bg-red-500/10 transition-colors"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <F label="Full Name">
+                <Input
+                  value={m.name}
+                  onChange={(e) => updateMember(i, "name", e.target.value)}
+                  placeholder="Hon. [Full Name]"
+                />
+              </F>
+              <F label="Title / Position">
+                <Input
+                  value={m.title}
+                  onChange={(e) => updateMember(i, "title", e.target.value)}
+                  placeholder="Chairman & Managing Director"
+                />
+              </F>
+            </div>
+            <F label="Short Bio" hint="optional, shown on hover or below name">
+              <Textarea
+                rows={2}
+                value={m.bio ?? ""}
+                onChange={(e) => updateMember(i, "bio", e.target.value)}
+                placeholder="Brief background (1–2 sentences)…"
+              />
+            </F>
+            <F label="Photo">
+              <FileUpload
+                kind="image"
+                value={m.photo ?? ""}
+                onChange={(url) => updateMember(i, "photo", url)}
+                label="Portrait photo (recommended: square, 400×400 minimum)"
+              />
+            </F>
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={addMember}
+          className="flex items-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-surface text-sm text-foreground-subtle hover:text-foreground transition-colors"
+        >
+          <Plus className="h-4 w-4" /> Add Board Member
+        </button>
       </div>
     );
   }
@@ -246,7 +314,7 @@ export default function AboutClient({ initialData }: { initialData: any[] }) {
     intro:          renderIntro,
     mission_vision: renderMissionVision,
     values:         renderValues,
-    leadership:     renderLeadership,
+    board:          renderBoard,
     timeline:       renderTimeline,
   };
 

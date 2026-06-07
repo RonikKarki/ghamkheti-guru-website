@@ -6,6 +6,7 @@ import {
   BookOpen, BarChart3, Shield, Bell, FileText, Scale,
   Leaf, Briefcase, TrendingUp, ExternalLink, ChevronLeft, ChevronRight,
 } from "lucide-react";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Dialog } from "@/components/ui/dialog";
@@ -511,21 +512,30 @@ export default function DocumentsClient({ initialData }: { initialData: AdminDoc
             <p className="mt-1 text-right text-[10px] text-foreground-subtle">{form.description.length}/500</p>
           </div>
 
-          {/* File URL */}
-          <div>
-            <label className="block text-xs font-medium text-foreground mb-1.5">File URL <span className="text-red-400">*</span></label>
-            <Input value={form.fileUrl} onChange={(e) => setForm({ ...form, fileUrl: e.target.value })}
-              placeholder="https://cdn.ghamkhetiguru.com/reports/annual-2082.pdf" />
-            <p className="mt-1 text-[11px] text-foreground-subtle">Upload the file to your CDN first, then paste the public URL here.</p>
-          </div>
+          {/* File Upload */}
+          <FileUpload
+            label="Document File *"
+            kind="document"
+            value={form.fileUrl}
+            onChange={(url, meta) => setForm({
+              ...form,
+              fileUrl:  url,
+              fileSize: meta ? String(meta.size) : form.fileSize,
+              fileType: meta ? (meta.mimeType.includes("pdf") ? "pdf"
+                : meta.mimeType.includes("excel") || meta.mimeType.includes("spreadsheet") ? "xlsx"
+                : meta.mimeType.includes("word") || meta.mimeType.includes("document") ? "docx"
+                : meta.mimeType.includes("presentation") ? "pptx"
+                : "other") : form.fileType,
+            })}
+          />
 
-          {/* File Size + Type */}
+          {/* File Size display + Format override */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-foreground mb-1.5">File Size (bytes)</label>
+              <label className="block text-xs font-medium text-foreground mb-1.5">File Size</label>
               <Input type="number" value={form.fileSize}
                 onChange={(e) => setForm({ ...form, fileSize: e.target.value })}
-                placeholder="8847360" />
+                placeholder="auto-filled on upload" />
               {form.fileSize && (
                 <p className="mt-1 text-[10px] text-foreground-subtle">
                   ≈ {Number(form.fileSize) < 1_048_576
