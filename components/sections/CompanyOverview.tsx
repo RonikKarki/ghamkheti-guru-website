@@ -2,32 +2,28 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Droplets, Sun, Sprout, ArrowRight, Award, Globe2, TrendingUp } from "lucide-react";
+import { Droplets, Sun, Sprout, ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/Container";
 import { Section } from "@/components/common/Section";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { fadeUp, fadeLeft, fadeRight, viewportOnce } from "@/lib/animations";
 
 const pillars = [
   {
-    icon: Droplets, label: "Hydropower", color: "text-teal", bg: "bg-teal/10 border-teal/20",
+    icon: Droplets, label: "Hydropower",
+    color: "text-teal", bg: "bg-teal/10 border-teal/20",
     detail: "Run-of-river & storage hydroelectric projects across Nepal's major river systems.",
   },
   {
-    icon: Sun, label: "Solar Energy", color: "text-gold", bg: "bg-gold/10 border-gold/20",
+    icon: Sun, label: "Solar Energy",
+    color: "text-gold", bg: "bg-gold/10 border-gold/20",
     detail: "Ground-mounted and rooftop solar PV installations powering communities and industry.",
   },
   {
-    icon: Sprout, label: "Agriculture", color: "text-primary", bg: "bg-primary/10 border-primary/20",
+    icon: Sprout, label: "Agriculture",
+    color: "text-primary", bg: "bg-primary/10 border-primary/20",
     detail: "Modern rice milling with Japanese Satake technology through our subsidiary in Gaindakot, Nawalpur.",
   },
-];
-
-const credentials = [
-  { icon: Award,      text: "Quality-Focused Operations" },
-  { icon: Globe2,     text: "Projects in Solukhumbu & Nawalpur" },
-  { icon: TrendingUp, text: "Energy, Agriculture & Tourism Sectors" },
 ];
 
 interface CmsAbout {
@@ -36,8 +32,8 @@ interface CmsAbout {
   subtitle?: string;
 }
 
-const DEFAULT_P1 = "Ghamkheti Guru Company Limited is an integrated development company operating across Energy, Agriculture, and Tourism in Nepal. Our energy portfolio includes the Sisakhola Hydropower Project (4.9 MW) and a 10 MW Solar Power Project — both in Solukhumbu and at the PPA stage — reflecting our commitment to Nepal's clean energy future.";
-const DEFAULT_P2 = "In agriculture, our wholly-owned subsidiary Shree Suryodaya Khadya Udhyog Limited operates a modern rice mill in Gaindakot, Nawalpur — equipped with Japanese Satake technology at 8 tons per hour and producing Namche Gold, a premium long grain rice brand. We are building a portfolio that advances Nepal's energy security, food sovereignty, and sustainable development.";
+const DEFAULT_P1 = "Ghamkheti Guru Company Limited is an integrated development company operating across Energy, Agriculture, and Tourism in Nepal. Our energy portfolio includes the Sisakhola Hydropower Project (4.9 MW) and a 10 MW Solar Power Project — both in Solukhumbu and at the PPA stage.";
+const DEFAULT_P2 = "Our wholly-owned subsidiary Shree Suryodaya Khadya Udhyog Limited operates a modern rice mill in Gaindakot, Nawalpur — equipped with Japanese Satake technology at 8 tons per hour, producing Namche Gold and Manaslu rice brands.";
 
 export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
   const sectionTitle = cms?.title    || null;
@@ -45,19 +41,26 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
   const paragraph2   = cms?.subtitle || DEFAULT_P2;
 
   return (
-    <Section id="about-overview">
+    <Section variant="surface" id="about-overview">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left — text content */}
+
+          {/* Left — text */}
           <motion.div
             variants={fadeLeft}
             initial="hidden"
             whileInView="visible"
             viewport={viewportOnce}
           >
-            <Badge variant="overline" dot className="mb-5">Who We Are</Badge>
+            {/* Overline */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/20 bg-primary/5 mb-6">
+              <span className="h-1 w-1 rounded-full bg-primary" />
+              <span className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-primary">
+                Who We Are
+              </span>
+            </div>
 
-            <h2 className="text-display-lg font-display text-foreground text-balance mb-5">
+            <h2 className="text-display-lg font-display text-foreground text-balance tracking-tight mb-5">
               {sectionTitle ? (
                 <span>{sectionTitle}</span>
               ) : (
@@ -69,18 +72,7 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
             </h2>
 
             <p className="text-foreground-muted leading-relaxed mb-4">{paragraph1}</p>
-            <p className="text-foreground-muted leading-relaxed mb-8">{paragraph2}</p>
-
-            <ul className="space-y-3 mb-10">
-              {credentials.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <Icon className="h-4 w-4 text-primary" strokeWidth={1.8} />
-                  </div>
-                  <span className="text-sm text-foreground">{text}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="text-foreground-muted leading-relaxed mb-10">{paragraph2}</p>
 
             <Button asChild size="lg" variant="gradient">
               <Link href="/about">
@@ -90,20 +82,20 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
             </Button>
           </motion.div>
 
-          {/* Right — pillars */}
+          {/* Right — sector cards + quote */}
           <motion.div
             variants={fadeRight}
             initial="hidden"
             whileInView="visible"
             viewport={viewportOnce}
-            className="space-y-4"
+            className="space-y-3"
           >
             {pillars.map(({ icon: Icon, label, color, bg, detail }) => (
               <div
                 key={label}
-                className="flex items-start gap-4 rounded-2xl p-5 border glass transition-all duration-300 hover:border-primary/30"
+                className="flex items-start gap-4 rounded-2xl p-5 border border-border bg-surface-raised hover:border-primary/20 transition-all duration-300 group"
               >
-                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border ${bg}`}>
+                <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border ${bg} transition-transform duration-300 group-hover:scale-105`}>
                   <Icon className={`h-5 w-5 ${color}`} strokeWidth={1.8} />
                 </div>
                 <div>
@@ -113,13 +105,31 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
               </div>
             ))}
 
-            <div className="rounded-2xl bg-linear-to-br from-brand-deep via-brand-mid/30 to-brand-deep border border-primary/15 p-5">
-              <p className="text-sm text-foreground-muted italic leading-relaxed">
+            {/* Chairman quote */}
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOnce}
+              className="relative rounded-2xl overflow-hidden p-5"
+              style={{
+                background: "linear-gradient(135deg, rgba(0,84,42,0.50) 0%, rgba(0,82,30,0.35) 60%, rgba(0,45,20,0.50) 100%)",
+                border: "1px solid rgba(0,212,106,0.15)",
+              }}
+            >
+              {/* Green radial glow inside card */}
+              <div
+                className="absolute top-0 right-0 h-24 w-24 blur-2xl pointer-events-none"
+                style={{ background: "rgba(0,212,106,0.15)" }}
+              />
+              <p className="text-sm text-foreground/80 italic leading-relaxed relative z-10">
                 &ldquo;Our mandate is not just commercial success — it is to be a cornerstone
                 of Nepal&apos;s sustainable development for the next hundred years.&rdquo;
               </p>
-              <p className="text-xs font-semibold text-primary mt-3">— Chairman, Ghamkheti Guru Co. Ltd.</p>
-            </div>
+              <p className="text-xs font-semibold text-primary mt-3 relative z-10">
+                — Chairman, Ghamkheti Guru Co. Ltd.
+              </p>
+            </motion.div>
           </motion.div>
         </div>
       </Container>

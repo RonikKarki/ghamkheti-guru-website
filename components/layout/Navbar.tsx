@@ -13,23 +13,20 @@ import { ThemeToggle } from "@/components/common/ThemeToggle";
 import type { NavItem } from "@/types";
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen]           = useState(false);
+  const [scrolled, setScrolled]       = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const pathname = usePathname();
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname                       = usePathname();
+  const dropdownRef                    = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu and dropdowns on every route change
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOpenDropdown(null);
   }, [pathname]);
 
@@ -44,65 +41,83 @@ export function Navbar() {
   }, []);
 
   return (
-    <header
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled
-          ? "bg-background/90 backdrop-blur-xl border-b border-border"
-          : "bg-transparent"
-      )}
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <Image
-              src="/images/logos/ghamkheti-logo.png"
-              alt="Ghamkheti Guru Logo"
-              width={32}
-              height={32}
-              className="rounded-md"
-              priority
-            />
-            <span className="hidden sm:block font-semibold text-sm tracking-tight text-foreground">
-              {siteConfig.shortName}
-            </span>
-          </Link>
+    <header className="fixed top-0 left-0 right-0 z-50">
+      {/* Top gradient accent line */}
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
 
-          {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-0.5" ref={dropdownRef}>
-            {navItems.map((item) => (
-              <NavItemLink
-                key={item.href}
-                item={item}
-                pathname={pathname}
-                openDropdown={openDropdown}
-                setOpenDropdown={setOpenDropdown}
-              />
-            ))}
-          </nav>
+      {/* Main bar */}
+      <div
+        className={cn(
+          "transition-all duration-300",
+          scrolled
+            ? "bg-surface/96 backdrop-blur-xl shadow-[0_1px_0_rgba(255,255,255,0.06)]"
+            : "bg-surface/90 backdrop-blur-lg"
+        )}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-[60px] items-center justify-between gap-4">
 
-          {/* Desktop actions */}
-          <div className="hidden lg:flex items-center gap-2">
-            <ThemeToggle />
-            <Button asChild size="sm" variant="outline">
-              <Link href="/contact">Contact</Link>
-            </Button>
-          </div>
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+              <div className="relative">
+                <Image
+                  src="/images/logos/ghamkheti-logo.png"
+                  alt="Ghamkheti Guru Logo"
+                  width={32}
+                  height={32}
+                  className="rounded-md"
+                  priority
+                />
+                <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-primary shadow-[0_0_6px_rgba(0,212,106,0.8)]" />
+              </div>
+              <div className="hidden sm:flex flex-col leading-none">
+                <span className="text-[13px] font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                  {siteConfig.shortName}
+                </span>
+                <span className="text-[9px] text-foreground-subtle tracking-[0.1em] uppercase">
+                  Energy · Agri · Tourism
+                </span>
+              </div>
+            </Link>
 
-          {/* Mobile actions */}
-          <div className="flex lg:hidden items-center gap-2">
-            <ThemeToggle />
-            <button
-              aria-label="Toggle menu"
-              onClick={() => setIsOpen((o) => !o)}
-              className="p-2 rounded-md text-foreground-muted hover:text-foreground transition-colors"
-            >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
+            {/* Desktop nav */}
+            <nav className="hidden lg:flex items-center gap-0.5" ref={dropdownRef}>
+              {navItems.map((item) => (
+                <NavItemLink
+                  key={item.href}
+                  item={item}
+                  pathname={pathname}
+                  openDropdown={openDropdown}
+                  setOpenDropdown={setOpenDropdown}
+                />
+              ))}
+            </nav>
+
+            {/* Desktop actions */}
+            <div className="hidden lg:flex items-center gap-2">
+              <ThemeToggle />
+              <Button asChild size="sm" variant="gradient" className="shadow-[0_0_16px_rgba(0,212,106,0.25)]">
+                <Link href="/contact">Contact</Link>
+              </Button>
+            </div>
+
+            {/* Mobile actions */}
+            <div className="flex lg:hidden items-center gap-2">
+              <ThemeToggle />
+              <button
+                aria-label="Toggle menu"
+                onClick={() => setIsOpen((o) => !o)}
+                className="p-2 rounded-md text-foreground-muted hover:text-foreground hover:bg-surface-raised transition-colors"
+              >
+                {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Divider */}
+      <div className="h-px w-full bg-border" />
 
       {/* Mobile menu */}
       <AnimatePresence>
@@ -113,15 +128,15 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="lg:hidden overflow-hidden border-t border-border bg-background/98 backdrop-blur-xl"
+            className="lg:hidden overflow-hidden bg-surface/98 backdrop-blur-xl border-b border-border"
           >
             <div className="px-4 py-5 space-y-0.5">
               {navItems.map((item) => (
                 <MobileNavItem key={item.href} item={item} pathname={pathname} />
               ))}
               <div className="pt-4 border-t border-border mt-4">
-                <Button asChild className="w-full" variant="outline">
-                  <Link href="/contact">Contact</Link>
+                <Button asChild className="w-full" variant="gradient">
+                  <Link href="/contact">Contact Us</Link>
                 </Button>
               </div>
             </div>
@@ -144,9 +159,9 @@ function NavItemLink({
   openDropdown: string | null;
   setOpenDropdown: (v: string | null) => void;
 }) {
-  const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+  const isActive    = pathname === item.href || pathname.startsWith(item.href + "/");
   const hasChildren = item.children && item.children.length > 0;
-  const isOpen = openDropdown === item.href;
+  const isOpen      = openDropdown === item.href;
 
   if (hasChildren) {
     return (
@@ -154,8 +169,10 @@ function NavItemLink({
         <button
           onClick={() => setOpenDropdown(isOpen ? null : item.href)}
           className={cn(
-            "flex items-center gap-1 px-3 py-2 text-sm transition-colors",
-            isActive ? "text-foreground" : "text-foreground-muted hover:text-foreground"
+            "flex items-center gap-1 px-3 py-2 text-sm rounded-md transition-colors",
+            isActive
+              ? "text-primary"
+              : "text-foreground-muted hover:text-foreground hover:bg-surface-raised"
           )}
         >
           {item.label}
@@ -168,14 +185,15 @@ function NavItemLink({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.15 }}
-              className="absolute left-0 top-full mt-1 w-48 rounded-lg border border-border bg-surface-overlay backdrop-blur-xl shadow-xl py-1 z-50"
+              className="absolute left-0 top-full mt-1.5 w-52 rounded-xl border border-border bg-surface-overlay backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] py-1.5 z-50"
             >
               {item.children!.map((child) => (
                 <Link
                   key={child.href}
                   href={child.href}
-                  className="block px-4 py-2 text-sm text-foreground-muted hover:text-foreground hover:bg-surface-raised transition-colors"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-foreground-muted hover:text-foreground hover:bg-surface-raised transition-colors"
                 >
+                  <span className="h-1 w-1 rounded-full bg-foreground-subtle" />
                   {child.label}
                 </Link>
               ))}
@@ -190,23 +208,22 @@ function NavItemLink({
     <Link
       href={item.href}
       className={cn(
-        "relative px-3 py-2 text-sm transition-colors",
-        isActive ? "text-foreground" : "text-foreground-muted hover:text-foreground"
+        "relative px-3 py-2 text-sm rounded-md transition-colors",
+        isActive
+          ? "text-primary bg-primary/8"
+          : "text-foreground-muted hover:text-foreground hover:bg-surface-raised"
       )}
     >
       {item.label}
-      {isActive && (
-        <span className="absolute bottom-0 left-3 right-3 h-px bg-primary rounded-full" />
-      )}
     </Link>
   );
 }
 
 /* ---- Mobile nav item ---- */
 function MobileNavItem({ item, pathname }: { item: NavItem; pathname: string }) {
-  const [open, setOpen] = useState(false);
-  const isActive = pathname === item.href;
-  const hasChildren = item.children && item.children.length > 0;
+  const [open, setOpen]   = useState(false);
+  const isActive          = pathname === item.href;
+  const hasChildren       = item.children && item.children.length > 0;
 
   return (
     <div>
@@ -215,8 +232,8 @@ function MobileNavItem({ item, pathname }: { item: NavItem; pathname: string }) 
           <button
             onClick={() => setOpen((o) => !o)}
             className={cn(
-              "flex items-center justify-between w-full px-3 py-2.5 text-sm",
-              isActive ? "text-foreground" : "text-foreground-muted"
+              "flex items-center justify-between w-full px-3 py-2.5 text-sm rounded-md",
+              isActive ? "text-primary" : "text-foreground-muted hover:text-foreground hover:bg-surface-raised"
             )}
           >
             {item.label}
@@ -228,7 +245,7 @@ function MobileNavItem({ item, pathname }: { item: NavItem; pathname: string }) 
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden pl-4 border-l border-border ml-3"
+                className="overflow-hidden pl-4 border-l border-primary/20 ml-3 mt-0.5"
               >
                 {item.children!.map((child) => (
                   <Link
@@ -247,8 +264,10 @@ function MobileNavItem({ item, pathname }: { item: NavItem; pathname: string }) 
         <Link
           href={item.href}
           className={cn(
-            "block px-3 py-2.5 text-sm transition-colors",
-            isActive ? "text-foreground" : "text-foreground-muted hover:text-foreground"
+            "block px-3 py-2.5 text-sm rounded-md transition-colors",
+            isActive
+              ? "text-primary bg-primary/8"
+              : "text-foreground-muted hover:text-foreground hover:bg-surface-raised"
           )}
         >
           {item.label}

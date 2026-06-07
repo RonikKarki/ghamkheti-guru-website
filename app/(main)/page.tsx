@@ -4,9 +4,7 @@ import HomepageContent from "@/models/HomepageContent";
 import InvestorDocument from "@/models/InvestorDocument";
 import { HomeHero } from "@/components/sections/HomeHero";
 import { CompanyOverview } from "@/components/sections/CompanyOverview";
-import { HydropowerSection } from "@/components/sections/HydropowerSection";
-import { SolarSection } from "@/components/sections/SolarSection";
-import { AgriSection } from "@/components/sections/AgriSection";
+import { ProjectsShowcase } from "@/components/sections/ProjectsShowcase";
 import { StatsSection } from "@/components/sections/StatsSection";
 import { ChairmanSection } from "@/components/sections/ChairmanSection";
 import { SustainabilitySection } from "@/components/sections/SustainabilitySection";
@@ -64,10 +62,8 @@ export default async function HomePage() {
     <>
       <HomeHero            cms={cms.hero} heroImages={heroImages} />
       <CompanyOverview     cms={cms.company_overview} />
-      <HydropowerSection />
+      <ProjectsShowcase />
       <StatsSection        cms={cms.stats} />
-      <SolarSection />
-      <AgriSection />
       <ChairmanSection     cms={cms.chairman_message} />
       <SustainabilitySection cms={cms.sustainability} />
       <NewsPreview />
