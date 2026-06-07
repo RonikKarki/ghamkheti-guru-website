@@ -13,8 +13,8 @@ import { InvestorCTA } from "@/components/sections/InvestorCTA";
 import { DocumentAnnouncementPopup } from "@/components/sections/DocumentAnnouncementPopup";
 import type { AnnouncementDoc } from "@/components/sections/DocumentAnnouncementPopup";
 
-// Revalidate the homepage every hour — CMS content changes infrequently
-export const revalidate = 3600;
+// Always fetch fresh CMS data — admin changes should appear immediately
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Ghamkheti Guru Company Limited — Energy, Agriculture & Tourism in Nepal",

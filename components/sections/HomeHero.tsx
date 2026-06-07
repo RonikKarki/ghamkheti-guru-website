@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown, Droplets, Sun, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/common/Container";
@@ -49,138 +48,116 @@ export function HomeHero({
   const secondHref   = cms?.secondaryCta?.href  || "/investor-relations";
   const heroStats    = cms?.items?.length ? cms.items : DEFAULT_STATS;
 
-  const slides = heroImages?.filter((s) => s.url && s.isVisible !== false) ?? [];
-  const [current, setCurrent] = useState(0);
+  const slides = (heroImages ?? []).filter((s) => s.url && s.isVisible !== false);
+  const [current, setCurrent]   = useState(0);
+  const [prevSlide, setPrevSlide] = useState<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (slides.length < 2) return;
-    const id = setInterval(() => setCurrent((c) => (c + 1) % slides.length), 7000);
-    return () => clearInterval(id);
+    timerRef.current = setInterval(() => {
+      setCurrent((c) => {
+        setPrevSlide(c);
+        return (c + 1) % slides.length;
+      });
+    }, 7000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [slides.length]);
 
-  /* gradient keyword highlight */
+  /* gradient keyword split */
   const headlineParts = (() => {
     const keywords = ["Sustainable", "Future", "Green", "Energy", "Nepal"];
     for (const kw of keywords) {
       if (headline.includes(kw)) {
         const idx = headline.indexOf(kw);
-        return {
-          before:  headline.slice(0, idx),
-          keyword: kw,
-          after:   headline.slice(idx + kw.length),
-        };
+        return { before: headline.slice(0, idx), keyword: kw, after: headline.slice(idx + kw.length) };
       }
     }
     return null;
   })();
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-[#07080d]">
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden" style={{ backgroundColor: "#07080d" }}>
 
-      {/* ── Background image slides ── */}
-      {slides.length > 0 && (
-        <div className="absolute inset-0">
-          <AnimatePresence mode="sync">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.4, ease: "easeInOut" }}
-              className="absolute inset-0"
-            >
-              <Image
-                src={slides[current].url}
-                alt={slides[current].alt ?? "Hero background"}
-                fill
-                className="object-cover"
-                priority={current === 0}
-                sizes="100vw"
-              />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* ALWAYS a strong dark overlay — bg-black, not bg-background */}
-          <AnimatePresence mode="sync">
-            <motion.div
-              key={`overlay-${current}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1 }}
-              className="absolute inset-0 bg-black"
-              style={{ opacity: Math.max((slides[current]?.overlay ?? 65), 50) / 100 }}
-            />
-          </AnimatePresence>
-
-          {/* Persistent bottom-to-top fade so stats are always readable */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(7,8,13,0.95) 0%, rgba(7,8,13,0.40) 40%, rgba(7,8,13,0.20) 70%, transparent 100%)",
-            }}
+      {/* ── Background slides — CSS crossfade, no opacity:0 on mount ── */}
+      {slides.map((slide, i) => (
+        <div
+          key={slide.url}
+          aria-hidden={i !== current}
+          className="absolute inset-0 transition-opacity duration-[1400ms] ease-in-out"
+          style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 2 : (i === prevSlide ? 1 : 0) }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={slide.url}
+            alt={slide.alt ?? ""}
+            className="absolute inset-0 w-full h-full object-cover"
           />
-
-          {slides.length > 1 && (
-            <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-              {slides.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrent(i)}
-                  aria-label={`Slide ${i + 1}`}
-                  className={`h-px rounded-full transition-all duration-500 ${
-                    i === current
-                      ? "w-8 bg-primary shadow-[0_0_8px_rgba(0,212,106,0.7)]"
-                      : "w-4 bg-white/25 hover:bg-white/50"
-                  }`}
-                />
-              ))}
-            </div>
-          )}
+          {/* Dark overlay — always bg-black, never bg-background */}
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: "#000", opacity: Math.max((slide.overlay ?? 65), 50) / 100 }}
+          />
         </div>
-      )}
+      ))}
 
-      {/* No image — fallback gradient */}
-      {slides.length === 0 && (
-        <>
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse 80% 60% at 50% -5%, rgba(0,212,106,0.16) 0%, transparent 65%), radial-gradient(ellipse 50% 80% at -5% 50%, rgba(0,212,106,0.07) 0%, transparent 60%)",
-            }}
-          />
-          {/* Dot grid */}
-          <div
-            className="absolute inset-0 opacity-25 pointer-events-none"
-            style={{
-              backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)",
-              backgroundSize: "28px 28px",
-            }}
-          />
-        </>
-      )}
-
-      {/* Top green spotlight — always visible */}
+      {/* Bottom-to-top gradient for stats readability */}
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          width: "90%",
-          height: "65%",
-          background:
-            "radial-gradient(ellipse 70% 60% at 50% -5%, rgba(0,212,106,0.14) 0%, transparent 65%)",
+          zIndex: 3,
+          background: "linear-gradient(to top, rgba(7,8,13,0.95) 0%, rgba(7,8,13,0.35) 40%, transparent 70%)",
         }}
       />
 
-      {/* ── Content — ALL text is white/light, independent of theme ── */}
-      <Container className="relative z-10 pt-36 pb-24 md:pt-44 md:pb-32">
+      {/* Fallback: no-image radial glow */}
+      {slides.length === 0 && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 50% -5%, rgba(0,212,106,0.16) 0%, transparent 65%), radial-gradient(ellipse 50% 80% at -5% 50%, rgba(0,212,106,0.07) 0%, transparent 60%)",
+            backgroundImage:
+              "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+      )}
+
+      {/* Top green spotlight */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{
+          zIndex: 3,
+          width: "90%",
+          height: "65%",
+          background: "radial-gradient(ellipse 70% 60% at 50% -5%, rgba(0,212,106,0.12) 0%, transparent 65%)",
+        }}
+      />
+
+      {/* Slide indicators */}
+      {slides.length > 1 && (
+        <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex gap-2" style={{ zIndex: 10 }}>
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => { setPrevSlide(current); setCurrent(i); }}
+              aria-label={`Slide ${i + 1}`}
+              className={`h-px rounded-full transition-all duration-500 ${
+                i === current
+                  ? "w-8 bg-primary shadow-[0_0_8px_rgba(0,212,106,0.7)]"
+                  : "w-4 bg-white/30 hover:bg-white/55"
+              }`}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* ── Content — white text, z above background layers ── */}
+      <Container className="relative pt-36 pb-24 md:pt-44 md:pb-32" style={{ zIndex: 5 }}>
         <div className="max-w-5xl">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-          >
+          <motion.div variants={staggerContainer} initial="hidden" animate="visible">
+
             {/* Overline pill */}
             <motion.div variants={staggerItem}>
               <div className="inline-flex items-center gap-2 border border-white/15 bg-white/5 rounded-full px-4 py-1.5 mb-10 backdrop-blur-sm">
@@ -191,11 +168,11 @@ export function HomeHero({
               </div>
             </motion.div>
 
-            {/* Headline — always white */}
+            {/* Headline — white always */}
             <motion.h1
               variants={staggerItem}
-              className="text-display-2xl font-display text-white leading-[1.04] mb-6 text-balance"
-              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
+              className="text-display-2xl font-display leading-[1.04] mb-6 text-balance"
+              style={{ color: "#fff", textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
             >
               {headlineParts ? (
                 <>
@@ -203,16 +180,14 @@ export function HomeHero({
                   <span className="text-gradient">{headlineParts.keyword}</span>
                   <span>{headlineParts.after}</span>
                 </>
-              ) : (
-                headline
-              )}
+              ) : headline}
             </motion.h1>
 
-            {/* Subtext — always white/semi */}
+            {/* Subtext */}
             <motion.p
               variants={staggerItem}
-              className="text-base md:text-lg text-white/70 leading-relaxed max-w-[560px] mb-10 text-pretty"
-              style={{ textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}
+              className="text-base md:text-lg leading-relaxed max-w-[560px] mb-10 text-pretty"
+              style={{ color: "rgba(255,255,255,0.70)", textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}
             >
               {body || subheadline}
             </motion.p>
@@ -226,8 +201,7 @@ export function HomeHero({
                 </Link>
               </Button>
               <Button
-                asChild
-                size="xl"
+                asChild size="xl"
                 className="bg-white/10 border border-white/20 text-white hover:bg-white/15 hover:border-white/35 backdrop-blur-sm"
               >
                 <Link href={secondHref}>{secondLabel}</Link>
@@ -247,27 +221,26 @@ export function HomeHero({
               ))}
             </motion.div>
 
-            {/* Stats row */}
+            {/* Stats */}
             <motion.div variants={staggerItem}>
-              <div className="h-px w-full bg-white/10 mb-8" />
+              <div className="h-px w-full mb-8" style={{ backgroundColor: "rgba(255,255,255,0.10)" }} />
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
                 {heroStats.map((s, i) => (
                   <motion.div
-                    key={s.label}
+                    key={s.label ?? i}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 + i * 0.08, duration: 0.5, ease: E }}
                   >
-                    <p
-                      className="text-2xl md:text-3xl font-display font-bold text-gradient leading-none mb-1.5 tracking-tight"
-                    >
+                    <p className="text-2xl md:text-3xl font-display font-bold text-gradient leading-none mb-1.5 tracking-tight">
                       {s.value}
                     </p>
-                    <p className="text-xs text-white/45 tracking-wide">{s.label}</p>
+                    <p className="text-xs tracking-wide" style={{ color: "rgba(255,255,255,0.40)" }}>{s.label}</p>
                   </motion.div>
                 ))}
               </div>
             </motion.div>
+
           </motion.div>
         </div>
       </Container>
@@ -277,7 +250,8 @@ export function HomeHero({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2, duration: 0.6, ease: E }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40 cursor-pointer z-20"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
+        style={{ zIndex: 10, color: "rgba(255,255,255,0.35)" }}
         onClick={() => window.scrollBy({ top: window.innerHeight, behavior: "smooth" })}
       >
         <motion.div
