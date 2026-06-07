@@ -18,8 +18,8 @@ export const PUT = withApiHandler(async (req: NextRequest, ctx?: Ctx) => {
 
   const updated = await HomepageContent.findOneAndUpdate(
     { section: section as HomepageSection },
-    { $set: { ...body, updatedBy: sessionUser?.email } },
-    { new: true, upsert: true, runValidators: true }
+    { $set: { ...body, updatedBy: sessionUser?.email, isActive: true } },
+    { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
   ).lean();
 
   return apiSuccess(updated, "Section updated");

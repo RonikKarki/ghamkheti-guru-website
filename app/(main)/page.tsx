@@ -27,7 +27,7 @@ export default async function HomePage() {
   await connectToDatabase();
 
   const [rawCms, rawAnnouncements] = await Promise.all([
-    HomepageContent.find({ isActive: true }).lean(),
+    HomepageContent.find({ isActive: { $ne: false } }).lean(),
     InvestorDocument.find({ showOnHomepage: true })
       .sort({ publishedAt: -1, createdAt: -1 })
       .select("title type fileUrl fileType fiscalYear isRestricted homepageLabel")
