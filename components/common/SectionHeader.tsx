@@ -3,15 +3,14 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { fadeUp, viewportOnce } from "@/lib/animations";
-import { Badge } from "@/components/ui/badge";
 
 interface SectionHeaderProps {
   badge?: string;
   title: string;
-  titleGradient?: boolean;     /* applies gradient text to last word */
+  titleGradient?: boolean;
   description?: string;
   centered?: boolean;
-  eyebrow?: string;            /* tiny uppercase label above badge */
+  eyebrow?: string;
   className?: string;
   titleClassName?: string;
   descriptionClassName?: string;
@@ -36,7 +35,6 @@ export function SectionHeader({
   descriptionClassName,
   size = "default",
 }: SectionHeaderProps) {
-  /* Split title: if titleGradient, apply gradient to last "word group" */
   const words = title.split(" ");
   const regularWords = titleGradient ? words.slice(0, -2).join(" ") : title;
   const gradientWords = titleGradient ? words.slice(-2).join(" ") : null;
@@ -53,21 +51,21 @@ export function SectionHeader({
         className
       )}
     >
-      {eyebrow && (
-        <p className="text-overline text-foreground-subtle mb-3">{eyebrow}</p>
-      )}
-
-      {badge && (
-        <div className={cn("mb-4", centered ? "flex justify-center" : "")}>
-          <Badge variant="overline" dot>
-            {badge}
-          </Badge>
+      {/* Overline badge */}
+      {(badge || eyebrow) && (
+        <div className={cn("mb-5", centered && "flex justify-center")}>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/20 bg-primary/5">
+            <span className="h-1 w-1 rounded-full bg-primary shrink-0" />
+            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-primary">
+              {badge || eyebrow}
+            </span>
+          </div>
         </div>
       )}
 
       <h2
         className={cn(
-          "font-display text-foreground text-balance",
+          "font-display text-foreground text-balance tracking-tight",
           titleSizes[size],
           titleClassName
         )}

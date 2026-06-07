@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/common/Container";
-import { Badge } from "@/components/ui/badge";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 
 interface BreadcrumbItem {
@@ -44,13 +43,14 @@ export function PageBanner({
   return (
     <div
       className={cn(
-        "relative overflow-hidden bg-hero-gradient noise-overlay",
-        "border-b border-border",
-        size === "lg" ? "pt-36 pb-20 md:pt-48 md:pb-28" : "pt-28 pb-14 md:pt-36 md:pb-20",
+        "relative overflow-hidden bg-background border-b border-border",
+        size === "lg"
+          ? "pt-36 pb-20 md:pt-48 md:pb-28"
+          : "pt-28 pb-14 md:pt-36 md:pb-20",
         className
       )}
     >
-      {/* Optional CMS background image */}
+      {/* CMS background image */}
       {bannerImage && (
         <>
           <Image
@@ -61,12 +61,33 @@ export function PageBanner({
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-background/70" />
         </>
       )}
-      {/* Ambient glow blobs */}
-      <div className="absolute top-0 left-1/4 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/6 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 h-64 w-64 translate-x-1/2 translate-y-1/2 rounded-full bg-brand-gold/5 blur-3xl pointer-events-none" />
+
+      {/* Top radial green spotlight */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{
+          width: "80%",
+          height: "100%",
+          background:
+            "radial-gradient(ellipse 70% 55% at 50% -5%, rgba(0,212,106,0.12) 0%, transparent 65%)",
+        }}
+      />
+
+      {/* Side accent glow */}
+      <div
+        className="absolute top-1/2 -translate-y-1/2 pointer-events-none"
+        style={{
+          left: isCentered ? "auto" : "-5%",
+          right: isCentered ? "auto" : "auto",
+          width: "40%",
+          height: "80%",
+          background:
+            "radial-gradient(ellipse 60% 80% at 0% 50%, rgba(0,212,106,0.06) 0%, transparent 65%)",
+        }}
+      />
 
       <Container>
         <motion.div
@@ -106,16 +127,21 @@ export function PageBanner({
           {badge && (
             <motion.div
               variants={staggerItem}
-              className={cn("mb-4", isCentered && "flex justify-center")}
+              className={cn("mb-5", isCentered && "flex justify-center")}
             >
-              <Badge variant="overline" dot>{badge}</Badge>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/20 bg-primary/5">
+                <span className="h-1 w-1 rounded-full bg-primary shrink-0" />
+                <span className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-primary">
+                  {badge}
+                </span>
+              </div>
             </motion.div>
           )}
 
           {/* Title */}
           <motion.h1
             variants={staggerItem}
-            className="text-display-xl font-display text-foreground text-balance"
+            className="text-display-xl font-display text-foreground text-balance tracking-tight"
           >
             {title}
           </motion.h1>

@@ -8,7 +8,8 @@ type SectionVariant =
   | "glass"         // glassmorphism
   | "gradient"      // mesh gradient
   | "primary"       // primary green
-  | "hero";         // hero with full gradient mesh + noise
+  | "hero"          // hero with full gradient mesh
+  | "spotlight";    // radial green spotlight on dark canvas
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
@@ -18,14 +19,15 @@ interface SectionProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const variantStyles: Record<SectionVariant, string> = {
-  default:  "bg-background",
-  alt:      "bg-background-alt",
-  surface:  "bg-surface",
-  dark:     "bg-[#030806]",
-  glass:    "glass",
-  gradient: "bg-mesh bg-background",
-  primary:  "bg-linear-to-br from-brand-deep via-brand-mid to-brand-deep text-primary-foreground",
-  hero:     "bg-hero-gradient relative overflow-hidden noise-overlay",
+  default:    "bg-background",
+  alt:        "bg-background-alt",
+  surface:    "bg-surface",
+  dark:       "bg-[#040508]",
+  glass:      "glass",
+  gradient:   "bg-mesh bg-background",
+  primary:    "bg-linear-to-br from-brand-deep via-brand-mid to-brand-deep text-primary-foreground",
+  hero:       "bg-hero-gradient relative overflow-hidden",
+  spotlight:  "relative overflow-hidden bg-background",
 };
 
 const sizeStyles = {

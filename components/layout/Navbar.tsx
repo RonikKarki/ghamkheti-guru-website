@@ -48,29 +48,29 @@ export function Navbar() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-background/95 backdrop-blur-md shadow-sm border-b border-border"
+          ? "bg-background/90 backdrop-blur-xl border-b border-border"
           : "bg-transparent"
       )}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 md:h-20 items-center justify-between">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
             <Image
               src="/images/logos/ghamkheti-logo.png"
               alt="Ghamkheti Guru Logo"
-              width={40}
-              height={40}
-              className="rounded-lg"
+              width={32}
+              height={32}
+              className="rounded-md"
               priority
             />
-            <span className="hidden sm:block font-bold text-base leading-tight">
-              <span className="text-primary">{siteConfig.shortName}</span>
+            <span className="hidden sm:block font-semibold text-sm tracking-tight text-foreground">
+              {siteConfig.shortName}
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
+          <nav className="hidden lg:flex items-center gap-0.5" ref={dropdownRef}>
             {navItems.map((item) => (
               <NavItemLink
                 key={item.href}
@@ -85,22 +85,21 @@ export function Navbar() {
           {/* Desktop actions */}
           <div className="hidden lg:flex items-center gap-2">
             <ThemeToggle />
-            <Button asChild size="sm">
-              <Link href="/contact">Get in Touch</Link>
+            <Button asChild size="sm" variant="outline">
+              <Link href="/contact">Contact</Link>
             </Button>
           </div>
 
           {/* Mobile actions */}
           <div className="flex lg:hidden items-center gap-2">
             <ThemeToggle />
-            <Button
-              variant="ghost"
-              size="icon"
+            <button
               aria-label="Toggle menu"
               onClick={() => setIsOpen((o) => !o)}
+              className="p-2 rounded-md text-foreground-muted hover:text-foreground transition-colors"
             >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
+            </button>
           </div>
         </div>
       </div>
@@ -113,16 +112,16 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="lg:hidden overflow-hidden border-t border-border bg-background/98 backdrop-blur-md"
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="lg:hidden overflow-hidden border-t border-border bg-background/98 backdrop-blur-xl"
           >
-            <div className="px-4 py-4 space-y-1">
+            <div className="px-4 py-5 space-y-0.5">
               {navItems.map((item) => (
                 <MobileNavItem key={item.href} item={item} pathname={pathname} />
               ))}
-              <div className="pt-4 border-t border-border">
-                <Button asChild className="w-full">
-                  <Link href="/contact">Get in Touch</Link>
+              <div className="pt-4 border-t border-border mt-4">
+                <Button asChild className="w-full" variant="outline">
+                  <Link href="/contact">Contact</Link>
                 </Button>
               </div>
             </div>
@@ -155,31 +154,27 @@ function NavItemLink({
         <button
           onClick={() => setOpenDropdown(isOpen ? null : item.href)}
           className={cn(
-            "flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors",
-            isActive
-              ? "text-primary bg-primary/8"
-              : "text-foreground/80 hover:text-foreground hover:bg-accent"
+            "flex items-center gap-1 px-3 py-2 text-sm transition-colors",
+            isActive ? "text-foreground" : "text-foreground-muted hover:text-foreground"
           )}
         >
           {item.label}
-          <ChevronDown
-            className={cn("h-3.5 w-3.5 transition-transform duration-200", isOpen && "rotate-180")}
-          />
+          <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", isOpen && "rotate-180")} />
         </button>
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -8 }}
+              initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.18 }}
-              className="absolute left-0 top-full mt-1 w-52 rounded-lg border border-border bg-card shadow-lg py-1 z-50"
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.15 }}
+              className="absolute left-0 top-full mt-1 w-48 rounded-lg border border-border bg-surface-overlay backdrop-blur-xl shadow-xl py-1 z-50"
             >
               {item.children!.map((child) => (
                 <Link
                   key={child.href}
                   href={child.href}
-                  className="block px-4 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-accent transition-colors"
+                  className="block px-4 py-2 text-sm text-foreground-muted hover:text-foreground hover:bg-surface-raised transition-colors"
                 >
                   {child.label}
                 </Link>
@@ -195,13 +190,14 @@ function NavItemLink({
     <Link
       href={item.href}
       className={cn(
-        "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-        isActive
-          ? "text-primary bg-primary/8"
-          : "text-foreground/80 hover:text-foreground hover:bg-accent"
+        "relative px-3 py-2 text-sm transition-colors",
+        isActive ? "text-foreground" : "text-foreground-muted hover:text-foreground"
       )}
     >
       {item.label}
+      {isActive && (
+        <span className="absolute bottom-0 left-3 right-3 h-px bg-primary rounded-full" />
+      )}
     </Link>
   );
 }
@@ -219,12 +215,12 @@ function MobileNavItem({ item, pathname }: { item: NavItem; pathname: string }) 
           <button
             onClick={() => setOpen((o) => !o)}
             className={cn(
-              "flex items-center justify-between w-full px-3 py-2.5 rounded-md text-sm font-medium",
-              isActive ? "text-primary bg-primary/8" : "text-foreground/80 hover:bg-accent"
+              "flex items-center justify-between w-full px-3 py-2.5 text-sm",
+              isActive ? "text-foreground" : "text-foreground-muted"
             )}
           >
             {item.label}
-            <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+            <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-180")} />
           </button>
           <AnimatePresence>
             {open && (
@@ -232,13 +228,13 @@ function MobileNavItem({ item, pathname }: { item: NavItem; pathname: string }) 
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden pl-4"
+                className="overflow-hidden pl-4 border-l border-border ml-3"
               >
                 {item.children!.map((child) => (
                   <Link
                     key={child.href}
                     href={child.href}
-                    className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
+                    className="block px-3 py-2 text-sm text-foreground-muted hover:text-foreground transition-colors"
                   >
                     {child.label}
                   </Link>
@@ -251,8 +247,8 @@ function MobileNavItem({ item, pathname }: { item: NavItem; pathname: string }) 
         <Link
           href={item.href}
           className={cn(
-            "block px-3 py-2.5 rounded-md text-sm font-medium",
-            isActive ? "text-primary bg-primary/8" : "text-foreground/80 hover:bg-accent"
+            "block px-3 py-2.5 text-sm transition-colors",
+            isActive ? "text-foreground" : "text-foreground-muted hover:text-foreground"
           )}
         >
           {item.label}

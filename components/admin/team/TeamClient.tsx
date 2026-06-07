@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Save, RefreshCw, Info } from "lucide-react";
+import { Save, RefreshCw, Plus, Trash2 } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Tabs } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -35,40 +35,23 @@ function F({ label, hint, children }: { label: string; hint?: string; children: 
   );
 }
 
-function JsonEditor({
-  value,
-  onChange,
-  hint,
-  rows = 14,
-}: {
-  value: Record<string, unknown>[];
-  onChange: (v: Record<string, unknown>[]) => void;
-  hint: string;
-  rows?: number;
-}) {
-  const [raw, setRaw] = useState(() => JSON.stringify(value, null, 2));
-  const [err, setErr] = useState("");
-
-  function handleChange(text: string) {
-    setRaw(text);
-    try {
-      const parsed = JSON.parse(text);
-      if (Array.isArray(parsed)) { onChange(parsed); setErr(""); }
-      else setErr("Must be a JSON array [ … ]");
-    } catch {
-      setErr("Invalid JSON");
-    }
-  }
-
+function AddBtn({ onClick, label }: { onClick: () => void; label: string }) {
   return (
-    <div>
-      <div className="flex items-center gap-1.5 mb-1.5 text-foreground-subtle">
-        <Info className="h-3 w-3 shrink-0" />
-        <span className="text-[10px] leading-relaxed">{hint}</span>
-      </div>
-      <Textarea rows={rows} value={raw} onChange={(e) => handleChange(e.target.value)} className="font-mono text-xs" />
-      {err && <p className="mt-1 text-xs text-red-400">{err}</p>}
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex items-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-surface text-sm text-foreground-subtle hover:text-foreground transition-colors"
+    >
+      <Plus className="h-4 w-4" /> {label}
+    </button>
+  );
+}
+
+function RemoveBtn({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="p-1.5 rounded-lg text-foreground-subtle hover:text-red-400 hover:bg-red-500/10 transition-colors">
+      <Trash2 className="h-3.5 w-3.5" />
+    </button>
   );
 }
 
@@ -99,80 +82,122 @@ export default function TeamClient({ initialData }: { initialData: any[] }) {
       if (title    !== undefined) payload.title    = title;
       if (subtitle !== undefined) payload.subtitle = subtitle;
       if (body     !== undefined) payload.body     = body;
-
-      const res = await fetch(`/api/admin/team/${tab}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(`/api/admin/team/${tab}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const json = await res.json();
       if (!res.ok) { error("Save failed", json.error); return; }
       success("Section saved");
     });
   }
 
-  // ── Section editors ──────────────────────────────────────────────────────────
-
   function renderBanner() {
     return (
       <div className="space-y-5">
-        <F label="Page Title">
-          <Input
-            value={doc.title ?? ""}
-            onChange={(e) => patch({ title: e.target.value })}
-            placeholder="The People Behind the Impact"
-          />
-        </F>
+        <F label="Page Title"><Input value={doc.title ?? ""} onChange={(e) => patch({ title: e.target.value })} placeholder="The People Behind the Impact" /></F>
         <F label="Description" hint="shown below the title in the hero banner">
-          <Textarea
-            rows={3}
-            value={doc.body ?? ""}
-            onChange={(e) => patch({ body: e.target.value })}
-            placeholder="Specialists across energy, technology, agriculture, and consulting…"
-          />
+          <Textarea rows={3} value={doc.body ?? ""} onChange={(e) => patch({ body: e.target.value })} placeholder="Specialists across energy, technology, agriculture, and consulting…" />
         </F>
       </div>
     );
   }
 
   function renderDepartments() {
+    type Dept = { name?: string; count?: number | string };
+    const depts = (doc.items ?? []) as Dept[];
+    function updateDept(i: number, field: keyof Dept, val: string) {
+      const next = [...depts] as Record<string, unknown>[];
+      next[i] = { ...next[i], [field]: field === "count" ? (isNaN(Number(val)) ? val : Number(val)) : val };
+      patch({ items: next });
+    }
+    function removeDept(i: number) { patch({ items: depts.filter((_, idx) => idx !== i) as Record<string, unknown>[] }); }
+    function addDept() { patch({ items: [...depts, { name: "", count: 0 }] as Record<string, unknown>[] }); }
+
     return (
-      <div className="space-y-5">
+      <div className="space-y-4">
         <p className="text-xs text-foreground-muted">Department stat boxes shown at the top of the Team page.</p>
-        <JsonEditor
-          value={doc.items}
-          onChange={(v) => patch({ items: v })}
-          hint='[{"name":"Energy","count":28},{"name":"Technology","count":42},…]'
-          rows={10}
-        />
+        {depts.map((d, i) => (
+          <div key={i} className="rounded-xl border border-border p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold text-foreground">Department {i + 1}</p>
+              <RemoveBtn onClick={() => removeDept(i)} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <F label="Name"><Input value={d.name ?? ""} onChange={(e) => updateDept(i, "name", e.target.value)} placeholder="Energy" /></F>
+              <F label="Count"><Input type="number" value={String(d.count ?? "")} onChange={(e) => updateDept(i, "count", e.target.value)} placeholder="28" /></F>
+            </div>
+          </div>
+        ))}
+        <AddBtn onClick={addDept} label="Add Department" />
       </div>
     );
   }
 
   function renderLeadership() {
+    type Leader = { name?: string; role?: string; department?: string; bio?: string; linkedin?: string };
+    const leaders = (doc.items ?? []) as Leader[];
+    function updateLeader(i: number, field: keyof Leader, val: string) {
+      const next = [...leaders] as Record<string, unknown>[];
+      next[i] = { ...next[i], [field]: val };
+      patch({ items: next });
+    }
+    function removeLeader(i: number) { patch({ items: leaders.filter((_, idx) => idx !== i) as Record<string, unknown>[] }); }
+    function addLeader() { patch({ items: [...leaders, { name: "", role: "", department: "", bio: "", linkedin: "" }] as Record<string, unknown>[] }); }
+
     return (
-      <div className="space-y-5">
-        <p className="text-xs text-foreground-muted">Executive leadership cards (large cards). Include name, role, department, bio, and optional linkedin URL.</p>
-        <JsonEditor
-          value={doc.items}
-          onChange={(v) => patch({ items: v })}
-          hint='[{"name":"Kwame Asante","role":"Chief Executive Officer","department":"Leadership","bio":"20+ years in energy…","linkedin":"https://linkedin.com/in/…"},…]'
-          rows={16}
-        />
+      <div className="space-y-4">
+        <p className="text-xs text-foreground-muted">Executive leadership — shown as large cards on the Team page.</p>
+        {leaders.map((l, i) => (
+          <div key={i} className="rounded-xl border border-border p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold text-foreground">Leader {i + 1}</p>
+              <RemoveBtn onClick={() => removeLeader(i)} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <F label="Full Name"><Input value={l.name ?? ""} onChange={(e) => updateLeader(i, "name", e.target.value)} placeholder="Full Name" /></F>
+              <F label="Role"><Input value={l.role ?? ""} onChange={(e) => updateLeader(i, "role", e.target.value)} placeholder="Chief Executive Officer" /></F>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <F label="Department"><Input value={l.department ?? ""} onChange={(e) => updateLeader(i, "department", e.target.value)} placeholder="Leadership" /></F>
+              <F label="LinkedIn URL" hint="optional"><Input value={l.linkedin ?? ""} onChange={(e) => updateLeader(i, "linkedin", e.target.value)} placeholder="https://linkedin.com/in/…" /></F>
+            </div>
+            <F label="Bio"><Textarea rows={3} value={l.bio ?? ""} onChange={(e) => updateLeader(i, "bio", e.target.value)} placeholder="20+ years in energy…" /></F>
+          </div>
+        ))}
+        <AddBtn onClick={addLeader} label="Add Leader" />
       </div>
     );
   }
 
   function renderTeamMembers() {
+    type Member = { name?: string; role?: string; department?: string; linkedin?: string };
+    const members = (doc.items ?? []) as Member[];
+    function updateMember(i: number, field: keyof Member, val: string) {
+      const next = [...members] as Record<string, unknown>[];
+      next[i] = { ...next[i], [field]: val };
+      patch({ items: next });
+    }
+    function removeMember(i: number) { patch({ items: members.filter((_, idx) => idx !== i) as Record<string, unknown>[] }); }
+    function addMember() { patch({ items: [...members, { name: "", role: "", department: "", linkedin: "" }] as Record<string, unknown>[] }); }
+
     return (
-      <div className="space-y-5">
-        <p className="text-xs text-foreground-muted">Regular team members grid. Include name, role, department, and optional linkedin URL.</p>
-        <JsonEditor
-          value={doc.items}
-          onChange={(v) => patch({ items: v })}
-          hint='[{"name":"Abena Sarfo","role":"Head of Renewable Energy","department":"Energy","linkedin":"#"},…]'
-          rows={18}
-        />
+      <div className="space-y-4">
+        <p className="text-xs text-foreground-muted">Regular team members shown in the grid.</p>
+        {members.map((m, i) => (
+          <div key={i} className="rounded-xl border border-border p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold text-foreground">Member {i + 1}</p>
+              <RemoveBtn onClick={() => removeMember(i)} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <F label="Full Name"><Input value={m.name ?? ""} onChange={(e) => updateMember(i, "name", e.target.value)} placeholder="Full Name" /></F>
+              <F label="Role"><Input value={m.role ?? ""} onChange={(e) => updateMember(i, "role", e.target.value)} placeholder="Head of Renewable Energy" /></F>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <F label="Department"><Input value={m.department ?? ""} onChange={(e) => updateMember(i, "department", e.target.value)} placeholder="Energy" /></F>
+              <F label="LinkedIn URL" hint="optional"><Input value={m.linkedin ?? ""} onChange={(e) => updateMember(i, "linkedin", e.target.value)} placeholder="https://linkedin.com/in/…" /></F>
+            </div>
+          </div>
+        ))}
+        <AddBtn onClick={addMember} label="Add Team Member" />
       </div>
     );
   }
@@ -190,19 +215,13 @@ export default function TeamClient({ initialData }: { initialData: any[] }) {
         title="Team CMS"
         description="Edit content for each section of the Our Team page"
         actions={
-          <button
-            onClick={save}
-            disabled={isPending}
-            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 disabled:opacity-50 transition-colors"
-          >
+          <button onClick={save} disabled={isPending} className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 disabled:opacity-50 transition-colors">
             {isPending ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
             Save Section
           </button>
         }
       />
-
       <Tabs tabs={SECTION_TABS} active={tab} onChange={setTab} />
-
       <div key={tab} className="rounded-xl bg-surface border border-border p-6">
         {(editors[tab] ?? (() => <p className="text-sm text-foreground-muted">No editor for this section.</p>))()}
       </div>

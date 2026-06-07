@@ -45,42 +45,41 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-foreground text-background">
-      {/* Main footer */}
+    <footer className="bg-surface border-t border-border">
       <Container className="py-14 md:py-20">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand column */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2.5 mb-5">
+            <Link href="/" className="flex items-center gap-2.5 mb-6">
               <Image
                 src="/images/logos/ghamkheti-logo.png"
                 alt="Ghamkheti Guru Logo"
-                width={36}
-                height={36}
-                className="rounded-lg"
+                width={28}
+                height={28}
+                className="rounded-md"
               />
-              <span className="font-bold text-sm leading-tight text-background">
+              <span className="font-semibold text-sm text-foreground tracking-tight">
                 {siteConfig.shortName}
               </span>
             </Link>
-            <p className="text-sm text-background/60 leading-relaxed mb-6 max-w-xs">
+            <p className="text-sm text-foreground-muted leading-relaxed mb-6 max-w-xs">
               {siteConfig.description}
             </p>
-            <ul className="space-y-2.5 text-sm text-background/60">
+            <ul className="space-y-3 text-sm text-foreground-subtle">
               <li className="flex items-start gap-2.5">
-                <Mail className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
-                <a href={`mailto:${siteConfig.email}`} className="hover:text-background transition-colors">
+                <Mail className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
+                <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground transition-colors">
                   {siteConfig.email}
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
-                <Phone className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
-                <a href={`tel:${siteConfig.phone}`} className="hover:text-background transition-colors">
+                <Phone className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
+                <a href={`tel:${siteConfig.phone}`} className="hover:text-foreground transition-colors">
                   {siteConfig.phone}
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
-                <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
+                <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
                 <span>{siteConfig.address}</span>
               </li>
             </ul>
@@ -88,11 +87,11 @@ export function Footer() {
 
           {/* Company links */}
           <div>
-            <h3 className="font-semibold text-background text-xs uppercase tracking-widest mb-5">Company</h3>
+            <h3 className="text-[10px] font-semibold text-foreground-subtle uppercase tracking-[0.18em] mb-5">Company</h3>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-background/60 hover:text-background transition-colors">
+                  <Link href={link.href} className="text-sm text-foreground-muted hover:text-foreground transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -102,11 +101,11 @@ export function Footer() {
 
           {/* Sectors */}
           <div>
-            <h3 className="font-semibold text-background text-xs uppercase tracking-widest mb-5">Sectors</h3>
+            <h3 className="text-[10px] font-semibold text-foreground-subtle uppercase tracking-[0.18em] mb-5">Sectors</h3>
             <ul className="space-y-3">
               {footerLinks.sectors.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-background/60 hover:text-background transition-colors">
+                  <Link href={link.href} className="text-sm text-foreground-muted hover:text-foreground transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -116,9 +115,9 @@ export function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h3 className="font-semibold text-background text-xs uppercase tracking-widest mb-5">Stay Updated</h3>
-            <p className="text-sm text-background/60 mb-4 leading-relaxed">
-              Receive the latest news on our projects, financial updates, and sustainability reports.
+            <h3 className="text-[10px] font-semibold text-foreground-subtle uppercase tracking-[0.18em] mb-5">Stay Updated</h3>
+            <p className="text-sm text-foreground-muted mb-4 leading-relaxed">
+              Receive the latest news on our projects and sustainability reports.
             </p>
             <NewsletterForm />
           </div>
@@ -126,20 +125,20 @@ export function Footer() {
       </Container>
 
       {/* Bottom bar */}
-      <div className="border-t border-background/10">
+      <div className="border-t border-border">
         <Container className="py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-background/50">
+            <p className="text-xs text-foreground-subtle">
               © {year} {siteConfig.name}. All rights reserved.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-5">
               {footerLinks.legal.map((link) => (
-                <Link key={link.href} href={link.href} className="text-xs text-background/50 hover:text-background transition-colors">
+                <Link key={link.href} href={link.href} className="text-xs text-foreground-subtle hover:text-foreground transition-colors">
                   {link.label}
                 </Link>
               ))}
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {socialLinks.map(({ svg, href, label }) => (
                 <a
                   key={label}
@@ -147,7 +146,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-background/10 text-background hover:bg-primary transition-colors"
+                  className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-foreground-subtle hover:text-primary hover:border-primary/30 transition-colors"
                 >
                   {svg}
                 </a>

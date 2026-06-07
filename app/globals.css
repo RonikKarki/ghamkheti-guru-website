@@ -2,103 +2,98 @@
 @import "tw-animate-css";
 
 /* ================================================================
-   GHAMKHETI GURU — Premium Design System
-   Renewable Energy · Agriculture · Enterprise
+   GHAMKHETI GURU — Clean Energy Design System
+   Inspired by Ecovolt / Solar energy Dribbble aesthetics
    ================================================================ */
 
-/* ----------------------------------------------------------------
-   DARK THEME  (default — site renders dark by default)
-   ---------------------------------------------------------------- */
 :root {
-  /* --- Brand Palette --- */
-  --brand-green:        #22c55e;   /* primary CTA green */
-  --brand-green-light:  #4ade80;   /* hover / highlight */
-  --brand-green-mid:    #16a34a;   /* secondary green */
-  --brand-green-deep:   #14532d;   /* deep forest */
-  --brand-gold:         #d4af37;   /* premium gold accent */
-  --brand-gold-light:   #f0d060;   /* gold highlight */
-  --brand-teal:         #2dd4bf;   /* water / clean energy */
-  --brand-earth:        #a16207;   /* earth / agriculture warm */
+  /* --- Base canvas --- */
+  --background:         #07080d;
+  --background-alt:     #0b0c13;
+  --surface:            #0f1018;
+  --surface-raised:     #14151f;
+  --surface-overlay:    #1a1b27;
+  --foreground:         #f1f2f8;
+  --foreground-muted:   #8b8fa8;
+  --foreground-subtle:  #50536a;
 
-  /* --- Surface Palette --- */
-  --background:         #050f07;   /* near-black green canvas */
-  --background-alt:     #07140a;   /* slightly lighter canvas */
-  --surface:            #0a1a0d;   /* card surface */
-  --surface-raised:     #0d2010;   /* elevated card */
-  --surface-overlay:    #0f2413;   /* modal / dropdown */
-  --foreground:         #f0fdf4;   /* primary text */
-  --foreground-muted:   #a7f3d0;   /* secondary text */
-  --foreground-subtle:  #6ee7b7;   /* tertiary / placeholder */
+  /* --- Semantic tokens --- */
+  --card:               #0f1018;
+  --card-foreground:    #f1f2f8;
+  --popover:            #14151f;
+  --popover-foreground: #f1f2f8;
 
-  /* --- Semantic Tokens (shadcn compat) --- */
-  --card:               #0a1a0d;
-  --card-foreground:    #f0fdf4;
-  --popover:            #0d2010;
-  --popover-foreground: #f0fdf4;
+  --primary:            #00d46a;
+  --primary-foreground: #07080d;
 
-  --primary:            #22c55e;
-  --primary-foreground: #050f07;
+  --secondary:          #14151f;
+  --secondary-foreground: #8b8fa8;
 
-  --secondary:          #0d2010;
-  --secondary-foreground: #a7f3d0;
+  --muted:              #0f1018;
+  --muted-foreground:   #60637a;
 
-  --muted:              #0a1a0d;
-  --muted-foreground:   #6ee7b7;
+  --accent:             #00d46a;
+  --accent-foreground:  #07080d;
 
-  --accent:             #d4af37;
-  --accent-foreground:  #050f07;
+  --destructive:        #f04f4f;
+  --destructive-foreground: #f1f2f8;
 
-  --destructive:        #f87171;
-  --destructive-foreground: #050f07;
+  --border:             rgba(255,255,255,0.07);
+  --border-strong:      rgba(255,255,255,0.13);
+  --input:              #14151f;
+  --ring:               #00d46a;
 
-  --border:             rgba(34,197,94,0.12);
-  --border-strong:      rgba(34,197,94,0.25);
-  --input:              #0d2010;
-  --ring:               #22c55e;
+  /* --- Brand palette --- */
+  --brand-green:        #00d46a;
+  --brand-green-light:  #00ff80;
+  --brand-green-mid:    #00a852;
+  --brand-green-deep:   #00542a;
+  --brand-gold:         #f0c040;
+  --brand-gold-light:   #ffd966;
+  --brand-teal:         #00c8b0;
+  --brand-earth:        #9a6830;
 
-  /* --- Glassmorphism --- */
-  --glass-bg:           rgba(10, 26, 13, 0.60);
-  --glass-bg-light:     rgba(10, 26, 13, 0.40);
-  --glass-border:       rgba(34, 197, 94, 0.14);
-  --glass-border-gold:  rgba(212, 175, 55, 0.20);
-  --glass-blur:         14px;
+  /* --- Glass --- */
+  --glass-bg:           rgba(15,16,24,0.75);
+  --glass-bg-light:     rgba(15,16,24,0.50);
+  --glass-border:       rgba(255,255,255,0.08);
+  --glass-border-gold:  rgba(240,192,64,0.18);
+  --glass-blur:         16px;
 
-  /* --- Glow --- */
-  --glow-sm:   0 0 20px rgba(34,197,94,0.12);
-  --glow-md:   0 0 40px rgba(34,197,94,0.18);
-  --glow-lg:   0 0 80px rgba(34,197,94,0.22);
-  --glow-gold: 0 0 40px rgba(212,175,55,0.18);
-  --glow-card: 0 8px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(34,197,94,0.08);
+  /* --- Glows --- */
+  --glow-sm:   0 0 20px rgba(0,212,106,0.15);
+  --glow-md:   0 0 40px rgba(0,212,106,0.22);
+  --glow-lg:   0 0 80px rgba(0,212,106,0.28);
+  --glow-gold: 0 0 40px rgba(240,192,64,0.18);
+  --glow-card: 0 8px 32px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.06);
 
   /* --- Gradients --- */
-  --gradient-brand:  linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  --gradient-gold:   linear-gradient(135deg, #d4af37 0%, #f0d060 50%, #d4af37 100%);
-  --gradient-dark:   linear-gradient(180deg, #050f07 0%, #07140a 100%);
-  --gradient-hero:   radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34,197,94,0.12) 0%, transparent 70%);
-  --gradient-mesh:   radial-gradient(at 40% 20%, rgba(34,197,94,0.08) 0px, transparent 50%),
-                     radial-gradient(at 80% 0%, rgba(20,83,45,0.12) 0px, transparent 50%),
-                     radial-gradient(at 0% 50%, rgba(34,197,94,0.06) 0px, transparent 50%),
-                     radial-gradient(at 60% 100%, rgba(212,175,55,0.06) 0px, transparent 50%);
+  --gradient-primary: linear-gradient(135deg, #00d46a 0%, #00c8b0 100%);
+  --gradient-gold:    linear-gradient(135deg, #f0c040 0%, #ffd966 50%, #f0c040 100%);
+  --gradient-hero:    radial-gradient(ellipse 80% 55% at 50% -5%, rgba(0,212,106,0.14) 0%, transparent 68%);
+  --gradient-glow-l:  radial-gradient(ellipse 60% 80% at 0% 50%, rgba(0,212,106,0.08) 0%, transparent 60%);
+  --gradient-glow-r:  radial-gradient(ellipse 50% 60% at 100% 50%, rgba(0,200,176,0.07) 0%, transparent 60%);
+  --gradient-cta:     linear-gradient(135deg, #003d20 0%, #005a30 40%, #003820 100%);
 
   /* --- Radius --- */
-  --radius:    0.625rem;   /* 10px */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
-  --radius-2xl:1.75rem;
-  --radius-full: 9999px;
+  --radius:     0.75rem;
+  --radius-sm:  0.375rem;
+  --radius-md:  0.75rem;
+  --radius-lg:  1rem;
+  --radius-xl:  1.25rem;
+  --radius-2xl: 1.75rem;
+  --radius-full:9999px;
 
-  /* --- Spacing scale --- */
-  --space-section: 6rem;      /* 96px – section padding */
-  --space-section-lg: 9rem;   /* 144px */
+  /* --- Spacing --- */
+  --space-section:    5.5rem;
+  --space-section-lg: 8rem;
 
   /* --- Typography --- */
-  --font-display: var(--font-playfair), "Georgia", serif;
+  --font-display: var(--font-geist-sans), "Inter", system-ui, sans-serif;
   --font-sans:    var(--font-geist-sans), "Inter", system-ui, sans-serif;
   --font-mono:    var(--font-geist-mono), "Courier New", monospace;
 
-  /* --- Z-index scale --- */
+  /* --- Z-index --- */
   --z-base:    0;
   --z-raised:  10;
   --z-sticky:  100;
@@ -107,57 +102,56 @@
   --z-toast:   400;
 }
 
-/* ----------------------------------------------------------------
-   LIGHT THEME  (when .dark is NOT applied)
-   ---------------------------------------------------------------- */
+/* Light theme */
 html:not(.dark) {
-  --background:         #f5fdf6;
-  --background-alt:     #ecfdf5;
+  --background:         #f8f9fc;
+  --background-alt:     #f0f2f8;
   --surface:            #ffffff;
-  --surface-raised:     #f0fdf4;
+  --surface-raised:     #f4f5fa;
   --surface-overlay:    #ffffff;
-  --foreground:         #052e16;
-  --foreground-muted:   #166534;
-  --foreground-subtle:  #4d7c0f;
+  --foreground:         #0a0b14;
+  --foreground-muted:   #4a4e6a;
+  --foreground-subtle:  #9094b0;
 
   --card:               #ffffff;
-  --card-foreground:    #052e16;
+  --card-foreground:    #0a0b14;
   --popover:            #ffffff;
-  --popover-foreground: #052e16;
+  --popover-foreground: #0a0b14;
 
-  --primary:            #16a34a;
+  --primary:            #00a852;
   --primary-foreground: #ffffff;
 
-  --secondary:          #dcfce7;
-  --secondary-foreground: #052e16;
+  --secondary:          #eef0f8;
+  --secondary-foreground: #0a0b14;
 
-  --muted:              #f0fdf4;
-  --muted-foreground:   #4d7c0f;
+  --muted:              #f0f2f8;
+  --muted-foreground:   #6a6e88;
 
-  --accent:             #d4af37;
-  --accent-foreground:  #052e16;
+  --accent:             #00a852;
+  --accent-foreground:  #ffffff;
 
-  --destructive:        #dc2626;
+  --destructive:        #d93636;
   --destructive-foreground: #ffffff;
 
-  --border:             rgba(22,163,74,0.15);
-  --border-strong:      rgba(22,163,74,0.30);
-  --input:              #dcfce7;
-  --ring:               #16a34a;
+  --border:             rgba(0,0,0,0.08);
+  --border-strong:      rgba(0,0,0,0.15);
+  --input:              #f0f2f8;
+  --ring:               #00a852;
 
-  --glass-bg:           rgba(255,255,255,0.70);
-  --glass-border:       rgba(22,163,74,0.18);
-  --glow-sm:   0 0 20px rgba(22,163,74,0.08);
-  --glow-md:   0 0 40px rgba(22,163,74,0.12);
-  --glow-lg:   0 0 80px rgba(22,163,74,0.15);
-  --glow-card: 0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px rgba(22,163,74,0.10);
+  --glass-bg:           rgba(255,255,255,0.80);
+  --glass-border:       rgba(0,0,0,0.07);
+  --glow-sm:            0 0 20px rgba(0,168,82,0.10);
+  --glow-md:            0 0 40px rgba(0,168,82,0.16);
+  --glow-lg:            0 0 80px rgba(0,168,82,0.20);
+  --glow-card:          0 4px 24px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.05);
+  --gradient-hero:      radial-gradient(ellipse 80% 55% at 50% -5%, rgba(0,168,82,0.08) 0%, transparent 68%);
+  --gradient-cta:       linear-gradient(135deg, #003820 0%, #005a30 50%, #003820 100%);
 }
 
 /* ----------------------------------------------------------------
-   TAILWIND v4  @theme mapping
+   TAILWIND v4 @theme
    ---------------------------------------------------------------- */
 @theme inline {
-  /* Surfaces */
   --color-background:           var(--background);
   --color-background-alt:       var(--background-alt);
   --color-surface:              var(--surface);
@@ -166,7 +160,6 @@ html:not(.dark) {
   --color-foreground-muted:     var(--foreground-muted);
   --color-foreground-subtle:    var(--foreground-subtle);
 
-  /* Semantic */
   --color-card:                 var(--card);
   --color-card-foreground:      var(--card-foreground);
   --color-popover:              var(--popover);
@@ -186,17 +179,15 @@ html:not(.dark) {
   --color-input:                var(--input);
   --color-ring:                 var(--ring);
 
-  /* Brand */
-  --color-brand:                var(--brand-green);
-  --color-brand-light:          var(--brand-green-light);
-  --color-brand-mid:            var(--brand-green-mid);
-  --color-brand-deep:           var(--brand-green-deep);
-  --color-gold:                 var(--brand-gold);
-  --color-gold-light:           var(--brand-gold-light);
-  --color-teal:                 var(--brand-teal);
-  --color-earth:                var(--brand-earth);
+  --color-brand:       var(--brand-green);
+  --color-brand-light: var(--brand-green-light);
+  --color-brand-mid:   var(--brand-green-mid);
+  --color-brand-deep:  var(--brand-green-deep);
+  --color-gold:        var(--brand-gold);
+  --color-gold-light:  var(--brand-gold-light);
+  --color-teal:        var(--brand-teal);
+  --color-earth:       var(--brand-earth);
 
-  /* Radius */
   --radius-sm:   var(--radius-sm);
   --radius-md:   var(--radius-md);
   --radius-lg:   var(--radius-lg);
@@ -204,21 +195,19 @@ html:not(.dark) {
   --radius-2xl:  var(--radius-2xl);
   --radius-full: var(--radius-full);
 
-  /* Fonts */
   --font-display: var(--font-display);
   --font-sans:    var(--font-sans);
   --font-mono:    var(--font-mono);
 
-  /* Custom text sizes */
   --text-display-2xl: 5rem;
   --text-display-xl:  4rem;
   --text-display-lg:  3.25rem;
   --text-display-md:  2.5rem;
-  --text-hero: 6.5rem;
+  --text-hero:        6.5rem;
 }
 
 /* ----------------------------------------------------------------
-   BASE RESET & GLOBALS
+   BASE
    ---------------------------------------------------------------- */
 *, *::before, *::after {
   border-color: var(--border);
@@ -241,63 +230,63 @@ body {
 }
 
 /* ----------------------------------------------------------------
-   TYPOGRAPHY SYSTEM
+   TYPOGRAPHY
    ---------------------------------------------------------------- */
 .font-display { font-family: var(--font-display); }
 
 .text-display-2xl {
-  font-size: clamp(3rem, 6vw + 1rem, 5rem);
-  line-height: 1.05;
+  font-size: clamp(2.8rem, 5.5vw + 0.75rem, 5rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.text-display-xl {
+  font-size: clamp(2.2rem, 4vw + 0.75rem, 4rem);
+  line-height: 1.07;
+  letter-spacing: -0.035em;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.text-display-lg {
+  font-size: clamp(1.875rem, 3vw + 0.5rem, 3.25rem);
+  line-height: 1.1;
   letter-spacing: -0.03em;
   font-family: var(--font-display);
   font-weight: 700;
 }
 
-.text-display-xl {
-  font-size: clamp(2.5rem, 4vw + 1rem, 4rem);
-  line-height: 1.08;
+.text-display-md {
+  font-size: clamp(1.5rem, 2vw + 0.35rem, 2.5rem);
+  line-height: 1.18;
   letter-spacing: -0.025em;
   font-family: var(--font-display);
   font-weight: 700;
 }
 
-.text-display-lg {
-  font-size: clamp(2rem, 3vw + 0.75rem, 3.25rem);
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  font-family: var(--font-display);
-  font-weight: 600;
-}
-
-.text-display-md {
-  font-size: clamp(1.75rem, 2vw + 0.5rem, 2.5rem);
-  line-height: 1.2;
-  letter-spacing: -0.018em;
-  font-family: var(--font-display);
-  font-weight: 600;
-}
-
 .text-overline {
-  font-size: 0.6875rem;     /* 11px */
+  font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .text-label {
-  font-size: 0.8125rem;     /* 13px */
+  font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 .text-balance { text-wrap: balance; }
 .text-pretty  { text-wrap: pretty; }
 
 /* ----------------------------------------------------------------
-   COLOUR UTILITIES
+   GRADIENT TEXT
    ---------------------------------------------------------------- */
 .text-gradient {
-  background: linear-gradient(135deg, var(--brand-green-light) 0%, var(--brand-green) 60%, var(--brand-gold) 100%);
+  background: linear-gradient(135deg, #00ff80 0%, #00d46a 60%, #00c8b0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -311,14 +300,14 @@ body {
 }
 
 .text-gradient-green {
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  background: linear-gradient(135deg, #00ff80 0%, #00d46a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* ----------------------------------------------------------------
-   GLASSMORPHISM UTILITIES
+   GLASS
    ---------------------------------------------------------------- */
 .glass {
   background: var(--glass-bg);
@@ -329,20 +318,20 @@ body {
 
 .glass-light {
   background: var(--glass-bg-light);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
 }
 
 .glass-gold {
-  background: rgba(212, 175, 55, 0.08);
+  background: rgba(240,192,64,0.06);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border-gold);
 }
 
 /* ----------------------------------------------------------------
-   GLOW UTILITIES
+   GLOW
    ---------------------------------------------------------------- */
 .glow-sm   { box-shadow: var(--glow-sm); }
 .glow-md   { box-shadow: var(--glow-md); }
@@ -351,40 +340,49 @@ body {
 .glow-card { box-shadow: var(--glow-card); }
 
 /* ----------------------------------------------------------------
-   BACKGROUND UTILITIES
+   CARD WITH GRADIENT BORDER
    ---------------------------------------------------------------- */
-.bg-mesh { background-image: var(--gradient-mesh); }
+.card-glow {
+  background: var(--surface);
+  border: 1px solid rgba(0,212,106,0.15);
+  box-shadow: 0 0 0 1px rgba(0,212,106,0.05), inset 0 1px 0 rgba(255,255,255,0.04);
+}
 
+.card-glow:hover {
+  border-color: rgba(0,212,106,0.30);
+  box-shadow: 0 0 24px rgba(0,212,106,0.12), 0 0 0 1px rgba(0,212,106,0.10);
+}
+
+/* ----------------------------------------------------------------
+   BACKGROUNDS
+   ---------------------------------------------------------------- */
 .bg-hero-gradient {
-  background:
-    var(--gradient-hero),
-    var(--gradient-mesh),
-    var(--background);
+  background: var(--gradient-hero), var(--gradient-glow-l), var(--gradient-glow-r), var(--background);
+}
+
+.bg-mesh {
+  background: var(--gradient-glow-l), var(--gradient-glow-r), var(--background);
 }
 
 .bg-section-dark {
   background: linear-gradient(180deg, var(--surface) 0%, var(--background) 100%);
 }
 
-/* Subtle noise texture overlay */
-.noise-overlay::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  z-index: 0;
+/* Dot grid pattern */
+.bg-dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
+/* Noise overlay — disabled, using dot grid instead */
+.noise-overlay::after { display: none; }
+
 /* ----------------------------------------------------------------
-   BORDER UTILITIES
+   BORDER GRADIENT
    ---------------------------------------------------------------- */
 .border-glass  { border-color: var(--glass-border); }
 .border-strong { border-color: var(--border-strong); }
 
-/* Animated gradient border */
 .border-gradient {
   position: relative;
 }
@@ -394,7 +392,7 @@ body {
   inset: 0;
   padding: 1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgba(34,197,94,0.4), rgba(212,175,55,0.2), rgba(34,197,94,0.1));
+  background: linear-gradient(135deg, rgba(0,212,106,0.40), rgba(0,200,176,0.15), rgba(0,212,106,0.08));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -403,49 +401,46 @@ body {
 }
 
 /* ----------------------------------------------------------------
-   INTERACTION UTILITIES
+   INTERACTIONS
    ---------------------------------------------------------------- */
 .hover-lift {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .hover-lift:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
   box-shadow: var(--glow-md);
 }
 
 .hover-glow {
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
-.hover-glow:hover {
-  box-shadow: var(--glow-lg);
-}
+.hover-glow:hover { box-shadow: var(--glow-md); }
 
 .hover-scale {
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.hover-scale:hover { transform: scale(1.03); }
+.hover-scale:hover { transform: scale(1.025); }
 
 /* ----------------------------------------------------------------
-   LAYOUT UTILITIES
+   LAYOUT
    ---------------------------------------------------------------- */
 .section-padding    { padding-block: var(--space-section); }
 .section-padding-lg { padding-block: var(--space-section-lg); }
-
-.container-narrow  { max-width: 48rem; }   /* 768px */
-.container-reading { max-width: 68ch; }
+.container-narrow   { max-width: 48rem; }
+.container-reading  { max-width: 68ch; }
 
 /* ----------------------------------------------------------------
-   ANIMATION UTILITIES  (complement tw-animate-css)
+   ANIMATIONS
    ---------------------------------------------------------------- */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-12px); }
+  50%       { transform: translateY(-10px); }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(34,197,94,0.15); }
-  50%       { box-shadow: 0 0 50px rgba(34,197,94,0.35); }
+  0%, 100% { box-shadow: 0 0 20px rgba(0,212,106,0.15); }
+  50%       { box-shadow: 0 0 50px rgba(0,212,106,0.35); }
 }
 
 @keyframes shimmer {
@@ -458,50 +453,36 @@ body {
   to   { transform: rotate(360deg); }
 }
 
-@keyframes grain {
-  0%,100% { transform: translate(0,0); }
-  10%      { transform: translate(-2%,-2%); }
-  20%      { transform: translate(2%,2%); }
-  30%      { transform: translate(-1%,1%); }
-  40%      { transform: translate(1%,-1%); }
-  50%      { transform: translate(-2%,0%); }
-  60%      { transform: translate(2%,1%); }
-  70%      { transform: translate(0%,-2%); }
-  80%      { transform: translate(-1%,2%); }
-  90%      { transform: translate(1%,0%); }
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.animate-float       { animation: float 4s ease-in-out infinite; }
+.animate-float       { animation: float 5s ease-in-out infinite; }
 .animate-pulse-glow  { animation: pulse-glow 3s ease-in-out infinite; }
-.animate-shimmer     { animation: shimmer 2.5s linear infinite; }
-.animate-spin-slow   { animation: spin-slow 12s linear infinite; }
-.animate-grain       { animation: grain 8s steps(1) infinite; }
+.animate-shimmer     { animation: shimmer 2s linear infinite; }
+.animate-spin-slow   { animation: spin-slow 14s linear infinite; }
+.animate-fade-up     { animation: fade-up 0.6s ease forwards; }
 
-/* Shimmer loading skeleton */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--surface) 25%,
-    var(--surface-raised) 50%,
-    var(--surface) 75%
-  );
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-raised) 50%, var(--surface) 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  animation: shimmer 1.4s infinite;
 }
 
 /* ----------------------------------------------------------------
    SCROLLBAR
    ---------------------------------------------------------------- */
-::-webkit-scrollbar              { width: 5px; height: 5px; }
-::-webkit-scrollbar-track        { background: var(--background); }
-::-webkit-scrollbar-thumb        { background: var(--brand-green-deep); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover  { background: var(--brand-green-mid); }
+::-webkit-scrollbar             { width: 4px; height: 4px; }
+::-webkit-scrollbar-track       { background: transparent; }
+::-webkit-scrollbar-thumb       { background: rgba(0,212,106,0.20); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,212,106,0.40); }
 
 /* ----------------------------------------------------------------
    SELECTION
    ---------------------------------------------------------------- */
 ::selection {
-  background: rgba(34,197,94,0.25);
+  background: rgba(0,212,106,0.22);
   color: var(--foreground);
 }
 
@@ -509,21 +490,21 @@ body {
    FOCUS
    ---------------------------------------------------------------- */
 :focus-visible {
-  outline: 2px solid var(--ring);
+  outline: 1px solid var(--ring);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
 /* ----------------------------------------------------------------
-   PROSE OVERRIDES  (for blog/article content)
+   PROSE
    ---------------------------------------------------------------- */
 .prose-brand {
-  --tw-prose-body:        var(--foreground-muted);
-  --tw-prose-headings:    var(--foreground);
-  --tw-prose-links:       var(--brand-green);
-  --tw-prose-bold:        var(--foreground);
-  --tw-prose-code:        var(--brand-green-light);
-  --tw-prose-pre-bg:      var(--surface);
-  --tw-prose-th-borders:  var(--border-strong);
-  --tw-prose-td-borders:  var(--border);
+  --tw-prose-body:       var(--foreground-muted);
+  --tw-prose-headings:   var(--foreground);
+  --tw-prose-links:      var(--brand-green);
+  --tw-prose-bold:       var(--foreground);
+  --tw-prose-code:       var(--brand-green-light);
+  --tw-prose-pre-bg:     var(--surface);
+  --tw-prose-th-borders: var(--border-strong);
+  --tw-prose-td-borders: var(--border);
 }
