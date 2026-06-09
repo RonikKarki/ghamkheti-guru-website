@@ -13,12 +13,13 @@ import { Select } from "@/components/ui/select";
 import { Tabs } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/lib/toast";
+import { FileUpload } from "@/components/admin/FileUpload";
 import type { Column } from "@/components/admin/DataTable";
 
 interface Article {
   _id: string; slug: string; title: string; excerpt: string; content: string;
   category: string; status: string; author: string; isFeatured: boolean;
-  views: number; publishedAt?: string; createdAt: string;
+  coverImage?: string; views: number; publishedAt?: string; createdAt: string;
 }
 
 const STATUS_TABS = [
@@ -30,7 +31,7 @@ const STATUS_TABS = [
 
 const BLANK = {
   title: "", excerpt: "", content: "", category: "corporate",
-  status: "draft", author: "Ghamkheti Guru", isFeatured: false,
+  status: "draft", author: "Ghamkheti Guru", isFeatured: false, coverImage: "",
 };
 
 export default function NewsClient({ initialData, initialOpen = false }: { initialData: Article[]; initialOpen?: boolean }) {
@@ -49,7 +50,7 @@ export default function NewsClient({ initialData, initialOpen = false }: { initi
   function openEdit(a: Article) {
     setEditing(a);
     setForm({ title: a.title, excerpt: a.excerpt, content: a.content,
-      category: a.category, status: a.status, author: a.author, isFeatured: a.isFeatured });
+      category: a.category, status: a.status, author: a.author, isFeatured: a.isFeatured, coverImage: a.coverImage ?? "" });
     setModalOpen(true);
   }
 
@@ -184,6 +185,12 @@ export default function NewsClient({ initialData, initialOpen = false }: { initi
             <label className="block text-xs font-medium text-foreground mb-1.5">Content *</label>
             <Textarea rows={8} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} placeholder="Full article body (Markdown supported)..." className="font-mono text-xs" />
           </div>
+          <FileUpload
+            kind="image"
+            label="Cover Image"
+            value={form.coverImage}
+            onChange={(url) => setForm({ ...form, coverImage: url })}
+          />
           <Switch checked={form.isFeatured} onChange={(v) => setForm({ ...form, isFeatured: v })} label="Feature this article on the media page" />
         </div>
       </Dialog>

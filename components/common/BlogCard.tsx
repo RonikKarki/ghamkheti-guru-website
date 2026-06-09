@@ -14,7 +14,7 @@ interface BlogCardProps {
   date: string;
   readTime: string;
   href?: string;
-  image?: string;
+  image?: string | null;
   className?: string;
   index?: number;
   featured?: boolean;
@@ -62,22 +62,28 @@ export function BlogCard({
         "relative overflow-hidden shrink-0",
         featured ? "md:w-2/5 h-56 md:h-auto" : "h-48"
       )}>
-        <div className="absolute inset-0 bg-linear-to-br from-brand-deep via-surface to-background" />
-        <div className="absolute top-0 right-0 h-36 w-36 rounded-full bg-primary/8 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-28 w-28 rounded-full bg-brand-gold/6 blur-2xl" />
-
+        {image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover" />
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-linear-to-br from-brand-deep via-surface to-background" />
+            <div className="absolute top-0 right-0 h-36 w-36 rounded-full bg-primary/8 blur-3xl" />
+            <div className="absolute bottom-0 left-0 h-28 w-28 rounded-full bg-brand-gold/6 blur-2xl" />
+            <div className="absolute inset-0 flex items-center justify-center opacity-10">
+              <svg viewBox="0 0 100 100" className="h-24 w-24 text-primary fill-current">
+                <path d="M10 20h80M10 40h60M10 60h70M10 80h50" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
+              </svg>
+            </div>
+          </>
+        )}
+        {image && <div className="absolute inset-0 bg-black/30" />}
         <span className={cn(
           "absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider",
           catClass
         )}>
           {category}
         </span>
-
-        <div className="absolute inset-0 flex items-center justify-center opacity-10">
-          <svg viewBox="0 0 100 100" className="h-24 w-24 text-primary fill-current">
-            <path d="M10 20h80M10 40h60M10 60h70M10 80h50" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
-          </svg>
-        </div>
       </div>
 
       {/* Content */}

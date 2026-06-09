@@ -10,7 +10,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import News from "@/models/News";
 import { getPageBanner } from "@/lib/get-page-banner";
 
-export const revalidate = 1800;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Insights & Blog",
@@ -45,7 +45,7 @@ export default async function BlogPage() {
 
   const articles = (JSON.parse(JSON.stringify(raw)) as Array<{
     _id: string; slug: string; title: string; excerpt: string; content: string;
-    category: string; author: string; publishedAt?: string; isFeatured: boolean;
+    category: string; author: string; publishedAt?: string; isFeatured: boolean; coverImage?: string;
   }>).map((n) => ({
     _id:      n._id,
     slug:     n.slug,
@@ -55,7 +55,8 @@ export default async function BlogPage() {
     author:   n.author,
     date:     n.publishedAt ? fmtDate(n.publishedAt) : "—",
     readTime: estimateReadTime(n.content),
-    href:     `#`,
+    href:     `/blog/${n.slug}`,
+    image:    n.coverImage,
     featured: n.isFeatured,
   }));
 
