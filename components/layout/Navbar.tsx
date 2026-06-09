@@ -12,12 +12,30 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import type { NavItem } from "@/types";
 
-export function Navbar() {
+interface NavbarProps {
+  projectLinks?: Array<{ label: string; href: string }>;
+}
+
+export function Navbar({ projectLinks }: NavbarProps) {
   const [isOpen, setIsOpen]           = useState(false);
   const [scrolled, setScrolled]       = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname                       = usePathname();
   const dropdownRef                    = useRef<HTMLDivElement>(null);
+
+  // Build nav items, replacing Projects children with live DB links when available
+  const resolvedNavItems = navItems.map((item) => {
+    if (item.label === "Projects" && projectLinks && projectLinks.length > 0) {
+      return {
+        ...item,
+        children: [
+          { label: "All Projects", href: "/projects" },
+          ...projectLinks,
+        ],
+      };
+    }
+    return item;
+  });
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 12);
@@ -82,7 +100,7 @@ export function Navbar() {
 
             {/* Desktop nav */}
             <nav className="hidden lg:flex items-center gap-0.5" ref={dropdownRef}>
-              {navItems.map((item) => (
+              {resolvedNavItems.map((item) => (
                 <NavItemLink
                   key={item.href}
                   item={item}
@@ -131,7 +149,7 @@ export function Navbar() {
             className="lg:hidden overflow-hidden bg-surface/98 backdrop-blur-xl border-b border-border"
           >
             <div className="px-4 py-5 space-y-0.5">
-              {navItems.map((item) => (
+              {resolvedNavItems.map((item) => (
                 <MobileNavItem key={item.href} item={item} pathname={pathname} />
               ))}
               <div className="pt-4 border-t border-border mt-4">

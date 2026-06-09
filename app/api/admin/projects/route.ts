@@ -19,10 +19,11 @@ export const POST = withApiHandler(async (req: NextRequest) => {
   const body = await req.json();
 
   const {
-    name, category, status, description,
+    name, category, status, isActive, description, objectives,
+    bannerImage, logoImage,
     location, capacity, investmentValue,
     codDate, constructionStart,
-    ppa, highlights, images,
+    ppa, highlights, images, documents, timeline,
     isFeatured, order,
     seoTitle, seoDescription,
   } = body;
@@ -41,14 +42,20 @@ export const POST = withApiHandler(async (req: NextRequest) => {
     name:        name.trim(),
     category:    category as ProjectCategory,
     status:      (status as ProjectStatus) ?? "under_development",
+    isActive:    isActive ?? true,
     description: description.trim(),
     location,
     isFeatured:  isFeatured ?? false,
     order:       order ?? 0,
     highlights:  Array.isArray(highlights) ? highlights : [],
     images:      Array.isArray(images)     ? images     : [],
+    documents:   Array.isArray(documents)  ? documents  : [],
+    timeline:    Array.isArray(timeline)   ? timeline   : [],
   };
 
+  if (objectives)         doc.objectives     = objectives;
+  if (bannerImage)        doc.bannerImage    = bannerImage;
+  if (logoImage)          doc.logoImage      = logoImage;
   if (capacity?.value)    doc.capacity       = capacity;
   if (investmentValue)    doc.investmentValue = investmentValue;
   if (codDate)            doc.codDate        = new Date(codDate);

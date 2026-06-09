@@ -6,7 +6,7 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Project from "@/models/Project";
 import { getPageBanner } from "@/lib/get-page-banner";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Our Projects",
@@ -19,26 +19,33 @@ export const metadata: Metadata = {
 export default async function ProjectsPage() {
   await connectToDatabase();
   const [raw, pageBanner] = await Promise.all([
-    Project.find().sort({ order: 1, createdAt: -1 }).lean(),
+    Project.find({ isActive: true }).sort({ order: 1, createdAt: -1 }).lean(),
     getPageBanner("projects"),
   ]);
   const projects: PublicProject[] = (JSON.parse(JSON.stringify(raw)) as Array<{
-    _id: string; name: string; category: string; status: string; description: string;
+    _id: string; name: string; slug: string; category: string; status: string; description: string;
     location: { district: string; province?: string; river?: string };
     capacity?: { value: number; unit: string };
     highlights: Array<{ label: string; value: string }>;
+    images: Array<{ url: string; isCover: boolean }>;
+    bannerImage?: string;
     order: number;
-  }>).map((p) => ({
-    _id:        p._id,
-    name:       p.name,
-    category:   p.category,
-    status:     p.status,
-    description: p.description,
-    location:   p.location,
-    capacity:   p.capacity,
-    highlights: p.highlights,
-    order:      p.order,
-  }));
+  }>).map((p) => {
+    const coverImage = p.images?.find((i) => i.isCover)?.url ?? p.images?.[0]?.url;
+    return {
+      _id:        p._id,
+      name:       p.name,
+      slug:       p.slug,
+      category:   p.category,
+      status:     p.status,
+      description: p.description,
+      location:   p.location,
+      capacity:   p.capacity,
+      highlights: p.highlights,
+      coverImage: p.bannerImage ?? coverImage,
+      order:      p.order,
+    };
+  });
 
   return (
     <>

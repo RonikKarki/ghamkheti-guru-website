@@ -11,12 +11,18 @@ export interface AdminProject {
   name:             string;
   category:         string;
   status:           string;
+  isActive:         boolean;
   description:      string;
+  objectives?:      string;
+  bannerImage?:     string;
+  logoImage?:       string;
   isFeatured:       boolean;
   location:         { district: string; province: string; river?: string; elevation?: number };
   capacity?:        { value: number; unit: string };
   highlights:       Array<{ label: string; value: string }>;
   images:           Array<{ url: string; alt: string; isCover: boolean }>;
+  documents:        Array<{ url: string; name: string; type: string; size?: number }>;
+  timeline:         Array<{ title: string; date?: string; completed: boolean; description?: string }>;
   codDate?:         string;
   constructionStart?: string;
   investmentValue?: number;

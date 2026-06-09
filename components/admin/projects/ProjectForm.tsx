@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, Star, AlertCircle } from "lucide-react";
+import { Plus, Trash2, Star, AlertCircle, CheckCircle, Circle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { cn } from "@/lib/utils";
 
 /* ── Types ──────────────────────────────────────────────────────── */
@@ -14,7 +15,11 @@ export interface ProjectFormData {
   name:             string;
   category:         string;
   status:           string;
+  isActive:         boolean;
   description:      string;
+  objectives:       string;
+  bannerImage:      string;
+  logoImage:        string;
   isFeatured:       boolean;
   location:         { district: string; province: string; river: string; elevation: string };
   capacity:         { value: string; unit: string };
@@ -24,6 +29,8 @@ export interface ProjectFormData {
   ppa:              { authority: string; term: string; tariff: string };
   highlights:       Array<{ label: string; value: string }>;
   images:           Array<{ url: string; alt: string; isCover: boolean }>;
+  documents:        Array<{ url: string; name: string; type: string; size?: number }>;
+  timeline:         Array<{ title: string; date: string; completed: boolean; description: string }>;
   order:            string;
   seoTitle:         string;
   seoDescription:   string;
@@ -40,12 +47,14 @@ export interface ProjectFormErrors {
 
 export const BLANK_FORM: ProjectFormData = {
   name: "", category: "hydropower", status: "under_development",
-  description: "", isFeatured: false,
+  isActive: true, description: "", objectives: "",
+  bannerImage: "", logoImage: "",
+  isFeatured: false,
   location: { district: "", province: "", river: "", elevation: "" },
   capacity: { value: "", unit: "MW" },
   investmentValue: "", codDate: "", constructionStart: "",
   ppa: { authority: "", term: "", tariff: "" },
-  highlights: [], images: [],
+  highlights: [], images: [], documents: [], timeline: [],
   order: "0", seoTitle: "", seoDescription: "",
 };
 
@@ -54,25 +63,36 @@ export function formDataToPayload(d: ProjectFormData) {
     name:        d.name.trim(),
     category:    d.category,
     status:      d.status,
+    isActive:    d.isActive,
     description: d.description.trim(),
+    ...(d.objectives   ? { objectives:   d.objectives.trim()   } : {}),
+    ...(d.bannerImage  ? { bannerImage:  d.bannerImage         } : {}),
+    ...(d.logoImage    ? { logoImage:    d.logoImage           } : {}),
     isFeatured:  d.isFeatured,
     location: {
       district:  d.location.district.trim(),
       province:  d.location.province.trim(),
-      ...(d.location.river     ? { river:     d.location.river.trim()         } : {}),
-      ...(d.location.elevation ? { elevation: Number(d.location.elevation)    } : {}),
+      ...(d.location.river     ? { river:     d.location.river.trim()     } : {}),
+      ...(d.location.elevation ? { elevation: Number(d.location.elevation) } : {}),
     },
-    ...(d.capacity.value  ? { capacity:       { value: Number(d.capacity.value), unit: d.capacity.unit } } : {}),
-    ...(d.investmentValue ? { investmentValue: Number(d.investmentValue)       } : {}),
-    ...(d.codDate         ? { codDate:         d.codDate                       } : {}),
-    ...(d.constructionStart ? { constructionStart: d.constructionStart         } : {}),
-    ...(d.ppa.authority   ? { ppa: {
+    ...(d.capacity.value ? { capacity: { value: Number(d.capacity.value), unit: d.capacity.unit } } : {}),
+    ...(d.investmentValue ? { investmentValue: Number(d.investmentValue) } : {}),
+    ...(d.codDate         ? { codDate:         d.codDate         } : {}),
+    ...(d.constructionStart ? { constructionStart: d.constructionStart } : {}),
+    ...(d.ppa.authority ? { ppa: {
       authority: d.ppa.authority.trim(),
       ...(d.ppa.term   ? { term:   Number(d.ppa.term)   } : {}),
       ...(d.ppa.tariff ? { tariff: Number(d.ppa.tariff) } : {}),
     }} : {}),
     highlights: d.highlights.filter((h) => h.label && h.value),
     images:     d.images.filter((i) => i.url),
+    documents:  d.documents.filter((doc) => doc.url && doc.name),
+    timeline:   d.timeline.filter((m) => m.title).map((m) => ({
+      title:       m.title.trim(),
+      completed:   m.completed,
+      ...(m.date        ? { date:        m.date        } : {}),
+      ...(m.description ? { description: m.description.trim() } : {}),
+    })),
     order:      Number(d.order) || 0,
     ...(d.seoTitle       ? { seoTitle:       d.seoTitle.trim()       } : {}),
     ...(d.seoDescription ? { seoDescription: d.seoDescription.trim() } : {}),
@@ -111,7 +131,9 @@ const TABS = [
   { id: "basics",    label: "Basics",     errorKeys: ["name", "category", "status", "description"] },
   { id: "location",  label: "Location",   errorKeys: ["district", "province"] },
   { id: "technical", label: "Technical",  errorKeys: [] },
-  { id: "images",    label: "Images",     errorKeys: [] },
+  { id: "media",     label: "Media",      errorKeys: [] },
+  { id: "documents", label: "Documents",  errorKeys: [] },
+  { id: "timeline",  label: "Timeline",   errorKeys: [] },
   { id: "advanced",  label: "Advanced",   errorKeys: [] },
 ] as const;
 
@@ -134,17 +156,14 @@ export function ProjectForm({ data, onChange, errors }: ProjectFormProps) {
     return t.errorKeys.some((k) => !!(errors as Record<string, string | undefined>)[k]);
   }
 
-  /* Highlights helpers */
+  /* Highlights */
   function addHighlight()  { set({ highlights: [...data.highlights, { label: "", value: "" }] }); }
-  function removeHighlight(i: number) {
-    set({ highlights: data.highlights.filter((_, idx) => idx !== i) });
-  }
+  function removeHighlight(i: number) { set({ highlights: data.highlights.filter((_, idx) => idx !== i) }); }
   function setHighlight(i: number, field: "label" | "value", v: string) {
-    const hl = data.highlights.map((h, idx) => idx === i ? { ...h, [field]: v } : h);
-    set({ highlights: hl });
+    set({ highlights: data.highlights.map((h, idx) => idx === i ? { ...h, [field]: v } : h) });
   }
 
-  /* Image helpers */
+  /* Gallery images */
   function addImage()  { set({ images: [...data.images, { url: "", alt: "", isCover: false }] }); }
   function removeImage(i: number) { set({ images: data.images.filter((_, idx) => idx !== i) }); }
   function setImage(i: number, field: keyof typeof data.images[0], v: string | boolean) {
@@ -154,11 +173,42 @@ export function ProjectForm({ data, onChange, errors }: ProjectFormProps) {
     });
     set({ images: imgs });
   }
+  function setImageUrl(i: number, url: string) {
+    set({ images: data.images.map((img, idx) => idx === i ? { ...img, url } : img) });
+  }
+
+  /* Documents */
+  function addDocument() { set({ documents: [...data.documents, { url: "", name: "", type: "pdf" }] }); }
+  function removeDocument(i: number) { set({ documents: data.documents.filter((_, idx) => idx !== i) }); }
+  function setDocument(i: number, field: string, v: string | number) {
+    set({ documents: data.documents.map((d, idx) => idx === i ? { ...d, [field]: v } : d) });
+  }
+  function setDocumentUpload(i: number, url: string, meta?: { size: number; mimeType: string; filename: string }) {
+    const docs = data.documents.map((d, idx) => {
+      if (idx !== i) return d;
+      const ext = url.split(".").pop()?.toLowerCase() ?? "pdf";
+      return {
+        ...d,
+        url,
+        ...(meta?.filename && !d.name ? { name: meta.filename } : {}),
+        type: ext,
+        ...(meta?.size ? { size: meta.size } : {}),
+      };
+    });
+    set({ documents: docs });
+  }
+
+  /* Timeline */
+  function addMilestone() { set({ timeline: [...data.timeline, { title: "", date: "", completed: false, description: "" }] }); }
+  function removeMilestone(i: number) { set({ timeline: data.timeline.filter((_, idx) => idx !== i) }); }
+  function setMilestone(i: number, field: string, v: string | boolean) {
+    set({ timeline: data.timeline.map((m, idx) => idx === i ? { ...m, [field]: v } : m) });
+  }
 
   return (
     <div>
       {/* Tabs */}
-      <div className="flex gap-0.5 border-b border-border px-1">
+      <div className="flex gap-0.5 border-b border-border px-1 flex-wrap">
         {TABS.map((t) => {
           const hasErr = tabHasError(t);
           return (
@@ -173,9 +223,7 @@ export function ProjectForm({ data, onChange, errors }: ProjectFormProps) {
               )}
             >
               {t.label}
-              {hasErr && (
-                <span className="absolute top-1.5 right-0.5 h-1.5 w-1.5 rounded-full bg-red-400" />
-              )}
+              {hasErr && <span className="absolute top-1.5 right-0.5 h-1.5 w-1.5 rounded-full bg-red-400" />}
             </button>
           );
         })}
@@ -243,17 +291,34 @@ export function ProjectForm({ data, onChange, errors }: ProjectFormProps) {
               />
               <div className="mt-1 flex items-center justify-between">
                 <FieldError msg={errors.description} />
-                <span className={cn("text-[10px] ml-auto", data.description.length > 1900 ? "text-red-400" : "text-foreground-subtle")}>
-                  {data.description.length}/2000
+                <span className={cn("text-[10px] ml-auto", data.description.length > 2800 ? "text-red-400" : "text-foreground-subtle")}>
+                  {data.description.length}/3000
                 </span>
               </div>
             </div>
 
-            <Switch
-              checked={data.isFeatured}
-              onChange={(v) => set({ isFeatured: v })}
-              label="Feature on homepage and project listings"
-            />
+            <div>
+              <Label>Objectives</Label>
+              <Textarea
+                rows={3}
+                value={data.objectives}
+                onChange={(e) => set({ objectives: e.target.value })}
+                placeholder="Key goals and objectives of this project..."
+              />
+            </div>
+
+            <div className="flex gap-6">
+              <Switch
+                checked={data.isFeatured}
+                onChange={(v) => set({ isFeatured: v })}
+                label="Feature on homepage"
+              />
+              <Switch
+                checked={data.isActive}
+                onChange={(v) => set({ isActive: v })}
+                label="Show in navbar & listings"
+              />
+            </div>
           </>
         )}
 
@@ -314,7 +379,7 @@ export function ProjectForm({ data, onChange, errors }: ProjectFormProps) {
                   type="number"
                   value={data.capacity.value}
                   onChange={(e) => set({ capacity: { ...data.capacity, value: e.target.value } })}
-                  placeholder="900"
+                  placeholder="4.9"
                   className="flex-1"
                 />
                 <Select
@@ -394,69 +459,207 @@ export function ProjectForm({ data, onChange, errors }: ProjectFormProps) {
           </>
         )}
 
-        {/* ── Images ── */}
-        {tab === "images" && (
-          <div className="space-y-3">
-            <p className="text-xs text-foreground-subtle">Add image URLs. Toggle the star to set the cover image.</p>
+        {/* ── Media ── */}
+        {tab === "media" && (
+          <div className="space-y-5">
+            <div>
+              <Label>Banner / Hero Image</Label>
+              <p className="text-[11px] text-foreground-subtle mb-2">Wide image shown at the top of the project detail page (16:9 recommended).</p>
+              <FileUpload
+                kind="image"
+                value={data.bannerImage}
+                onChange={(url) => set({ bannerImage: url })}
+              />
+            </div>
 
-            {data.images.length === 0 && (
+            <div>
+              <Label>Project Logo / Icon</Label>
+              <p className="text-[11px] text-foreground-subtle mb-2">Square logo shown on cards and navbar dropdown (1:1 recommended).</p>
+              <FileUpload
+                kind="image"
+                value={data.logoImage}
+                onChange={(url) => set({ logoImage: url })}
+              />
+            </div>
+
+            <div className="pt-2 border-t border-border">
+              <Label>Gallery Images</Label>
+              <p className="text-[11px] text-foreground-subtle mb-3">Upload photos for the gallery section. Star = cover image.</p>
+
+              {data.images.length === 0 && (
+                <div className="rounded-lg border border-dashed border-border py-6 text-center mb-3">
+                  <p className="text-xs text-foreground-subtle">No gallery images yet</p>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {data.images.map((img, i) => (
+                  <div key={i} className="rounded-lg border border-border bg-surface p-3 space-y-2">
+                    <div className="flex items-start gap-2">
+                      <div className="flex-1">
+                        <FileUpload
+                          kind="image"
+                          value={img.url}
+                          onChange={(url) => setImageUrl(i, url)}
+                          label={`Image ${i + 1}`}
+                        />
+                        <Input
+                          value={img.alt}
+                          onChange={(e) => setImage(i, "alt", e.target.value)}
+                          placeholder="Alt text / caption"
+                          className="mt-2"
+                        />
+                      </div>
+                      <div className="flex flex-col items-center gap-2 shrink-0 mt-6">
+                        <button
+                          title="Set as cover image"
+                          onClick={() => setImage(i, "isCover", !img.isCover)}
+                          className={cn(
+                            "p-1.5 rounded-lg transition-colors",
+                            img.isCover
+                              ? "text-gold bg-gold/10 border border-gold/30"
+                              : "text-foreground-subtle hover:text-gold hover:bg-gold/10"
+                          )}
+                        >
+                          <Star className="h-4 w-4" fill={img.isCover ? "currentColor" : "none"} />
+                        </button>
+                        <button
+                          onClick={() => removeImage(i)}
+                          className="p-1.5 rounded-lg text-foreground-subtle hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={addImage}
+                className="w-full mt-3 flex items-center justify-center gap-2 rounded-lg border border-dashed border-border py-2.5 text-xs text-foreground-muted hover:border-primary/50 hover:text-primary transition-colors"
+              >
+                <Plus className="h-3.5 w-3.5" /> Add Gallery Image
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── Documents ── */}
+        {tab === "documents" && (
+          <div className="space-y-3">
+            <p className="text-xs text-foreground-subtle">Upload PDFs, reports, licenses, or presentations.</p>
+
+            {data.documents.length === 0 && (
               <div className="rounded-lg border border-dashed border-border py-8 text-center">
-                <p className="text-xs text-foreground-subtle">No images added yet</p>
+                <p className="text-xs text-foreground-subtle">No documents uploaded yet</p>
               </div>
             )}
 
-            {data.images.map((img, i) => (
+            {data.documents.map((doc, i) => (
               <div key={i} className="rounded-lg border border-border bg-surface p-3 space-y-2">
-                <div className="flex items-center gap-2">
+                <div className="flex items-start gap-2">
                   <div className="flex-1 space-y-2">
-                    <Input
-                      value={img.url}
-                      onChange={(e) => setImage(i, "url", e.target.value)}
-                      placeholder="https://cdn.ghamkhetiguru.com/projects/dam.jpg"
+                    <FileUpload
+                      kind="document"
+                      value={doc.url}
+                      onChange={(url, meta) => setDocumentUpload(i, url, meta)}
+                      label={`Document ${i + 1}`}
                     />
                     <Input
-                      value={img.alt}
-                      onChange={(e) => setImage(i, "alt", e.target.value)}
-                      placeholder="Alt text / caption"
+                      value={doc.name}
+                      onChange={(e) => setDocument(i, "name", e.target.value)}
+                      placeholder="Document title (e.g. Project Survey Report)"
                     />
-                  </div>
-                  <div className="flex flex-col items-center gap-2 shrink-0">
-                    <button
-                      title="Set as cover image"
-                      onClick={() => setImage(i, "isCover", !img.isCover)}
-                      className={cn(
-                        "p-1.5 rounded-lg transition-colors",
-                        img.isCover
-                          ? "text-gold bg-gold/10 border border-gold/30"
-                          : "text-foreground-subtle hover:text-gold hover:bg-gold/10"
-                      )}
+                    <Select
+                      value={doc.type}
+                      onChange={(e) => setDocument(i, "type", e.target.value)}
                     >
-                      <Star className="h-4 w-4" fill={img.isCover ? "currentColor" : "none"} />
-                    </button>
-                    <button
-                      onClick={() => removeImage(i)}
-                      className="p-1.5 rounded-lg text-foreground-subtle hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
+                      <option value="pdf">PDF</option>
+                      <option value="doc">Word Document</option>
+                      <option value="xls">Excel</option>
+                      <option value="ppt">PowerPoint</option>
+                      <option value="other">Other</option>
+                    </Select>
                   </div>
+                  <button
+                    onClick={() => removeDocument(i)}
+                    className="mt-6 p-1.5 rounded-lg text-foreground-subtle hover:text-red-400 hover:bg-red-500/10 transition-colors shrink-0"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
                 </div>
-                {img.url && (
-                  <img
-                    src={img.url}
-                    alt={img.alt || "preview"}
-                    className="h-20 w-full object-cover rounded-md border border-border"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                  />
-                )}
               </div>
             ))}
 
             <button
-              onClick={addImage}
+              onClick={addDocument}
               className="w-full flex items-center justify-center gap-2 rounded-lg border border-dashed border-border py-2.5 text-xs text-foreground-muted hover:border-primary/50 hover:text-primary transition-colors"
             >
-              <Plus className="h-3.5 w-3.5" /> Add Image
+              <Plus className="h-3.5 w-3.5" /> Add Document
+            </button>
+          </div>
+        )}
+
+        {/* ── Timeline ── */}
+        {tab === "timeline" && (
+          <div className="space-y-3">
+            <p className="text-xs text-foreground-subtle">Add project milestones in order. Toggle checkmark when completed.</p>
+
+            {data.timeline.length === 0 && (
+              <div className="rounded-lg border border-dashed border-border py-8 text-center">
+                <p className="text-xs text-foreground-subtle">No milestones added yet</p>
+              </div>
+            )}
+
+            {data.timeline.map((m, i) => (
+              <div key={i} className="rounded-lg border border-border bg-surface p-3 space-y-2">
+                <div className="flex items-start gap-2">
+                  <button
+                    onClick={() => setMilestone(i, "completed", !m.completed)}
+                    className={cn(
+                      "mt-1 shrink-0 transition-colors",
+                      m.completed ? "text-primary" : "text-foreground-subtle hover:text-primary"
+                    )}
+                    title="Toggle completed"
+                  >
+                    {m.completed
+                      ? <CheckCircle className="h-4.5 w-4.5" />
+                      : <Circle className="h-4.5 w-4.5" />
+                    }
+                  </button>
+                  <div className="flex-1 space-y-2">
+                    <Input
+                      value={m.title}
+                      onChange={(e) => setMilestone(i, "title", e.target.value)}
+                      placeholder="Milestone title (e.g. Survey Completed)"
+                    />
+                    <Input
+                      type="date"
+                      value={m.date}
+                      onChange={(e) => setMilestone(i, "date", e.target.value)}
+                    />
+                    <Input
+                      value={m.description}
+                      onChange={(e) => setMilestone(i, "description", e.target.value)}
+                      placeholder="Optional description..."
+                    />
+                  </div>
+                  <button
+                    onClick={() => removeMilestone(i)}
+                    className="mt-1 p-1.5 rounded-lg text-foreground-subtle hover:text-red-400 hover:bg-red-500/10 transition-colors shrink-0"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <button
+              onClick={addMilestone}
+              className="w-full flex items-center justify-center gap-2 rounded-lg border border-dashed border-border py-2.5 text-xs text-foreground-muted hover:border-primary/50 hover:text-primary transition-colors"
+            >
+              <Plus className="h-3.5 w-3.5" /> Add Milestone
             </button>
           </div>
         )}
@@ -486,7 +689,7 @@ export function ProjectForm({ data, onChange, errors }: ProjectFormProps) {
                     <Input
                       value={h.value}
                       onChange={(e) => setHighlight(i, "value", e.target.value)}
-                      placeholder="900 MW"
+                      placeholder="4.9 MW"
                       className="flex-1"
                     />
                     <button
@@ -525,7 +728,7 @@ export function ProjectForm({ data, onChange, errors }: ProjectFormProps) {
                   value={data.seoDescription}
                   onChange={(e) => set({ seoDescription: e.target.value })}
                   maxLength={160}
-                  placeholder="Nepal's largest run-of-river hydropower project..."
+                  placeholder="Run-of-river hydropower project in Karnali Province..."
                 />
                 <p className="mt-1 text-right text-[10px] text-foreground-subtle">{data.seoDescription.length}/160</p>
               </div>
@@ -537,7 +740,7 @@ export function ProjectForm({ data, onChange, errors }: ProjectFormProps) {
                   onChange={(e) => set({ order: e.target.value })}
                   placeholder="0"
                 />
-                <p className="mt-1 text-[10px] text-foreground-subtle">Lower = shown first within category</p>
+                <p className="mt-1 text-[10px] text-foreground-subtle">Lower = shown first</p>
               </div>
             </div>
           </>

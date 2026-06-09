@@ -10,7 +10,7 @@ import { NewsCard } from "@/components/common/NewsCard";
 import { Grid } from "@/components/common/Grid";
 import { CTABanner } from "@/components/common/CTABanner";
 
-export const revalidate = 1800;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "News & Notices",
@@ -43,7 +43,7 @@ export default async function NewsPage() {
 
   const articles = (JSON.parse(JSON.stringify(rawNews)) as Array<{
     _id: string; slug: string; title: string; excerpt: string; content: string;
-    category: string; author: string; publishedAt?: string; isFeatured: boolean;
+    category: string; author: string; publishedAt?: string; isFeatured: boolean; coverImage?: string;
   }>).map((n) => ({
     _id:      n._id,
     slug:     n.slug,
@@ -52,7 +52,8 @@ export default async function NewsPage() {
     category: CATEGORY_LABEL[n.category] ?? n.category,
     author:   n.author,
     date:     n.publishedAt ? fmtDate(n.publishedAt) : "—",
-    href:     `#`,
+    href:     `/blog/${n.slug}`,
+    image:    n.coverImage,
     featured: n.isFeatured,
   }));
 
