@@ -36,6 +36,7 @@ export function BlogCard({
   date,
   readTime,
   href = "#",
+  image,
   className,
   index = 0,
   featured = false,
