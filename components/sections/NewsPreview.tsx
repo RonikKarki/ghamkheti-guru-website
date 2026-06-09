@@ -64,7 +64,7 @@ export async function NewsPreview() {
                   excerpt={n.excerpt}
                   category={categoryDisplay[n.category] ?? n.category}
                   date={formatDate(n.publishedAt ?? n.createdAt)}
-                  href={`/media/${n.slug}`}
+                  href={`/blog/${n.slug}`}
                   image={n.coverImage}
                   index={i}
                 />

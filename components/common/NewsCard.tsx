@@ -33,6 +33,7 @@ export function NewsCard({
   category,
   date,
   href = "#",
+  image,
   className,
   index = 0,
   featured = false,
@@ -59,8 +60,19 @@ export function NewsCard({
         "relative overflow-hidden shrink-0 bg-linear-to-br from-brand-deep via-surface to-background",
         featured ? "md:w-2/5 h-52 md:h-auto" : "h-44"
       )}>
-        <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-primary/6 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-28 w-28 rounded-full bg-brand-gold/5 blur-2xl" />
+        {image && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-black/40" />
+          </>
+        )}
+        {!image && (
+          <>
+            <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-primary/6 blur-3xl" />
+            <div className="absolute bottom-0 left-0 h-28 w-28 rounded-full bg-brand-gold/5 blur-2xl" />
+          </>
+        )}
 
         {/* Category pill */}
         <div className="absolute top-4 left-4">
