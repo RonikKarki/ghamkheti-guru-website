@@ -13,24 +13,34 @@ import { ThemeToggle } from "@/components/common/ThemeToggle";
 import type { NavItem } from "@/types";
 
 interface NavbarProps {
-  projectLinks?: Array<{ label: string; href: string }>;
+  projectLinks?:    Array<{ label: string; href: string }>;
+  subsidiaryLinks?: Array<{ label: string; href: string }>;
 }
 
-export function Navbar({ projectLinks }: NavbarProps) {
+export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
   const [isOpen, setIsOpen]           = useState(false);
   const [scrolled, setScrolled]       = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname                       = usePathname();
   const dropdownRef                    = useRef<HTMLDivElement>(null);
 
-  // Build nav items, replacing Projects children with live DB links when available
+  // Build nav items — Projects & Subsidiaries dropdowns come entirely from DB
   const resolvedNavItems = navItems.map((item) => {
-    if (item.label === "Projects" && projectLinks && projectLinks.length > 0) {
+    if (item.label === "Projects") {
       return {
         ...item,
         children: [
           { label: "All Projects", href: "/projects" },
-          ...projectLinks,
+          ...(projectLinks ?? []),
+        ],
+      };
+    }
+    if (item.label === "Subsidiaries") {
+      return {
+        ...item,
+        children: [
+          { label: "All Subsidiaries", href: "/subsidiaries" },
+          ...(subsidiaryLinks ?? []),
         ],
       };
     }

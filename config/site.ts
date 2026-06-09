@@ -30,16 +30,8 @@ export const siteConfig = {
 export const navItems: NavItem[] = [
   { label: "Home",               href: "/" },
   { label: "About Us",           href: "/about" },
-  {
-    label: "Projects",
-    href: "/projects",
-    children: [
-      { label: "Hydropower",          href: "/projects#hydropower" },
-      { label: "Solar Energy",        href: "/projects#solar" },
-      { label: "Agriculture & Agro",  href: "/projects#agriculture" },
-      { label: "Tourism",             href: "/projects#tourism" },
-    ],
-  },
+  { label: "Projects", href: "/projects" },
+  { label: "Subsidiaries", href: "/subsidiaries" },
   { label: "Investor Relations", href: "/investor-relations" },
   { label: "News & Notices",     href: "/media" },
   { label: "Gallery",            href: "/gallery" },
