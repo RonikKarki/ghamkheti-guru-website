@@ -3,7 +3,7 @@ import { PageBanner } from "@/components/common/PageBanner";
 import { Section } from "@/components/common/Section";
 import { Container } from "@/components/common/Container";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { BlogCard } from "@/components/common/BlogCard";
+import { NewsCard } from "@/components/common/NewsCard";
 import { Grid } from "@/components/common/Grid";
 import { CTABanner } from "@/components/common/CTABanner";
 import { connectToDatabase } from "@/lib/mongodb";
@@ -89,7 +89,7 @@ export default async function BlogPage() {
             <Section>
               <Container>
                 <SectionHeader badge="Featured" title="Latest Insight" />
-                <BlogCard {...featured} index={0} />
+                <NewsCard {...featured} index={0} featured />
               </Container>
             </Section>
           )}
@@ -101,7 +101,7 @@ export default async function BlogPage() {
                 <SectionHeader badge="All Articles" title="More Articles" titleGradient />
                 <Grid cols={1} colsMd={2} colsLg={3} gap="default">
                   {rest.map((p, i) => (
-                    <BlogCard key={p._id} {...p} index={i} />
+                    <NewsCard key={p._id} {...p} index={i} />
                   ))}
                 </Grid>
               </Container>
