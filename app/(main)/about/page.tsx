@@ -10,7 +10,8 @@ import { CTABanner } from "@/components/common/CTABanner";
 import { connectToDatabase } from "@/lib/mongodb";
 import AboutContent from "@/models/AboutContent";
 import { getPageBanner } from "@/lib/get-page-banner";
-import { Target, Eye, Heart, Shield, Zap, Globe2, Quote } from "lucide-react";
+import Link from "next/link";
+import { Target, Eye, Heart, Shield, Zap, Globe2, Quote, ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -288,6 +289,32 @@ export default async function AboutPage() {
           </Container>
         </Section>
       )}
+
+      {/* Meet the Team */}
+      <Section variant="alt">
+        <Container>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <div>
+              <div className="section-num mb-3">Our People</div>
+              <h2
+                className="font-display font-bold text-foreground tracking-tight"
+                style={{ fontSize: "clamp(1.8rem, 3vw, 2.8rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }}
+              >
+                Meet the Team Behind the Vision
+              </h2>
+              <p className="mt-3 text-foreground-muted text-[15px] leading-relaxed max-w-lg">
+                The specialists, engineers, and professionals driving our projects across energy, agriculture, and sustainable development.
+              </p>
+            </div>
+            <Link
+              href="/team"
+              className="inline-flex items-center gap-2.5 px-6 py-3 text-sm font-semibold tracking-wide bg-foreground text-background hover:opacity-80 transition-opacity duration-200 shrink-0"
+            >
+              Meet the Team <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </Container>
+      </Section>
 
       <CTABanner
         badge="Partner With Us"
