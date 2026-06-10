@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { staggerContainer, staggerItem, fadeUp, viewportOnce } from "@/lib/animations";
@@ -41,6 +42,10 @@ interface CmsPortfolio { title?: string; subtitle?: string; }
 export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
   const heading = cms?.title    || "Our Sectors";
   const subtext = cms?.subtitle || "Three integrated sectors working as one — clean energy and agro-industry building Nepal's economic and environmental future.";
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  const isAmber = (s: typeof sectors[0]) =>
+    hovered === s.id || (hovered === null && s.isCenter);
 
   return (
     <section style={{ backgroundColor: "#1a1a1a" }} id="sectors">
@@ -97,62 +102,79 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
         className="grid grid-cols-1 md:grid-cols-3"
         style={{ borderTop: "1px solid rgba(255,255,255,0.07)", minHeight: "520px" }}
       >
-        {sectors.map((s) => (
-          <motion.div
-            key={s.id}
-            variants={staggerItem}
-            className="flex flex-col justify-between p-10 lg:p-14 border-b md:border-b-0 md:border-r last:border-r-0"
-            style={{
-              backgroundColor: s.isCenter ? "#e8960a" : "transparent",
-              borderColor: "rgba(255,255,255,0.07)",
-            }}
-          >
-            {/* Large ghost number at top */}
-            <div
-              className="font-display font-black select-none leading-none mb-8"
+        {sectors.map((s) => {
+          const amber = isAmber(s);
+          return (
+            <motion.div
+              key={s.id}
+              variants={staggerItem}
+              onMouseEnter={() => setHovered(s.id)}
+              onMouseLeave={() => setHovered(null)}
+              className="flex flex-col justify-between p-10 lg:p-14 border-b md:border-b-0 md:border-r last:border-r-0 cursor-default"
               style={{
-                fontSize: "clamp(5rem, 10vw, 10rem)",
-                color: s.isCenter ? "rgba(0,0,0,0.10)" : "rgba(255,255,255,0.05)",
-                lineHeight: 1,
+                backgroundColor: amber ? "#e8960a" : "transparent",
+                borderColor: "rgba(255,255,255,0.07)",
+                transition: "background-color 0.3s ease",
               }}
             >
-              {s.num}
-            </div>
-
-            {/* Content block at bottom */}
-            <div className="mt-auto">
-              <p
-                className="text-[10px] font-mono tracking-[0.18em] uppercase mb-4"
-                style={{ color: s.isCenter ? "rgba(0,0,0,0.50)" : "rgba(255,255,255,0.35)" }}
-              >
-                {s.sector}
-              </p>
-              <h3
-                className="font-display font-bold uppercase tracking-tight mb-4"
+              {/* Large ghost number at top */}
+              <div
+                className="font-display font-black select-none leading-none mb-8"
                 style={{
-                  fontSize: "clamp(1.4rem, 2.2vw, 2rem)",
-                  color: s.isCenter ? "#0a0a0a" : "white",
-                  lineHeight: 1.1,
+                  fontSize: "clamp(5rem, 10vw, 10rem)",
+                  color: amber ? "rgba(0,0,0,0.10)" : "rgba(255,255,255,0.05)",
+                  lineHeight: 1,
+                  transition: "color 0.3s ease",
                 }}
               >
-                {s.label}
-              </h3>
-              <p
-                className="text-sm leading-relaxed mb-8"
-                style={{ color: s.isCenter ? "rgba(0,0,0,0.65)" : "rgba(255,255,255,0.45)" }}
-              >
-                {s.description}
-              </p>
-              <Link
-                href={s.href}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-opacity hover:opacity-70"
-                style={{ color: s.isCenter ? "#0a0a0a" : "rgba(255,255,255,0.50)" }}
-              >
-                View Dossier <ArrowUpRight className="h-3 w-3" />
-              </Link>
-            </div>
-          </motion.div>
-        ))}
+                {s.num}
+              </div>
+
+              {/* Content block at bottom */}
+              <div className="mt-auto">
+                <p
+                  className="text-[10px] font-mono tracking-[0.18em] uppercase mb-4"
+                  style={{
+                    color: amber ? "rgba(0,0,0,0.50)" : "rgba(255,255,255,0.35)",
+                    transition: "color 0.3s ease",
+                  }}
+                >
+                  {s.sector}
+                </p>
+                <h3
+                  className="font-display font-bold uppercase tracking-tight mb-4"
+                  style={{
+                    fontSize: "clamp(1.4rem, 2.2vw, 2rem)",
+                    color: amber ? "#0a0a0a" : "white",
+                    lineHeight: 1.1,
+                    transition: "color 0.3s ease",
+                  }}
+                >
+                  {s.label}
+                </h3>
+                <p
+                  className="text-sm leading-relaxed mb-8"
+                  style={{
+                    color: amber ? "rgba(0,0,0,0.65)" : "rgba(255,255,255,0.45)",
+                    transition: "color 0.3s ease",
+                  }}
+                >
+                  {s.description}
+                </p>
+                <Link
+                  href={s.href}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-opacity hover:opacity-70"
+                  style={{
+                    color: amber ? "#0a0a0a" : "rgba(255,255,255,0.50)",
+                    transition: "color 0.3s ease",
+                  }}
+                >
+                  View Dossier <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </motion.div>
+          );
+        })}
       </motion.div>
     </section>
   );

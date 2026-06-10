@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Container } from "@/components/common/Container";
 
 interface CmsStat {
@@ -29,6 +32,7 @@ export function StatsSection({ cms }: { cms?: CmsStats | null }) {
     : DEFAULT_STATS;
 
   const heading = cms?.title || "Our Growing\nImpact";
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   return (
     <section className="py-24 md:py-32 bg-background border-t border-border" id="stats">
@@ -51,46 +55,64 @@ export function StatsSection({ cms }: { cms?: CmsStats | null }) {
             </h2>
           </div>
 
-          {/* RIGHT: vertical stat rows with ghost numbers */}
+          {/* RIGHT: vertical stat rows — large ghost-style numbers, amber on hover */}
           <div className="divide-y divide-border">
-            {stats.map((s, i) => (
-              <div key={i} className="py-8 first:pt-0 flex items-start gap-6">
-                {/* Ghost ordinal number */}
-                <span
-                  className="font-display font-black leading-none select-none shrink-0"
-                  style={{
-                    fontSize: "clamp(4rem, 8vw, 7rem)",
-                    color: "rgba(0,0,0,0.05)",
-                    lineHeight: 1,
-                    minWidth: "4rem",
-                    textAlign: "right",
-                  }}
+            {stats.map((s, i) => {
+              const isHovered = hoveredIdx === i;
+              return (
+                <div
+                  key={i}
+                  className="py-8 first:pt-0 flex items-center gap-6 cursor-default"
+                  onMouseEnter={() => setHoveredIdx(i)}
+                  onMouseLeave={() => setHoveredIdx(null)}
                 >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-
-                {/* Stat content */}
-                <div className="pt-1">
-                  <div className="flex items-baseline gap-1.5 mb-2 leading-none">
+                  {/* Large ghost-style stat value — turns amber on hover */}
+                  <div
+                    className="font-display font-black leading-none select-none shrink-0 flex items-baseline gap-1"
+                    style={{ minWidth: "8rem" }}
+                  >
                     <span
-                      className="font-mono font-bold text-foreground"
-                      style={{ fontSize: "clamp(1.8rem, 3vw, 2.8rem)", lineHeight: 1 }}
+                      style={{
+                        fontSize: "clamp(4rem, 8vw, 7rem)",
+                        lineHeight: 1,
+                        color: isHovered ? "#e8960a" : "rgba(0,0,0,0.08)",
+                        transition: "color 0.25s ease",
+                      }}
                     >
                       {s.value}
                     </span>
                     {s.suffix && (
-                      <span className="font-mono font-semibold text-primary text-lg">{s.suffix}</span>
+                      <span
+                        className="font-mono font-bold"
+                        style={{
+                          fontSize: "clamp(1rem, 2vw, 1.5rem)",
+                          color: isHovered ? "#e8960a" : "rgba(0,0,0,0.15)",
+                          transition: "color 0.25s ease",
+                          lineHeight: 1,
+                          alignSelf: "flex-end",
+                          paddingBottom: "0.4em",
+                        }}
+                      >
+                        {s.suffix}
+                      </span>
                     )}
                   </div>
-                  <div className="text-xs font-semibold uppercase tracking-widest text-foreground mb-1">
-                    {s.label}
+
+                  {/* Label + description */}
+                  <div>
+                    <div
+                      className="text-xs font-semibold uppercase tracking-widest mb-1 transition-colors duration-200"
+                      style={{ color: isHovered ? "#e8960a" : "var(--foreground)" }}
+                    >
+                      {s.label}
+                    </div>
+                    {s.description && (
+                      <div className="text-sm text-foreground-muted">{s.description}</div>
+                    )}
                   </div>
-                  {s.description && (
-                    <div className="text-sm text-foreground-muted">{s.description}</div>
-                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>
