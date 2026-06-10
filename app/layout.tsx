@@ -50,8 +50,7 @@ export const metadata: Metadata = {
     images: [`${siteConfig.url}/og-image.png`],
   },
   robots: { index: true, follow: true },
-  // Verify ownership if Google Search Console is used
-  // verification: { google: "your-google-verification-token" },
+  verification: { google: "urnxtEeuS-9e7YBD0YB-dRpiMWOJ5CbfbAI1cgIkUYs" },
 };
 
 export const viewport: Viewport = {
