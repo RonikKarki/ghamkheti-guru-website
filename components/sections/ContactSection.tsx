@@ -52,15 +52,32 @@ const enquiryTypes = [
   { value: "government",  label: "Government / Regulatory" },
 ];
 
-const offices = [
-  { name: "Headquarters",      city: "Kathmandu",    address: "Babarmahal, Kathmandu 44600" },
-  { name: "Hydropower Office", city: "Surkhet",      address: "Birendranagar, Karnali Province" },
-  { name: "Solar Operations",  city: "Butwal",       address: "Industrial Zone, Rupandehi" },
-  { name: "Agriculture Hub",   city: "Bharatpur",    address: "Bharatpur-5, Chitwan" },
+const DEFAULT_OFFICES = [
+  { name: "Headquarters",      city: "Kathmandu",    address: "Trade Tower, Thapathali, Kathmandu 44600" },
+  { name: "Hydropower Office", city: "Solukhumbu",   address: "Sisakhola River Project Site" },
+  { name: "Solar Operations",  city: "Solukhumbu",   address: "Solar PV Project Site" },
+  { name: "Agriculture Hub",   city: "Nawalpur",     address: "Gaindakot, Nawalpur" },
 ];
 
-export function ContactSection() {
+interface CmsData {
+  intro?:   { title?: string; body?: string };
+  offices?: { title?: string; subtitle?: string; items?: { name?: string; city?: string; address?: string }[] };
+  map?:     { title?: string; subtitle?: string; body?: string };
+}
+
+export function ContactSection({ cms }: { cms?: CmsData }) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const introHeading = cms?.intro?.title || "Let's Start a Conversation";
+  const introBody    = cms?.intro?.body  || "Whether you're a potential investor, government counterpart, media professional, or community partner — our team is ready to engage. We aim to respond to all enquiries within one business day.";
+
+  const officesTitle = cms?.offices?.title    || "Find Our Offices";
+  const officesDesc  = cms?.offices?.subtitle || "";
+  const offices      = cms?.offices?.items?.length ? cms.offices.items : DEFAULT_OFFICES;
+
+  const mapTitle    = cms?.map?.title    || "Trade Tower, Thapathali, Kathmandu";
+  const mapSubtitle = cms?.map?.subtitle || "Ghamkheti Guru Company Limited HQ";
+  const mapsUrl     = cms?.map?.body     || "https://maps.google.com/?q=Trade+Tower+Thapathali+Kathmandu+Nepal";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -97,14 +114,9 @@ export function ContactSection() {
               <div>
                 <Badge variant="overline" dot className="mb-4">Get in Touch</Badge>
                 <h2 className="text-display-lg font-display text-foreground text-balance mb-4">
-                  Let&apos;s Start a{" "}
-                  <span className="text-gradient">Conversation</span>
+                  {introHeading}
                 </h2>
-                <p className="text-foreground-muted leading-relaxed">
-                  Whether you&apos;re a potential investor, government counterpart, media professional,
-                  or community partner — our team is ready to engage. We aim to respond to all
-                  enquiries within one business day.
-                </p>
+                <p className="text-foreground-muted leading-relaxed">{introBody}</p>
               </div>
 
               <div className="space-y-4 pt-2">
@@ -230,7 +242,7 @@ export function ContactSection() {
       {/* Map placeholder */}
       <Section variant="alt" size="sm" id="map">
         <Container>
-          <SectionHeader badge="Location" title="Find Our Offices" description="Four offices across Nepal — from Kathmandu headquarters to project-level operations." />
+          <SectionHeader badge="Location" title={officesTitle} description={officesDesc} />
 
           {/* Office cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -259,10 +271,10 @@ export function ContactSection() {
               <div className="h-16 w-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
                 <MapPin className="h-8 w-8 text-primary" strokeWidth={1.5} />
               </div>
-              <p className="font-semibold text-foreground mb-1">Babarmahal, Kathmandu</p>
-              <p className="text-xs text-foreground-subtle mb-4">Ghamkheti Guru Company Limited HQ</p>
+              <p className="font-semibold text-foreground mb-1">{mapTitle}</p>
+              <p className="text-xs text-foreground-subtle mb-4">{mapSubtitle}</p>
               <a
-                href="https://maps.google.com/?q=Babarmahal+Kathmandu+Nepal"
+                href={mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"

@@ -61,36 +61,33 @@ export function PageBanner({
             priority
             sizes="100vw"
           />
-          {/* Dark gradient overlay so text is always legible */}
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.50) 100%)" }}
-          />
+          <div className="absolute inset-0 bg-background/70" />
         </>
       )}
 
-      {/* Amber spotlight — only when no image */}
-      {!bannerImage && (
-        <>
-          <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
-            style={{
-              width: "80%",
-              height: "100%",
-              background: "radial-gradient(ellipse 70% 55% at 50% -5%, rgba(232,150,10,0.08) 0%, transparent 65%)",
-            }}
-          />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 pointer-events-none"
-            style={{
-              left: isCentered ? "auto" : "-5%",
-              width: "40%",
-              height: "80%",
-              background: "radial-gradient(ellipse 60% 80% at 0% 50%, rgba(232,150,10,0.04) 0%, transparent 65%)",
-            }}
-          />
-        </>
-      )}
+      {/* Top radial green spotlight */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{
+          width: "80%",
+          height: "100%",
+          background:
+            "radial-gradient(ellipse 70% 55% at 50% -5%, rgba(0,212,106,0.12) 0%, transparent 65%)",
+        }}
+      />
+
+      {/* Side accent glow */}
+      <div
+        className="absolute top-1/2 -translate-y-1/2 pointer-events-none"
+        style={{
+          left: isCentered ? "auto" : "-5%",
+          right: isCentered ? "auto" : "auto",
+          width: "40%",
+          height: "80%",
+          background:
+            "radial-gradient(ellipse 60% 80% at 0% 50%, rgba(0,212,106,0.06) 0%, transparent 65%)",
+        }}
+      />
 
       <Container>
         <motion.div
@@ -104,8 +101,7 @@ export function PageBanner({
             <motion.nav
               variants={staggerItem}
               className={cn(
-                "flex items-center gap-1.5 text-xs mb-5",
-                bannerImage ? "text-white/60" : "text-foreground-subtle",
+                "flex items-center gap-1.5 text-xs text-foreground-subtle mb-5",
                 isCentered && "justify-center"
               )}
               aria-label="Breadcrumb"
@@ -118,7 +114,7 @@ export function PageBanner({
                       {crumb.label}
                     </Link>
                   ) : (
-                    <span className={i === breadcrumbs.length - 1 ? (bannerImage ? "text-white/80" : "text-foreground-muted") : ""}>
+                    <span className={i === breadcrumbs.length - 1 ? "text-foreground-muted" : ""}>
                       {crumb.label}
                     </span>
                   )}
@@ -133,15 +129,9 @@ export function PageBanner({
               variants={staggerItem}
               className={cn("mb-5", isCentered && "flex justify-center")}
             >
-              <div
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full"
-                style={bannerImage
-                  ? { border: "1px solid rgba(232,150,10,0.50)", backgroundColor: "rgba(232,150,10,0.15)" }
-                  : { border: "1px solid rgba(232,150,10,0.20)", backgroundColor: "rgba(232,150,10,0.05)" }
-                }
-              >
-                <span className="h-1 w-1 rounded-full shrink-0" style={{ backgroundColor: "#e8960a" }} />
-                <span className="text-[0.65rem] font-semibold uppercase tracking-[0.16em]" style={{ color: "#e8960a" }}>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/20 bg-primary/5">
+                <span className="h-1 w-1 rounded-full bg-primary shrink-0" />
+                <span className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-primary">
                   {badge}
                 </span>
               </div>
@@ -151,10 +141,7 @@ export function PageBanner({
           {/* Title */}
           <motion.h1
             variants={staggerItem}
-            className={cn(
-              "text-display-xl font-display text-balance tracking-tight",
-              bannerImage ? "text-white" : "text-foreground"
-            )}
+            className="text-display-xl font-display text-foreground text-balance tracking-tight"
           >
             {title}
           </motion.h1>
@@ -163,10 +150,7 @@ export function PageBanner({
           {description && (
             <motion.p
               variants={staggerItem}
-              className={cn(
-                "mt-5 text-lg leading-relaxed text-pretty",
-                bannerImage ? "text-white/75" : "text-foreground-muted"
-              )}
+              className="mt-5 text-lg text-foreground-muted leading-relaxed text-pretty"
             >
               {description}
             </motion.p>
