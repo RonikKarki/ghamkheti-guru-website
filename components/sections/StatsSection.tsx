@@ -6,7 +6,10 @@ interface CmsStat {
   label:        string;
   description?: string;
 }
-interface CmsStats { items?: CmsStat[] }
+interface CmsStats {
+  title?: string;
+  items?: CmsStat[];
+}
 
 const DEFAULT_STATS = [
   { value: "4.9",  suffix: "MW",    label: "Hydropower Pipeline",   description: "Sisakhola, Solukhumbu" },
@@ -16,7 +19,7 @@ const DEFAULT_STATS = [
 ];
 
 export function StatsSection({ cms }: { cms?: CmsStats | null }) {
-  const stats = cms?.items?.length
+  const stats   = cms?.items?.length
     ? cms.items.map((s) => ({
         value:       String(s.value),
         suffix:      s.suffix ?? "",
@@ -25,43 +28,71 @@ export function StatsSection({ cms }: { cms?: CmsStats | null }) {
       }))
     : DEFAULT_STATS;
 
-  return (
-    /* Dark band — "Network Integrity / Pulse of the Valley" style */
-    <section style={{ backgroundColor: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-      <Container>
-        {/* Heading */}
-        <div className="pt-16 pb-10 border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-          <div className="flex items-center gap-2.5 mb-4" style={{ color: "rgba(255,255,255,0.30)" }}>
-            <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "rgba(255,255,255,0.20)" }} />
-            <span className="text-[10px] font-mono tracking-[0.20em] uppercase">03 / Network Integrity</span>
-          </div>
-          <h2 className="text-display-md font-display font-bold text-white tracking-tight">
-            The Pulse of the Valley
-          </h2>
-        </div>
+  const heading = cms?.title || "Our Growing\nImpact";
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 divide-x" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-          {stats.map((s, i) => (
-            <div key={i} className="py-10 px-6 lg:px-10 first:pl-0 last:pr-0">
-              <div className="flex items-end gap-1 mb-3 leading-none">
-                <span className="font-mono font-bold text-white" style={{ fontSize: "clamp(2.5rem, 4vw, 4rem)" }}>
-                  {s.value}
+  return (
+    <section className="py-24 md:py-32 bg-background border-t border-border" id="stats">
+      <Container>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-16 lg:gap-24 items-start">
+
+          {/* LEFT: section label + stacked heading */}
+          <div>
+            <div className="section-num mb-8">03 / Network Integrity</div>
+            <h2
+              className="font-display font-bold text-foreground tracking-tight"
+              style={{
+                fontSize: "clamp(2.8rem, 5vw, 5rem)",
+                lineHeight: 1,
+                whiteSpace: "pre-line",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              {heading}
+            </h2>
+          </div>
+
+          {/* RIGHT: vertical stat rows with ghost numbers */}
+          <div className="divide-y divide-border">
+            {stats.map((s, i) => (
+              <div key={i} className="py-8 first:pt-0 flex items-start gap-6">
+                {/* Ghost ordinal number */}
+                <span
+                  className="font-display font-black leading-none select-none shrink-0"
+                  style={{
+                    fontSize: "clamp(4rem, 8vw, 7rem)",
+                    color: "rgba(0,0,0,0.05)",
+                    lineHeight: 1,
+                    minWidth: "4rem",
+                    textAlign: "right",
+                  }}
+                >
+                  {String(i + 1).padStart(2, "0")}
                 </span>
-                {s.suffix && (
-                  <span className="font-mono font-bold pb-1 text-xl" style={{ color: "rgba(0,212,106,0.85)" }}>
-                    {s.suffix}
-                  </span>
-                )}
+
+                {/* Stat content */}
+                <div className="pt-1">
+                  <div className="flex items-baseline gap-1.5 mb-2 leading-none">
+                    <span
+                      className="font-mono font-bold text-foreground"
+                      style={{ fontSize: "clamp(1.8rem, 3vw, 2.8rem)", lineHeight: 1 }}
+                    >
+                      {s.value}
+                    </span>
+                    {s.suffix && (
+                      <span className="font-mono font-semibold text-primary text-lg">{s.suffix}</span>
+                    )}
+                  </div>
+                  <div className="text-xs font-semibold uppercase tracking-widest text-foreground mb-1">
+                    {s.label}
+                  </div>
+                  {s.description && (
+                    <div className="text-sm text-foreground-muted">{s.description}</div>
+                  )}
+                </div>
               </div>
-              <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.70)" }}>
-                {s.label}
-              </div>
-              {s.description && (
-                <div className="text-[11px]" style={{ color: "rgba(255,255,255,0.30)" }}>{s.description}</div>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
+
         </div>
       </Container>
     </section>

@@ -1,9 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Barlow_Condensed, Space_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/layout/Providers";
 import { siteConfig } from "@/config";
 
+
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-barlow-condensed",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["600", "700", "800", "900"],
+});
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -131,7 +138,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${geistMono.variable}`}
+      className={`${barlowCondensed.variable} ${spaceGrotesk.variable} ${geistMono.variable}`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
