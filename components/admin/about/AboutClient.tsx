@@ -22,6 +22,7 @@ const SECTION_TABS = [
   { value: "intro",          label: "Our Story"         },
   { value: "mission_vision", label: "Mission & Vision"  },
   { value: "values",         label: "Core Values"       },
+  { value: "leadership",     label: "Leadership Message"},
   { value: "board",          label: "Board of Directors"},
   { value: "timeline",       label: "Timeline"          },
 ];
@@ -271,11 +272,45 @@ export default function AboutClient({ initialData }: { initialData: any[] }) {
     );
   }
 
+  function renderLeadership() {
+    type LeaderInfo = { photo?: string; quote?: string };
+    const info = ((doc.items ?? [])[0] ?? {}) as LeaderInfo;
+    function patchInfo(field: keyof LeaderInfo, val: string) {
+      const next = [{ ...info, [field]: val }] as Record<string, unknown>[];
+      patch({ items: next });
+    }
+    return (
+      <div className="space-y-5">
+        <p className="text-xs text-foreground-muted">
+          This message appears on the About Us page. It can be from the Chairman, MD, or any leader — just update the name and title fields.
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <F label="Name">
+            <Input value={doc.title ?? ""} onChange={(e) => patch({ title: e.target.value })} placeholder="Hon. [Full Name]" />
+          </F>
+          <F label="Title / Role">
+            <Input value={doc.subtitle ?? ""} onChange={(e) => patch({ subtitle: e.target.value })} placeholder="Chairman & Managing Director" />
+          </F>
+        </div>
+        <F label="Photo">
+          <FileUpload kind="image" value={info.photo ?? ""} onChange={(url) => patchInfo("photo", url)} label="Portrait photo (recommended: square, minimum 400×400px)" />
+        </F>
+        <F label="Featured Quote" hint="displayed as a highlighted pull-quote">
+          <Textarea rows={2} value={info.quote ?? ""} onChange={(e) => patchInfo("quote", e.target.value)} placeholder="We are committed to building a sustainable Nepal through clean energy and agriculture." />
+        </F>
+        <F label="Full Message" hint="the complete message text — use line breaks for paragraphs">
+          <Textarea rows={10} value={doc.body ?? ""} onChange={(e) => patch({ body: e.target.value })} placeholder={"Dear Stakeholders,\n\nAt Ghamkheti Guru Company Limited, our mission is…\n\nWe remain committed to…"} />
+        </F>
+      </div>
+    );
+  }
+
   const editors: Record<string, () => React.ReactNode> = {
     banner:         renderBanner,
     intro:          renderIntro,
     mission_vision: renderMissionVision,
     values:         renderValues,
+    leadership:     renderLeadership,
     board:          renderBoard,
     timeline:       renderTimeline,
   };

@@ -10,9 +10,9 @@ import { CTABanner } from "@/components/common/CTABanner";
 import { connectToDatabase } from "@/lib/mongodb";
 import AboutContent from "@/models/AboutContent";
 import { getPageBanner } from "@/lib/get-page-banner";
-import { Target, Eye, Heart, Shield, Zap, Globe2, CheckCircle } from "lucide-react";
+import { Target, Eye, Heart, Shield, Zap, Globe2, Quote } from "lucide-react";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -38,6 +38,7 @@ export default async function AboutPage() {
   const banner        = cms.banner        ?? {};
   const intro         = cms.intro         ?? {};
   const missionVision = cms.mission_vision ?? {};
+  const leaderData    = cms.leadership    ?? {};
   const valuesData    = cms.values        ?? {};
   const boardData     = cms.board         ?? {};
   const timelineData  = cms.timeline      ?? {};
@@ -65,11 +66,17 @@ export default async function AboutPage() {
     ? timelineData.items as { year: string; event: string }[]
     : [];
 
-  const hasIntro       = introPara1 || introPara2 || introPara3 || facts.length > 0;
-  const hasMission     = mission || vision;
-  const hasValues      = values.length > 0;
-  const hasBoard       = boardMembers.length > 0;
-  const hasTimeline    = timeline.length > 0;
+  const leaderName    = leaderData.title    ?? "";
+  const leaderRole    = leaderData.subtitle ?? "";
+  const leaderMessage = leaderData.body     ?? "";
+  const leaderInfo    = (leaderData.items?.[0] ?? {}) as { photo?: string; quote?: string };
+
+  const hasIntro      = introPara1 || introPara2 || introPara3 || facts.length > 0;
+  const hasMission    = mission || vision;
+  const hasLeader     = leaderName || leaderMessage;
+  const hasValues     = values.length > 0;
+  const hasBoard      = boardMembers.length > 0;
+  const hasTimeline   = timeline.length > 0;
 
   return (
     <>
@@ -136,6 +143,53 @@ export default async function AboutPage() {
                   <p className="text-foreground-muted leading-relaxed">{vision}</p>
                 </GlassCard>
               )}
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      {/* Leadership Message */}
+      {hasLeader && (
+        <Section>
+          <Container>
+            <SectionHeader badge="Leadership" title="Message from Our Leadership" centered={false} className="mb-10" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+              {/* Photo + name card */}
+              <div className="flex flex-col items-center text-center gap-4">
+                <div className="relative h-48 w-48 rounded-2xl overflow-hidden bg-surface border border-border shrink-0">
+                  {leaderInfo.photo ? (
+                    <Image src={leaderInfo.photo} alt={leaderName} fill className="object-cover" sizes="192px" />
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center bg-primary/10">
+                      <span className="text-4xl font-bold text-primary">
+                        {leaderName.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase() || "GG"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {leaderName && <p className="font-semibold text-foreground">{leaderName}</p>}
+                  {leaderRole && <p className="text-sm text-primary mt-0.5">{leaderRole}</p>}
+                </div>
+                {leaderInfo.quote && (
+                  <div className="rounded-xl bg-primary/5 border border-primary/15 p-4 text-left w-full">
+                    <Quote className="h-5 w-5 text-primary mb-2 opacity-60" />
+                    <p className="text-sm text-foreground leading-relaxed italic">{leaderInfo.quote}</p>
+                  </div>
+                )}
+              </div>
+              {/* Message */}
+              <div className="lg:col-span-2 space-y-4">
+                {leaderMessage.split("\n\n").filter(Boolean).map((para: string, i: number) => (
+                  <p key={i} className="text-foreground-muted leading-relaxed">{para}</p>
+                ))}
+                {leaderName && (
+                  <div className="pt-4 border-t border-border">
+                    <p className="font-semibold text-foreground text-sm">{leaderName}</p>
+                    {leaderRole && <p className="text-xs text-primary mt-0.5">{leaderRole}</p>}
+                  </div>
+                )}
+              </div>
             </div>
           </Container>
         </Section>

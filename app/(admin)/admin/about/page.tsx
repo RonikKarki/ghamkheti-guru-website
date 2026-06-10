@@ -12,6 +12,7 @@ const SECTIONS: AboutSection[] = [
   "intro",
   "mission_vision",
   "values",
+  "leadership",
   "board",
   "timeline",
 ];
