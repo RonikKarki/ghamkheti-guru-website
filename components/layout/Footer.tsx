@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import { siteConfig } from "@/config";
 import { Container } from "@/components/common/Container";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
@@ -84,66 +84,79 @@ export async function Footer() {
   const activeSocials = settings.socialLinks.filter((s) => s.enabled && s.href);
 
   return (
-    <footer className="bg-surface border-t border-border">
-      {/* Editorial headline band */}
-      <div className="border-b border-border">
+    /* Always dark regardless of theme — matches reference footer */
+    <footer style={{ backgroundColor: "#0a0a0a" }}>
+
+      {/* ── Editorial email CTA band ── */}
+      <div className="border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
         <Container className="py-16 md:py-20">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-            <h2 className="text-display-lg font-display text-foreground tracking-tight max-w-2xl text-balance">
-              Building Nepal&apos;s <span className="text-gradient">Sustainable Future</span> — Together
-            </h2>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2.5 self-start md:self-auto px-6 py-3 text-sm font-semibold border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-200 shrink-0"
+          <div className="flex items-center gap-2.5 mb-8" style={{ color: "rgba(255,255,255,0.30)" }}>
+            <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "rgba(255,255,255,0.20)" }} />
+            <span className="text-[10px] font-mono tracking-[0.20em] uppercase">Get In Touch</span>
+          </div>
+
+          {/* Featured email link — reference "nexus@..." style */}
+          <a
+            href={`mailto:${settings.email}`}
+            className="group inline-flex items-end gap-3 transition-opacity duration-200 hover:opacity-70"
+          >
+            <span
+              className="font-display font-bold text-white text-balance leading-none tracking-tight"
+              style={{ fontSize: "clamp(1.8rem, 3.5vw, 3.5rem)" }}
             >
-              Get In Touch
-            </Link>
+              {settings.email}
+            </span>
+            <ArrowUpRight
+              className="mb-1 shrink-0 text-white/40 group-hover:text-white transition-colors"
+              style={{ width: "clamp(1.5rem, 2.5vw, 2.5rem)", height: "clamp(1.5rem, 2.5vw, 2.5rem)" }}
+            />
+          </a>
+
+          <div className="mt-6 flex items-center gap-3" style={{ color: "rgba(255,255,255,0.30)" }}>
+            <MapPin className="h-3.5 w-3.5 shrink-0" />
+            <span className="text-sm">{settings.address}</span>
           </div>
         </Container>
       </div>
 
-      {/* Main links grid */}
-      <Container className="py-14 md:py-16">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand column */}
-          <div>
-            <Link href="/" className="flex items-center gap-2.5 mb-6">
-              <Image
-                src="/images/logos/ghamkheti-logo.png"
-                alt="Ghamkheti Guru Logo"
-                width={28}
-                height={28}
-                className="object-contain"
-              />
-              <span className="font-semibold text-sm text-foreground tracking-tight">{siteConfig.shortName}</span>
+      {/* ── Links grid ── */}
+      <Container className="py-14">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+
+          {/* Brand */}
+          <div className="col-span-2 md:col-span-1">
+            <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
+              <div className="relative h-7 w-7">
+                <Image
+                  src="/images/logos/ghamkheti-logo.png"
+                  alt="Ghamkheti Guru Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-xs font-semibold tracking-wide" style={{ color: "rgba(255,255,255,0.60)" }}>
+                {siteConfig.shortName}
+              </span>
             </Link>
-            <p className="text-sm text-foreground-muted leading-relaxed mb-6 max-w-xs">
-              {siteConfig.description}
+            <p className="text-sm leading-relaxed max-w-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Energy · Agriculture · Tourism
             </p>
-            <ul className="space-y-3 text-sm text-foreground-subtle">
-              <li className="flex items-start gap-2.5">
-                <Mail className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
-                <a href={`mailto:${settings.email}`} className="hover:text-foreground transition-colors">{settings.email}</a>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <Phone className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
-                <a href={`tel:${settings.phone}`} className="hover:text-foreground transition-colors">{settings.phone}</a>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
-                <span>{settings.address}</span>
-              </li>
-            </ul>
           </div>
 
           {/* Company links */}
           {settings.companyLinks.length > 0 && (
             <div>
-              <h3 className="text-[10px] font-semibold text-foreground-subtle uppercase tracking-[0.18em] mb-5">Company</h3>
+              <h3 className="text-[10px] font-mono tracking-widest uppercase mb-5" style={{ color: "rgba(255,255,255,0.25)" }}>
+                Company
+              </h3>
               <ul className="space-y-3">
                 {settings.companyLinks.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-foreground-muted hover:text-foreground transition-colors">
+                    <Link href={link.href} className="text-sm transition-colors duration-200"
+                      style={{ color: "rgba(255,255,255,0.40)" }}
+                      onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.80)")}
+                      onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.40)")}
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -155,11 +168,17 @@ export async function Footer() {
           {/* Sector links */}
           {settings.sectorLinks.length > 0 && (
             <div>
-              <h3 className="text-[10px] font-semibold text-foreground-subtle uppercase tracking-[0.18em] mb-5">Sectors</h3>
+              <h3 className="text-[10px] font-mono tracking-widest uppercase mb-5" style={{ color: "rgba(255,255,255,0.25)" }}>
+                Sectors
+              </h3>
               <ul className="space-y-3">
                 {settings.sectorLinks.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-foreground-muted hover:text-foreground transition-colors">
+                    <Link href={link.href} className="text-sm transition-colors duration-200"
+                      style={{ color: "rgba(255,255,255,0.40)" }}
+                      onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.80)")}
+                      onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.40)")}
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -170,10 +189,12 @@ export async function Footer() {
 
           {/* Newsletter */}
           {settings.newsletterEnabled && (
-            <div>
-              <h3 className="text-[10px] font-semibold text-foreground-subtle uppercase tracking-[0.18em] mb-5">Stay Updated</h3>
-              <p className="text-sm text-foreground-muted mb-4 leading-relaxed">
-                Receive the latest news on our projects and sustainability reports.
+            <div className="col-span-2 md:col-span-1">
+              <h3 className="text-[10px] font-mono tracking-widest uppercase mb-5" style={{ color: "rgba(255,255,255,0.25)" }}>
+                Stay Updated
+              </h3>
+              <p className="text-sm mb-4 leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
+                Latest news on our projects and sustainability reports.
               </p>
               <NewsletterForm />
             </div>
@@ -181,14 +202,19 @@ export async function Footer() {
         </div>
       </Container>
 
-      {/* Bottom bar */}
-      <div className="border-t border-border">
+      {/* ── Bottom bar ── */}
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
         <Container className="py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-foreground-subtle">{copyright}</p>
+            <p className="text-xs font-mono" style={{ color: "rgba(255,255,255,0.22)" }}>{copyright}</p>
             <div className="flex items-center gap-5">
               {settings.legalLinks.map((link) => (
-                <Link key={link.href} href={link.href} className="text-xs text-foreground-subtle hover:text-foreground transition-colors">
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-xs transition-colors"
+                  style={{ color: "rgba(255,255,255,0.22)" }}
+                >
                   {link.label}
                 </Link>
               ))}
@@ -202,7 +228,10 @@ export async function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={platform}
-                    className="flex h-7 w-7 items-center justify-center border border-border text-foreground-subtle hover:text-primary hover:border-primary/30 transition-colors"
+                    className="flex h-7 w-7 items-center justify-center transition-colors"
+                    style={{ border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.35)" }}
+                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.80)")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.35)")}
                   >
                     {SOCIAL_SVGS[platform]}
                   </a>

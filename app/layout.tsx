@@ -131,7 +131,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`dark ${spaceGrotesk.variable} ${geistMono.variable}`}
+      className={`${spaceGrotesk.variable} ${geistMono.variable}`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >

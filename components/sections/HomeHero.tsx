@@ -3,14 +3,14 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { staggerContainer, staggerItem, EASE_OUT_BEZIER as E } from "@/lib/animations";
 
 const DEFAULT_STATS = [
   { value: "4.9 MW",  label: "Hydropower" },
   { value: "10 MW",   label: "Solar" },
   { value: "8 T/Hr",  label: "Rice Mill" },
-  { value: "3",       label: "Sectors" },
+  { value: "03",      label: "Sectors" },
 ];
 
 interface CmsHero {
@@ -31,13 +31,13 @@ export function HomeHero({
   cms?: CmsHero | null;
   heroImages?: HeroImage[];
 }) {
-  const headline     = cms?.title     || "Powering Nepal's Sustainable Future";
+  const headline     = cms?.title     || "The Sun Flows\nThrough Grain";
   const subheadline  = cms?.subtitle  || "From the Himalayan rivers to the Terai plains — developing world-class hydropower, solar installations, and agro-industrial enterprises for a stronger, greener Nepal.";
   const body         = cms?.body      || "";
-  const primaryLabel = cms?.primaryCta?.label  || "Explore Our Projects";
+  const primaryLabel = cms?.primaryCta?.label  || "Explore Projects";
   const primaryHref  = cms?.primaryCta?.href   || "/projects";
-  const secondLabel  = cms?.secondaryCta?.label || "Investor Relations";
-  const secondHref   = cms?.secondaryCta?.href  || "/investor-relations";
+  const secondLabel  = cms?.secondaryCta?.label || "Our Story";
+  const secondHref   = cms?.secondaryCta?.href  || "/about";
   const heroStats    = cms?.items?.length ? cms.items : DEFAULT_STATS;
 
   const slides  = (heroImages ?? []).filter((s) => s.url && s.isVisible !== false);
@@ -49,73 +49,31 @@ export function HomeHero({
     if (slides.length < 2) return;
     timerRef.current = setInterval(() => {
       setCurrent((c) => { setPrevSlide(c); return (c + 1) % slides.length; });
-    }, 7000);
+    }, 6000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [slides.length]);
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-end overflow-hidden" style={{ backgroundColor: "#080808" }}>
+    <section className="relative flex min-h-screen" style={{ backgroundColor: "#0a0a0a" }}>
 
-      {/* Background slides */}
-      {slides.map((slide, i) => (
-        <div
-          key={slide.url}
-          aria-hidden={i !== current}
-          className="absolute inset-0 transition-opacity duration-[1600ms] ease-in-out"
-          style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 2 : (i === prevSlide ? 1 : 0) }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={slide.url} alt={slide.alt ?? ""} className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ backgroundColor: "#000", opacity: Math.max((slide.overlay ?? 65), 55) / 100 }} />
-        </div>
-      ))}
-
-      {/* Gradient overlay */}
+      {/* ── LEFT PANEL — text content (always dark) ── */}
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          zIndex: 3,
-          background: "linear-gradient(to top, rgba(8,8,8,1) 0%, rgba(8,8,8,0.70) 35%, rgba(8,8,8,0.15) 65%, transparent 100%)",
-        }}
-      />
-
-      {/* Fallback no-image gradient */}
-      {slides.length === 0 && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 3,
-            background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,212,106,0.12) 0%, transparent 60%)",
-          }}
-        />
-      )}
-
-      {/* Slide indicators */}
-      {slides.length > 1 && (
-        <div className="absolute bottom-8 right-8 flex gap-1.5" style={{ zIndex: 10 }}>
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => { setPrevSlide(current); setCurrent(i); }}
-              aria-label={`Slide ${i + 1}`}
-              className={`h-px transition-all duration-500 ${
-                i === current ? "w-10 bg-primary" : "w-4 bg-white/25 hover:bg-white/50"
-              }`}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Content */}
-      <div className="relative mx-auto max-w-7xl w-full px-6 lg:px-8 pt-36 pb-20 md:pb-28" style={{ zIndex: 5 }}>
-        <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-4xl">
-
-          {/* Numbered label */}
-          <motion.div variants={staggerItem}>
-            <div className="inline-flex items-center gap-2.5 mb-8" style={{ color: "rgba(0,212,106,0.85)" }}>
-              <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "rgba(0,212,106,0.7)" }} />
-              <span className="text-[0.65rem] font-medium tracking-[0.20em] uppercase">
-                01 / Nepal&apos;s Integrated Growth Company
+        className="relative z-10 flex flex-col justify-between w-full lg:w-[52%] shrink-0 pt-28 pb-10 px-8 md:px-12 lg:px-16"
+        style={{ backgroundColor: "#0a0a0a" }}
+      >
+        {/* Top: brand tag */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col flex-1 justify-end pb-4"
+        >
+          {/* Section label */}
+          <motion.div variants={staggerItem} className="mb-8">
+            <div className="flex items-center gap-2.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+              <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "rgba(255,255,255,0.25)" }} />
+              <span className="text-[10px] font-mono tracking-[0.22em] uppercase">
+                Ghamkheti Guru · Energy &amp; Agriculture
               </span>
             </div>
           </motion.div>
@@ -123,8 +81,13 @@ export function HomeHero({
           {/* Headline */}
           <motion.h1
             variants={staggerItem}
-            className="text-display-2xl font-display leading-[1.02] mb-6 text-balance"
-            style={{ color: "#fff" }}
+            className="font-display font-bold text-white text-balance mb-6"
+            style={{
+              fontSize: "clamp(2.6rem, 4.5vw + 0.5rem, 5.2rem)",
+              lineHeight: 1.02,
+              letterSpacing: "-0.04em",
+              whiteSpace: "pre-line",
+            }}
           >
             {headline}
           </motion.h1>
@@ -132,69 +95,167 @@ export function HomeHero({
           {/* Subtext */}
           <motion.p
             variants={staggerItem}
-            className="text-base md:text-lg leading-relaxed max-w-[580px] mb-10"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            className="text-[15px] leading-[1.75] mb-10 max-w-120"
+            style={{ color: "rgba(255,255,255,0.50)" }}
           >
             {body || subheadline}
           </motion.p>
 
           {/* CTAs */}
-          <motion.div variants={staggerItem} className="flex flex-wrap gap-3 mb-16">
+          <motion.div variants={staggerItem} className="flex flex-wrap items-center gap-4 mb-12">
             <Link
               href={primaryHref}
-              className="inline-flex items-center gap-2.5 px-6 py-3 text-sm font-semibold tracking-wide bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
+              className="inline-flex items-center gap-2.5 text-sm font-semibold text-white tracking-wide group"
             >
-              {primaryLabel}
-              <ArrowRight className="h-4 w-4" />
+              <span
+                className="inline-flex items-center justify-center h-10 px-5 border transition-colors duration-200 group-hover:bg-white group-hover:text-black"
+                style={{ borderColor: "rgba(255,255,255,0.25)", color: "inherit" }}
+              >
+                {primaryLabel}
+                <ArrowRight className="ml-2 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+              </span>
             </Link>
             <Link
               href={secondHref}
-              className="inline-flex items-center gap-2.5 px-6 py-3 text-sm font-medium tracking-wide border border-white/20 text-white/80 hover:border-white/40 hover:text-white transition-colors duration-200"
+              className="text-sm font-medium transition-colors duration-200"
+              style={{ color: "rgba(255,255,255,0.40)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.80)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.40)")}
             >
-              {secondLabel}
+              {secondLabel} →
             </Link>
           </motion.div>
 
-          {/* Stats — horizontal monospace strip */}
+          {/* Geo metadata tag */}
+          <motion.div variants={staggerItem} className="mb-10">
+            <div
+              className="inline-flex items-center gap-3 px-3 py-1.5 font-mono text-[10px] tracking-[0.12em]"
+              style={{ border: "1px solid rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.30)" }}
+            >
+              <span>Alt 1,400m</span>
+              <span style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
+              <span>27.7172° N</span>
+              <span style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
+              <span>85.3240° E</span>
+              <span style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
+              <span>Kathmandu, Nepal</span>
+            </div>
+          </motion.div>
+
+          {/* Stats strip */}
           <motion.div variants={staggerItem}>
-            <div className="h-px w-full mb-8" style={{ backgroundColor: "rgba(255,255,255,0.08)" }} />
-            <div className="flex flex-wrap gap-x-10 gap-y-4">
+            <div className="h-px mb-7" style={{ backgroundColor: "rgba(255,255,255,0.07)" }} />
+            <div className="flex flex-wrap gap-x-8 gap-y-3">
               {heroStats.map((s, i) => (
                 <motion.div
                   key={s.label ?? i}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 + i * 0.07, duration: 0.5, ease: E }}
-                  className="flex items-baseline gap-2"
+                  transition={{ delay: 0.9 + i * 0.07, duration: 0.5, ease: E }}
+                  className="flex items-baseline gap-1.5"
                 >
-                  <span className="font-mono text-2xl md:text-3xl font-bold text-primary leading-none">
+                  <span className="font-mono text-xl md:text-2xl font-bold leading-none" style={{ color: "var(--primary, #00d46a)" }}>
                     {s.value}
                   </span>
-                  <span className="text-[10px] tracking-[0.14em] uppercase" style={{ color: "rgba(255,255,255,0.38)" }}>
+                  <span className="text-[10px] tracking-[0.14em] uppercase" style={{ color: "rgba(255,255,255,0.30)" }}>
                     {s.label}
                   </span>
                 </motion.div>
               ))}
             </div>
           </motion.div>
-
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.4, duration: 0.6, ease: E }}
-        className="absolute bottom-8 left-8 flex items-center gap-2.5 cursor-pointer select-none"
-        style={{ zIndex: 10, color: "rgba(255,255,255,0.28)" }}
-        onClick={() => window.scrollBy({ top: window.innerHeight, behavior: "smooth" })}
-      >
-        <motion.div animate={{ y: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}>
-          <ChevronDown className="h-4 w-4" />
-        </motion.div>
-        <span className="text-[10px] tracking-[0.15em] uppercase">Scroll</span>
-      </motion.div>
+      {/* ── RIGHT PANEL — image slider (desktop) ── */}
+      <div className="hidden lg:block flex-1 relative overflow-hidden">
+        {/* Slides */}
+        {slides.length > 0 ? (
+          slides.map((slide, i) => (
+            <div
+              key={slide.url}
+              aria-hidden={i !== current}
+              className="absolute inset-0 transition-opacity duration-1800 ease-in-out"
+              style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 2 : (i === prevSlide ? 1 : 0) }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={slide.url} alt={slide.alt ?? ""} className="absolute inset-0 w-full h-full object-cover" />
+              {/* Subtle left-edge gradient to blend with text panel */}
+              <div
+                className="absolute inset-y-0 left-0 w-16 pointer-events-none"
+                style={{ background: "linear-gradient(to right, #0a0a0a, transparent)", zIndex: 3 }}
+              />
+            </div>
+          ))
+        ) : (
+          /* Fallback when no images uploaded */
+          <div
+            className="absolute inset-0 bg-dot-grid"
+            style={{
+              backgroundColor: "#0f0f0f",
+              backgroundImage: "radial-gradient(circle, rgba(0,168,82,0.12) 0%, transparent 60%)",
+            }}
+          >
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
+                backgroundSize: "32px 32px",
+              }}
+            />
+          </div>
+        )}
+
+        {/* Slide indicators — bottom right */}
+        {slides.length > 1 && (
+          <div className="absolute bottom-10 right-10 flex gap-1.5 z-10">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => { setPrevSlide(current); setCurrent(i); }}
+                aria-label={`Slide ${i + 1}`}
+                style={{
+                  height: "1px",
+                  width: i === current ? "2.5rem" : "1rem",
+                  backgroundColor: i === current ? "rgba(255,255,255,0.70)" : "rgba(255,255,255,0.20)",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "all 0.4s ease",
+                  display: "block",
+                  padding: 0,
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Slide counter — top right */}
+        {slides.length > 1 && (
+          <div
+            className="absolute top-8 right-8 font-mono text-[10px] tracking-widest z-10"
+            style={{ color: "rgba(255,255,255,0.30)" }}
+          >
+            {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+          </div>
+        )}
+      </div>
+
+      {/* ── MOBILE: image behind text as background ── */}
+      {slides.length > 0 && (
+        <div className="lg:hidden absolute inset-0" aria-hidden="true">
+          {slides.map((slide, i) => (
+            <div
+              key={slide.url}
+              className="absolute inset-0 transition-opacity duration-1800"
+              style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 1 : 0 }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={slide.url} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            </div>
+          ))}
+          <div className="absolute inset-0 z-10" style={{ background: "rgba(10,10,10,0.78)" }} />
+        </div>
+      )}
     </section>
   );
 }

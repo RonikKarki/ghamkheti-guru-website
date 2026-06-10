@@ -20,7 +20,6 @@ const DEFAULT_METRICS = [
 ];
 
 interface CmsItem { type?: string; v?: string; l?: string; text?: string; }
-
 interface CmsInvestorCta {
   title?:        string;
   subtitle?:     string;
@@ -30,7 +29,7 @@ interface CmsInvestorCta {
 }
 
 export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
-  const heading      = cms?.title    || "Partner With Us for Sustainable Growth";
+  const heading      = cms?.title    || "Active Deployments";
   const bodyText     = cms?.subtitle || "Join us in developing transformative energy and infrastructure projects that contribute to Nepal's economic progress and sustainable development.";
   const primaryLabel = cms?.primaryCta?.label  || "View Portfolio";
   const primaryHref  = cms?.primaryCta?.href   || "/projects";
@@ -45,18 +44,12 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
   const displayHighlights = highlights.length > 0 ? highlights : DEFAULT_HIGHLIGHTS;
 
   return (
-    <section className="py-24 md:py-32 bg-background border-t border-border">
+    <section className="py-24 md:py-32 bg-background border-t border-border" id="invest">
       <Container>
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-        >
-          {/* Section label */}
-          <div className="section-num mb-0">06 / Investor Relations</div>
+        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportOnce}>
+          <div className="section-num">06 / Investor Relations</div>
 
-          <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-start mt-10">
             {/* Left */}
             <div>
               <h2 className="text-display-lg font-display text-foreground text-balance tracking-tight mb-6">
@@ -73,7 +66,7 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
               >
                 {displayHighlights.map((text, i) => (
                   <motion.li key={i} variants={staggerItem} className="flex items-start gap-3">
-                    <span className="mt-2 h-px w-4 bg-primary shrink-0" />
+                    <span className="mt-2 h-px w-5 bg-primary shrink-0" />
                     <span className="text-sm text-foreground-muted leading-relaxed">{text}</span>
                   </motion.li>
                 ))}
@@ -82,25 +75,25 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={primaryHref}
-                  className="inline-flex items-center gap-2.5 px-6 py-3 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
+                  className="inline-flex items-center gap-2.5 px-6 py-3 text-xs font-semibold tracking-widest uppercase bg-foreground text-background hover:opacity-80 transition-opacity duration-200"
                 >
-                  {primaryLabel} <ArrowRight className="h-4 w-4" />
+                  {primaryLabel} <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
                 <Link
                   href={secondHref}
-                  className="inline-flex items-center gap-2.5 px-6 py-3 text-sm font-semibold border border-border text-foreground-muted hover:text-foreground hover:border-foreground-subtle transition-colors duration-200"
+                  className="inline-flex items-center gap-2.5 px-6 py-3 text-xs font-semibold tracking-widest uppercase border border-border text-foreground-muted hover:text-foreground hover:border-foreground-subtle transition-colors duration-200"
                 >
                   {secondLabel}
                 </Link>
               </div>
             </div>
 
-            {/* Right — metrics grid */}
+            {/* Right — metrics 2×2 grid */}
             <div className="grid grid-cols-2 gap-px bg-border">
               {displayMetrics.map((m, i) => (
-                <div key={i} className="bg-surface p-6 text-center hover:bg-surface-raised transition-colors duration-300">
-                  <p className="font-mono text-2xl md:text-3xl font-bold text-primary leading-none mb-1.5 tabular-nums">{m.v}</p>
-                  <p className="text-[11px] text-foreground-subtle uppercase tracking-widest">{m.l}</p>
+                <div key={i} className="bg-background hover:bg-surface transition-colors duration-300 p-8 text-center">
+                  <p className="font-mono text-3xl md:text-4xl font-bold text-foreground leading-none mb-2 tabular-nums">{m.v}</p>
+                  <p className="text-[10px] text-foreground-subtle uppercase tracking-widest">{m.l}</p>
                 </div>
               ))}
             </div>

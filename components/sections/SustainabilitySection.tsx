@@ -6,12 +6,7 @@ import { Container } from "@/components/common/Container";
 import { staggerContainer, staggerItem, fadeUp, viewportOnce } from "@/lib/animations";
 
 interface CmsGoal { title?: string; description?: string }
-
-interface CmsSustainability {
-  title?: string;
-  body?:  string;
-  items?: CmsGoal[];
-}
+interface CmsSustainability { title?: string; body?: string; items?: CmsGoal[] }
 
 const GOAL_ICONS = [Leaf, Globe2, Users, Shield, TrendingUp, Wind];
 
@@ -29,21 +24,15 @@ export function SustainabilitySection({ cms }: { cms?: CmsSustainability | null 
   const goals        = cms?.items?.length ? cms.items : DEFAULT_GOALS;
 
   return (
-    <section className="py-24 md:py-32 bg-surface border-t border-border">
+    <section className="py-24 md:py-32 bg-surface border-t border-border" id="sustainability">
       <Container>
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="mb-14"
-        >
+        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportOnce} className="mb-16">
           <div className="section-num">05 / Sustainability &amp; Vision</div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
             <h2 className="text-display-lg font-display text-foreground text-balance tracking-tight">
               {sectionTitle}
             </h2>
-            <p className="text-foreground-muted leading-relaxed text-[15px] lg:pt-2">{description}</p>
+            <p className="text-foreground-muted leading-relaxed text-[15px]">{description}</p>
           </div>
         </motion.div>
 
@@ -60,7 +49,7 @@ export function SustainabilitySection({ cms }: { cms?: CmsSustainability | null 
               <motion.div
                 key={g.title ?? i}
                 variants={staggerItem}
-                className="flex gap-4 bg-surface p-6 hover:bg-surface-raised transition-colors duration-300"
+                className="flex gap-4 bg-surface hover:bg-background transition-colors duration-300 p-6 md:p-8"
               >
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-primary/20 mt-0.5">
                   <Icon className="h-4 w-4 text-primary" strokeWidth={1.8} />
