@@ -7,9 +7,17 @@ import { ArrowUpRight } from "lucide-react";
 import { staggerContainer, staggerItem, fadeUp, viewportOnce } from "@/lib/animations";
 import { Container } from "@/components/common/Container";
 
-const sectors = [
+type SectorItem = {
+  num?: string;
+  label?: string;
+  sector?: string;
+  description?: string;
+  href?: string;
+  isCenter?: boolean;
+};
+
+const DEFAULT_SECTORS: SectorItem[] = [
   {
-    id: "hydropower",
     num: "01",
     label: "Hydraulic Force",
     sector: "Hydropower · Energy",
@@ -18,7 +26,6 @@ const sectors = [
     isCenter: false,
   },
   {
-    id: "solar",
     num: "02",
     label: "Solar Terracing",
     sector: "Solar Energy · Energy",
@@ -27,7 +34,6 @@ const sectors = [
     isCenter: true,
   },
   {
-    id: "agriculture",
     num: "03",
     label: "Agro-Industry",
     sector: "Agriculture · Agro-Industrial",
@@ -37,15 +43,20 @@ const sectors = [
   },
 ];
 
-interface CmsPortfolio { title?: string; subtitle?: string; }
+interface CmsPortfolio {
+  title?: string;
+  subtitle?: string;
+  items?: SectorItem[];
+}
 
 export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
   const heading = cms?.title    || "Our Sectors";
   const subtext = cms?.subtitle || "Three integrated sectors working as one — clean energy and agro-industry building Nepal's economic and environmental future.";
+  const sectors = (cms?.items && cms.items.length > 0) ? cms.items : DEFAULT_SECTORS;
   const [hovered, setHovered] = useState<string | null>(null);
 
-  const isAmber = (s: typeof sectors[0]) =>
-    hovered === s.id || (hovered === null && s.isCenter);
+  const isAmber = (idx: number, s: SectorItem) =>
+    hovered === String(idx) || (hovered === null && s.isCenter);
 
   return (
     <section style={{ backgroundColor: "#1a1a1a" }} id="sectors">
@@ -102,13 +113,13 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
         className="grid grid-cols-1 md:grid-cols-3"
         style={{ borderTop: "1px solid rgba(255,255,255,0.07)", minHeight: "520px" }}
       >
-        {sectors.map((s) => {
-          const amber = isAmber(s);
+        {sectors.map((s, idx) => {
+          const amber = isAmber(idx, s);
           return (
             <motion.div
-              key={s.id}
+              key={idx}
               variants={staggerItem}
-              onMouseEnter={() => setHovered(s.id)}
+              onMouseEnter={() => setHovered(String(idx))}
               onMouseLeave={() => setHovered(null)}
               className="flex flex-col justify-between p-10 lg:p-14 border-b md:border-b-0 md:border-r last:border-r-0 cursor-default"
               style={{
@@ -162,7 +173,7 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
                   {s.description}
                 </p>
                 <Link
-                  href={s.href}
+                  href={s.href || "/projects"}
                   className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-opacity hover:opacity-70"
                   style={{
                     color: amber ? "#0a0a0a" : "rgba(255,255,255,0.50)",

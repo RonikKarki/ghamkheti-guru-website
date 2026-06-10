@@ -264,11 +264,55 @@ export default function HomepageClient({ initialData }: { initialData: any[] }) 
   }
 
   function renderPortfolio() {
+    type Sector = { num?: string; label?: string; sector?: string; description?: string; href?: string; isCenter?: boolean };
+    const sectors = (doc.items ?? []) as Sector[];
+
+    function updateSector(i: number, field: keyof Sector, val: string | boolean) {
+      const next = [...sectors] as Record<string, unknown>[];
+      next[i] = { ...next[i], [field]: val };
+      patch({ items: next });
+    }
+    function removeSector(i: number) { patch({ items: sectors.filter((_, idx) => idx !== i) as Record<string, unknown>[] }); }
+    function addSector() {
+      const num = String(sectors.length + 1).padStart(2, "0");
+      patch({ items: [...sectors, { num, label: "", sector: "", description: "", href: "/projects", isCenter: false }] as Record<string, unknown>[] });
+    }
+
     return (
       <div className="space-y-5">
-        <p className="text-xs text-foreground-muted">Controls the heading and description of the "Our Portfolio" section. Sector card content is managed via <strong>Admin → Projects</strong>.</p>
-        <F label="Section Title"><Input value={doc.title ?? ""} onChange={(e) => patch({ title: e.target.value })} placeholder="Three Sectors, One Mission" /></F>
-        <F label="Description"><Textarea rows={3} value={doc.subtitle ?? ""} onChange={(e) => patch({ subtitle: e.target.value })} placeholder="Integrated development across clean energy and agro-industry…" /></F>
+        <F label="Section Title"><Input value={doc.title ?? ""} onChange={(e) => patch({ title: e.target.value })} placeholder="Our Sectors" /></F>
+        <F label="Description"><Textarea rows={3} value={doc.subtitle ?? ""} onChange={(e) => patch({ subtitle: e.target.value })} placeholder="Three integrated sectors working as one…" /></F>
+
+        <div>
+          <p className="text-xs font-medium text-foreground mb-3">Sector Columns <span className="text-foreground-subtle font-normal">(3 columns on dark background)</span></p>
+          <div className="space-y-3">
+            {sectors.map((s, i) => (
+              <div key={i} className="rounded-xl border border-border p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <p className="text-xs font-semibold text-foreground">Column {i + 1}</p>
+                    <button
+                      type="button"
+                      onClick={() => updateSector(i, "isCenter", !s.isCenter)}
+                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-colors ${s.isCenter ? "border-amber-500/40 text-amber-600 bg-amber-500/10" : "border-border text-foreground-subtle"}`}
+                    >
+                      {s.isCenter ? "★ Highlighted" : "Highlight"}
+                    </button>
+                  </div>
+                  <RemoveBtn onClick={() => removeSector(i)} />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <F label="Number" hint="e.g. 01"><Input value={s.num ?? ""} onChange={(e) => updateSector(i, "num", e.target.value)} placeholder="01" /></F>
+                  <F label="Sector Tag" hint="e.g. Hydropower · Energy"><Input value={s.sector ?? ""} onChange={(e) => updateSector(i, "sector", e.target.value)} placeholder="Hydropower · Energy" /></F>
+                </div>
+                <F label="Column Title"><Input value={s.label ?? ""} onChange={(e) => updateSector(i, "label", e.target.value)} placeholder="Hydraulic Force" /></F>
+                <F label="Description"><Textarea rows={2} value={s.description ?? ""} onChange={(e) => updateSector(i, "description", e.target.value)} placeholder="Run-of-river hydroelectric project…" /></F>
+                <F label="Link URL"><Input value={s.href ?? ""} onChange={(e) => updateSector(i, "href", e.target.value)} placeholder="/projects" /></F>
+              </div>
+            ))}
+          </div>
+          {sectors.length < 4 && <div className="mt-3"><AddBtn onClick={addSector} label="Add Sector Column" /></div>}
+        </div>
       </div>
     );
   }
