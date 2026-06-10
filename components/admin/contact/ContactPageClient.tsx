@@ -9,11 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/lib/toast";
 
 interface SectionDoc {
-  section: string;
-  title?:  string;
+  section:   string;
+  title?:    string;
   subtitle?: string;
-  body?:   string;
-  items:   Record<string, unknown>[];
+  body?:     string;
+  embedUrl?: string;
+  items:     Record<string, unknown>[];
 }
 
 const SECTION_TABS = [
@@ -68,11 +69,12 @@ export default function ContactPageClient({ initialData }: { initialData: any[] 
 
   function save() {
     startTransition(async () => {
-      const { items, title, subtitle, body } = doc;
+      const { items, title, subtitle, body, embedUrl } = doc;
       const payload: Record<string, unknown> = { items };
       if (title    !== undefined) payload.title    = title;
       if (subtitle !== undefined) payload.subtitle = subtitle;
       if (body     !== undefined) payload.body     = body;
+      if (embedUrl !== undefined) payload.embedUrl = embedUrl;
 
       const res = await fetch(`/api/admin/contact-page/${tab}`, {
         method: "PUT",
@@ -147,10 +149,20 @@ export default function ContactPageClient({ initialData }: { initialData: any[] 
   function renderMap() {
     return (
       <div className="space-y-5">
-        <p className="text-xs text-foreground-muted">Controls the map placeholder shown below the office cards.</p>
+        <p className="text-xs text-foreground-muted">Controls the map section shown below the office cards.</p>
         <F label="Location Name"><Input value={doc.title ?? ""} onChange={(e) => patch({ title: e.target.value })} placeholder="Trade Tower, Thapathali, Kathmandu" /></F>
         <F label="Location Label" hint="shown below the name"><Input value={doc.subtitle ?? ""} onChange={(e) => patch({ subtitle: e.target.value })} placeholder="Ghamkheti Guru Company Limited HQ" /></F>
-        <F label="Google Maps URL"><Input value={doc.body ?? ""} onChange={(e) => patch({ body: e.target.value })} placeholder="https://maps.google.com/?q=Trade+Tower+Thapathali+Kathmandu" /></F>
+        <F label="Google Maps URL" hint="opens when user clicks 'Open in Google Maps'"><Input value={doc.body ?? ""} onChange={(e) => patch({ body: e.target.value })} placeholder="https://maps.google.com/?q=Trade+Tower+Thapathali+Kathmandu" /></F>
+        <F label="Google Maps Embed URL" hint="from Google Maps → Share → Embed a map → copy the src= URL">
+          <Input
+            value={doc.embedUrl ?? ""}
+            onChange={(e) => patch({ embedUrl: e.target.value })}
+            placeholder="https://www.google.com/maps/embed?pb=..."
+          />
+          <p className="text-[10px] text-foreground-subtle mt-1.5">
+            In Google Maps: click Share → Embed a map → copy only the URL inside <code>src="..."</code>
+          </p>
+        </F>
       </div>
     );
   }

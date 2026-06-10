@@ -8,6 +8,7 @@ export interface IContactContent extends Document {
   title?:     string;
   subtitle?:  string;
   body?:      string;
+  embedUrl?:  string;
   items:      mongoose.Types.Array<Record<string, unknown>>;
   updatedBy?: string;
   createdAt:  Date;
@@ -26,6 +27,7 @@ const ContactContentSchema = new Schema<IContactContent>(
     title:     { type: String, trim: true },
     subtitle:  { type: String, trim: true },
     body:      { type: String },
+    embedUrl:  { type: String },
     items:     { type: [Schema.Types.Mixed], default: [] },
     updatedBy: { type: String },
   },

@@ -62,7 +62,7 @@ const DEFAULT_OFFICES = [
 interface CmsData {
   intro?:   { title?: string; body?: string };
   offices?: { title?: string; subtitle?: string; items?: { name?: string; city?: string; address?: string }[] };
-  map?:     { title?: string; subtitle?: string; body?: string };
+  map?:     { title?: string; subtitle?: string; body?: string; embedUrl?: string };
 }
 
 export function ContactSection({ cms }: { cms?: CmsData }) {
@@ -77,6 +77,7 @@ export function ContactSection({ cms }: { cms?: CmsData }) {
 
   const mapTitle    = cms?.map?.title    || "Trade Tower, Thapathali, Kathmandu";
   const mapSubtitle = cms?.map?.subtitle || "Ghamkheti Guru Company Limited HQ";
+  const mapEmbedUrl = cms?.map?.embedUrl || "";
   const mapsUrl     = cms?.map?.body     || "https://maps.google.com/?q=Trade+Tower+Thapathali+Kathmandu+Nepal";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -255,34 +256,58 @@ export function ContactSection({ cms }: { cms?: CmsData }) {
             ))}
           </div>
 
-          {/* Map embed placeholder */}
-          <div className="relative rounded-3xl overflow-hidden h-80 border border-border bg-linear-to-br from-brand-deep via-surface to-background flex items-center justify-center">
-            <div className="absolute top-0 right-0 h-48 w-48 rounded-full bg-primary/5 blur-3xl" />
-            <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-gold/4 blur-2xl" />
-
-            {/* Grid lines overlay */}
-            <div className="absolute inset-0 opacity-[0.04]" style={{
-              backgroundImage: "linear-gradient(var(--primary) 1px, transparent 1px), linear-gradient(90deg, var(--primary) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }} />
-
-            {/* Pin */}
-            <div className="relative z-10 text-center">
-              <div className="h-16 w-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
-                <MapPin className="h-8 w-8 text-primary" strokeWidth={1.5} />
+          {/* Map embed */}
+          <div className="relative rounded-3xl overflow-hidden border border-border" style={{ height: "420px" }}>
+            {mapEmbedUrl ? (
+              <>
+                <iframe
+                  src={mapEmbedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Office Location"
+                />
+                {/* Overlay bar at bottom */}
+                <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-5 py-3 bg-background/90 backdrop-blur-sm border-t border-border">
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">{mapTitle}</p>
+                    <p className="text-xs text-foreground-subtle">{mapSubtitle}</p>
+                  </div>
+                  <a
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shrink-0"
+                  >
+                    <MapPin className="h-3 w-3" />
+                    Open in Google Maps
+                  </a>
+                </div>
+              </>
+            ) : (
+              /* Fallback placeholder when no embed URL set */
+              <div className="h-full bg-linear-to-br from-brand-deep via-surface to-background flex items-center justify-center">
+                <div className="text-center">
+                  <div className="h-16 w-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
+                    <MapPin className="h-8 w-8 text-primary" strokeWidth={1.5} />
+                  </div>
+                  <p className="font-semibold text-foreground mb-1">{mapTitle}</p>
+                  <p className="text-xs text-foreground-subtle mb-4">{mapSubtitle}</p>
+                  <a
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                  >
+                    <MapPin className="h-3 w-3" />
+                    Open in Google Maps
+                  </a>
+                </div>
               </div>
-              <p className="font-semibold text-foreground mb-1">{mapTitle}</p>
-              <p className="text-xs text-foreground-subtle mb-4">{mapSubtitle}</p>
-              <a
-                href={mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-              >
-                <MapPin className="h-3 w-3" />
-                Open in Google Maps
-              </a>
-            </div>
+            )}
           </div>
         </Container>
       </Section>
