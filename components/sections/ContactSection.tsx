@@ -77,7 +77,11 @@ export function ContactSection({ cms }: { cms?: CmsData }) {
 
   const mapTitle    = cms?.map?.title    || "Trade Tower, Thapathali, Kathmandu";
   const mapSubtitle = cms?.map?.subtitle || "Ghamkheti Guru Company Limited HQ";
-  const mapEmbedUrl = cms?.map?.embedUrl || "";
+  const rawEmbedUrl = cms?.map?.embedUrl || "";
+  const mapEmbedUrl = rawEmbedUrl.startsWith("https://www.google.com/maps/embed") ||
+                      rawEmbedUrl.startsWith("https://maps.google.com/maps?")
+    ? rawEmbedUrl
+    : "";
   const mapsUrl     = cms?.map?.body     || "https://maps.google.com/?q=Trade+Tower+Thapathali+Kathmandu+Nepal";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
