@@ -12,11 +12,12 @@ import { ThemeToggle } from "@/components/common/ThemeToggle";
 import type { NavItem } from "@/types";
 
 const NAV_NUMBERS: Record<string, string> = {
-  "About":        "01",
-  "Projects":     "02",
-  "Subsidiaries": "03",
-  "Media":        "04",
-  "Investor Relations": "05",
+  "About Us":           "01",
+  "Projects":           "02",
+  "Subsidiaries":       "03",
+  "Investor Relations": "04",
+  "News & Notices":     "05",
+  "Gallery":            "06",
 };
 
 interface NavbarProps {

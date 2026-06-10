@@ -29,7 +29,15 @@ export const siteConfig = {
 
 export const navItems: NavItem[] = [
   { label: "Home",               href: "/" },
-  { label: "About Us",           href: "/about" },
+  {
+    label: "About Us",
+    href: "/about",
+    children: [
+      { label: "About Us",           href: "/about" },
+      { label: "Board of Directors", href: "/board-of-directors" },
+      { label: "Our Team",           href: "/team" },
+    ],
+  },
   { label: "Projects", href: "/projects" },
   { label: "Subsidiaries", href: "/subsidiaries" },
   { label: "Investor Relations", href: "/investor-relations" },
