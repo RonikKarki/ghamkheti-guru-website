@@ -61,7 +61,7 @@ export default async function HomePage() {
     <>
       <HomeHero            cms={cms.hero} heroImages={heroImages} />
       <CompanyOverview     cms={cms.company_overview} />
-      <ProjectsShowcase />
+      <ProjectsShowcase    cms={cms.portfolio} />
       <StatsSection        cms={cms.stats} />
       <ChairmanSection     cms={cms.chairman_message} />
       <SustainabilitySection cms={cms.sustainability} />

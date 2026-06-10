@@ -14,6 +14,7 @@ export type HomepageSection =
   | "hero_images"
   | "company_overview"
   | "stats"
+  | "portfolio"
   | "hydropower"
   | "solar"
   | "agriculture"
@@ -54,7 +55,7 @@ const HomepageContentSchema = new Schema<IHomepageContent>(
       required: true,
       unique: true,
       enum:   [
-        "hero", "hero_images", "company_overview", "stats", "hydropower",
+        "hero", "hero_images", "company_overview", "stats", "portfolio", "hydropower",
         "solar", "agriculture", "chairman_message",
         "sustainability", "news_preview", "investor_cta",
       ],
