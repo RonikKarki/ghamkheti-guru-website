@@ -134,11 +134,11 @@ export async function Footer() {
                   className="object-contain"
                 />
               </div>
-              <span className="text-xs font-semibold tracking-wide" style={{ color: "rgba(255,255,255,0.60)" }}>
+              <span className="text-xs font-semibold tracking-wide text-white/60">
                 {siteConfig.shortName}
               </span>
             </Link>
-            <p className="text-sm leading-relaxed max-w-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <p className="text-sm leading-relaxed max-w-xs text-white/35">
               Energy · Agriculture · Tourism
             </p>
           </div>
@@ -146,17 +146,11 @@ export async function Footer() {
           {/* Company links */}
           {settings.companyLinks.length > 0 && (
             <div>
-              <h3 className="text-[10px] font-mono tracking-widest uppercase mb-5" style={{ color: "rgba(255,255,255,0.25)" }}>
-                Company
-              </h3>
+              <h3 className="text-[10px] font-mono tracking-widest uppercase mb-5 text-white/25">Company</h3>
               <ul className="space-y-3">
                 {settings.companyLinks.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm transition-colors duration-200"
-                      style={{ color: "rgba(255,255,255,0.40)" }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.80)")}
-                      onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.40)")}
-                    >
+                    <Link href={link.href} className="text-sm text-white/40 hover:text-white/80 transition-colors duration-200">
                       {link.label}
                     </Link>
                   </li>
@@ -168,17 +162,11 @@ export async function Footer() {
           {/* Sector links */}
           {settings.sectorLinks.length > 0 && (
             <div>
-              <h3 className="text-[10px] font-mono tracking-widest uppercase mb-5" style={{ color: "rgba(255,255,255,0.25)" }}>
-                Sectors
-              </h3>
+              <h3 className="text-[10px] font-mono tracking-widest uppercase mb-5 text-white/25">Sectors</h3>
               <ul className="space-y-3">
                 {settings.sectorLinks.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm transition-colors duration-200"
-                      style={{ color: "rgba(255,255,255,0.40)" }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.80)")}
-                      onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.40)")}
-                    >
+                    <Link href={link.href} className="text-sm text-white/40 hover:text-white/80 transition-colors duration-200">
                       {link.label}
                     </Link>
                   </li>
@@ -190,10 +178,8 @@ export async function Footer() {
           {/* Newsletter */}
           {settings.newsletterEnabled && (
             <div className="col-span-2 md:col-span-1">
-              <h3 className="text-[10px] font-mono tracking-widest uppercase mb-5" style={{ color: "rgba(255,255,255,0.25)" }}>
-                Stay Updated
-              </h3>
-              <p className="text-sm mb-4 leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
+              <h3 className="text-[10px] font-mono tracking-widest uppercase mb-5 text-white/25">Stay Updated</h3>
+              <p className="text-sm mb-4 leading-relaxed text-white/35">
                 Latest news on our projects and sustainability reports.
               </p>
               <NewsletterForm />
@@ -206,15 +192,10 @@ export async function Footer() {
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
         <Container className="py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs font-mono" style={{ color: "rgba(255,255,255,0.22)" }}>{copyright}</p>
+            <p className="text-xs font-mono text-white/22">{copyright}</p>
             <div className="flex items-center gap-5">
               {settings.legalLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-xs transition-colors"
-                  style={{ color: "rgba(255,255,255,0.22)" }}
-                >
+                <Link key={link.href} href={link.href} className="text-xs text-white/22 hover:text-white/50 transition-colors">
                   {link.label}
                 </Link>
               ))}
@@ -228,10 +209,7 @@ export async function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={platform}
-                    className="flex h-7 w-7 items-center justify-center transition-colors"
-                    style={{ border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.35)" }}
-                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.80)")}
-                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.35)")}
+                    className="flex h-7 w-7 items-center justify-center text-white/35 hover:text-white/80 transition-colors border border-white/12"
                   >
                     {SOCIAL_SVGS[platform]}
                   </a>
