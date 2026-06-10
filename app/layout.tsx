@@ -87,7 +87,7 @@ const organizationSchema = {
   "contactPoint": [
     {
       "@type": "ContactPoint",
-      "telephone": "+977-9843698536",
+      "telephone": "+977-9851266455",
       "contactType": "customer service",
       "areaServed": "NP",
       "availableLanguage": ["English", "Nepali"],

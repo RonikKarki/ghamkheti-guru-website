@@ -7,7 +7,7 @@ export const siteConfig = {
     "Ghamkheti Guru Company Limited — an integrated Energy, Agriculture, and Tourism development company in Nepal. Developing clean hydropower, solar energy, and agro-industrial enterprises for a sustainable future.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   email: "ghamkhetiguru@gmail.com",
-  phone: "+977-9843698536",
+  phone: "+977-9851266455",
   address: "2nd Floor, Trade Tower, Thapathali, Kathmandu 44600, Nepal",
   social: {
     twitter: "https://twitter.com/ghamkhetiguru",
