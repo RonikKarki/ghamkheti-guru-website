@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Mail } from "lucide-react";
 import { Container } from "@/components/common/Container";
-import { Button } from "@/components/ui/button";
 import { fadeUp, viewportOnce } from "@/lib/animations";
 
 interface CTABannerProps {
@@ -35,84 +34,82 @@ export function CTABanner({
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="relative overflow-hidden rounded-3xl"
-          style={{
-            background: "linear-gradient(135deg, #001a0d 0%, #003820 35%, #00521e 60%, #002d14 100%)",
-          }}
+          className="relative overflow-hidden"
+          style={{ backgroundColor: "#1a1a1a" }}
         >
-          {/* Radial green spotlight */}
+          {/* Amber radial spotlight */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background:
-                "radial-gradient(ellipse 70% 80% at 50% -10%, rgba(0,212,106,0.30) 0%, transparent 65%)",
+              background: "radial-gradient(ellipse 60% 70% at 50% -5%, rgba(232,150,10,0.18) 0%, transparent 65%)",
             }}
           />
 
-          {/* Secondary glow — bottom right */}
+          {/* Subtle dot grid texture */}
           <div
-            className="absolute -bottom-16 -right-16 h-80 w-80 rounded-full blur-3xl pointer-events-none"
-            style={{ background: "rgba(0,200,176,0.12)" }}
-          />
-
-          {/* Dot grid texture */}
-          <div
-            className="absolute inset-0 opacity-20 pointer-events-none"
+            className="absolute inset-0 opacity-30 pointer-events-none"
             style={{
-              backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)",
+              backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)",
               backgroundSize: "28px 28px",
             }}
           />
 
-          {/* Border glow */}
+          {/* Top amber accent line */}
           <div
-            className="absolute inset-0 rounded-3xl pointer-events-none"
-            style={{ boxShadow: "inset 0 0 0 1px rgba(0,212,106,0.18)" }}
+            className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(to right, transparent, rgba(232,150,10,0.5), transparent)" }}
           />
 
           <div className="relative z-10 px-8 py-14 md:px-16 md:py-20 text-center">
             {badge && (
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-6">
-                <span className="h-1 w-1 rounded-full bg-primary shrink-0" />
-                <span className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-primary">
+              <div
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6"
+                style={{ border: "1px solid rgba(232,150,10,0.30)", backgroundColor: "rgba(232,150,10,0.08)" }}
+              >
+                <span className="h-1 w-1 rounded-full shrink-0" style={{ backgroundColor: "#e8960a" }} />
+                <span
+                  className="text-[0.65rem] font-semibold uppercase tracking-[0.16em]"
+                  style={{ color: "#e8960a" }}
+                >
                   {badge}
                 </span>
               </div>
             )}
 
-            <h2 className="text-display-lg font-display text-white text-balance max-w-3xl mx-auto mb-5 tracking-tight">
+            <h2
+              className="font-display font-bold text-white text-balance max-w-3xl mx-auto mb-5 tracking-tight"
+              style={{ fontSize: "clamp(1.8rem, 3.5vw, 3rem)", lineHeight: 1.1, letterSpacing: "-0.03em" }}
+            >
               {title}
             </h2>
 
             {description && (
-              <p className="text-white/65 text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-10">
+              <p className="text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-10" style={{ color: "rgba(255,255,255,0.55)" }}>
                 {description}
               </p>
             )}
 
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Button
-                asChild
-                size="xl"
-                className="bg-primary text-primary-foreground font-semibold hover:bg-primary/90 shadow-[0_0_28px_rgba(0,212,106,0.35)]"
+              <Link
+                href={primaryHref}
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 text-sm font-semibold tracking-wide transition-opacity hover:opacity-85"
+                style={{ backgroundColor: "#e8960a", color: "#0a0a0a" }}
               >
-                <Link href={primaryHref}>
-                  <Mail className="h-4 w-4" />
-                  {primaryLabel}
-                </Link>
-              </Button>
+                <Mail className="h-4 w-4" />
+                {primaryLabel}
+              </Link>
 
               {secondaryLabel && secondaryHref && (
-                <Button
-                  asChild
-                  size="xl"
-                  className="bg-transparent border border-white/20 text-white hover:bg-white/8 hover:border-white/35"
+                <Link
+                  href={secondaryHref}
+                  className="inline-flex items-center gap-2.5 px-7 py-3.5 text-sm font-semibold tracking-wide transition-colors"
+                  style={{ border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.80)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.40)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)")}
                 >
-                  <Link href={secondaryHref}>
-                    {secondaryLabel}
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
+                  {secondaryLabel}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               )}
             </div>
           </div>
