@@ -8,14 +8,14 @@
 
 :root {
   /* --- Base canvas --- */
-  --background:         #07080d;
-  --background-alt:     #0b0c13;
-  --surface:            #0f1018;
-  --surface-raised:     #14151f;
-  --surface-overlay:    #1a1b27;
-  --foreground:         #f1f2f8;
-  --foreground-muted:   #8b8fa8;
-  --foreground-subtle:  #50536a;
+  --background:         #080808;
+  --background-alt:     #0d0d0d;
+  --surface:            #111111;
+  --surface-raised:     #181818;
+  --surface-overlay:    #1e1e1e;
+  --foreground:         #ededed;
+  --foreground-muted:   #909090;
+  --foreground-subtle:  #555555;
 
   /* --- Semantic tokens --- */
   --card:               #0f1018;
@@ -76,12 +76,12 @@
   --gradient-cta:     linear-gradient(135deg, #003d20 0%, #005a30 40%, #003820 100%);
 
   /* --- Radius --- */
-  --radius:     0.75rem;
-  --radius-sm:  0.375rem;
-  --radius-md:  0.75rem;
-  --radius-lg:  1rem;
-  --radius-xl:  1.25rem;
-  --radius-2xl: 1.75rem;
+  --radius:     0.25rem;
+  --radius-sm:  0.125rem;
+  --radius-md:  0.25rem;
+  --radius-lg:  0.375rem;
+  --radius-xl:  0.5rem;
+  --radius-2xl: 0.75rem;
   --radius-full:9999px;
 
   /* --- Spacing --- */
@@ -89,8 +89,8 @@
   --space-section-lg: 8rem;
 
   /* --- Typography --- */
-  --font-display: var(--font-geist-sans), "Inter", system-ui, sans-serif;
-  --font-sans:    var(--font-geist-sans), "Inter", system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
+  --font-sans:    var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
   --font-mono:    var(--font-geist-mono), "Courier New", monospace;
 
   /* --- Z-index --- */
@@ -104,14 +104,14 @@
 
 /* Light theme */
 html:not(.dark) {
-  --background:         #f8f9fc;
-  --background-alt:     #f0f2f8;
+  --background:         #f9f9f7;
+  --background-alt:     #f0f0ee;
   --surface:            #ffffff;
-  --surface-raised:     #f4f5fa;
+  --surface-raised:     #f5f5f3;
   --surface-overlay:    #ffffff;
-  --foreground:         #0a0b14;
-  --foreground-muted:   #4a4e6a;
-  --foreground-subtle:  #9094b0;
+  --foreground:         #0a0a0a;
+  --foreground-muted:   #4a4a4a;
+  --foreground-subtle:  #909090;
 
   --card:               #ffffff;
   --card-foreground:    #0a0b14;
@@ -493,6 +493,29 @@ body {
   outline: 1px solid var(--ring);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* ----------------------------------------------------------------
+   SECTION LABELS — numbered editorial style
+   ---------------------------------------------------------------- */
+.section-num {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 1.25rem;
+}
+.section-num::before {
+  content: "";
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background: var(--primary);
+  opacity: 0.7;
 }
 
 /* ----------------------------------------------------------------

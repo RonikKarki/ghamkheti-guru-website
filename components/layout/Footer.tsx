@@ -79,27 +79,43 @@ export async function Footer() {
     // use fallback
   }
 
-  const year = new Date().getFullYear();
+  const year      = new Date().getFullYear();
   const copyright = settings.copyrightText || `© ${year} ${siteConfig.name}. All rights reserved.`;
   const activeSocials = settings.socialLinks.filter((s) => s.enabled && s.href);
 
   return (
     <footer className="bg-surface border-t border-border">
-      <Container className="py-14 md:py-20">
+      {/* Editorial headline band */}
+      <div className="border-b border-border">
+        <Container className="py-16 md:py-20">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+            <h2 className="text-display-lg font-display text-foreground tracking-tight max-w-2xl text-balance">
+              Building Nepal&apos;s <span className="text-gradient">Sustainable Future</span> — Together
+            </h2>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2.5 self-start md:self-auto px-6 py-3 text-sm font-semibold border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-200 shrink-0"
+            >
+              Get In Touch
+            </Link>
+          </div>
+        </Container>
+      </div>
+
+      {/* Main links grid */}
+      <Container className="py-14 md:py-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand column */}
-          <div className="lg:col-span-1">
+          <div>
             <Link href="/" className="flex items-center gap-2.5 mb-6">
               <Image
                 src="/images/logos/ghamkheti-logo.png"
                 alt="Ghamkheti Guru Logo"
                 width={28}
                 height={28}
-                className="rounded-md"
+                className="object-contain"
               />
-              <span className="font-semibold text-sm text-foreground tracking-tight">
-                {siteConfig.shortName}
-              </span>
+              <span className="font-semibold text-sm text-foreground tracking-tight">{siteConfig.shortName}</span>
             </Link>
             <p className="text-sm text-foreground-muted leading-relaxed mb-6 max-w-xs">
               {siteConfig.description}
@@ -107,15 +123,11 @@ export async function Footer() {
             <ul className="space-y-3 text-sm text-foreground-subtle">
               <li className="flex items-start gap-2.5">
                 <Mail className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
-                <a href={`mailto:${settings.email}`} className="hover:text-foreground transition-colors">
-                  {settings.email}
-                </a>
+                <a href={`mailto:${settings.email}`} className="hover:text-foreground transition-colors">{settings.email}</a>
               </li>
               <li className="flex items-start gap-2.5">
                 <Phone className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
-                <a href={`tel:${settings.phone}`} className="hover:text-foreground transition-colors">
-                  {settings.phone}
-                </a>
+                <a href={`tel:${settings.phone}`} className="hover:text-foreground transition-colors">{settings.phone}</a>
               </li>
               <li className="flex items-start gap-2.5">
                 <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" />
@@ -190,7 +202,7 @@ export async function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={platform}
-                    className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-foreground-subtle hover:text-primary hover:border-primary/30 transition-colors"
+                    className="flex h-7 w-7 items-center justify-center border border-border text-foreground-subtle hover:text-primary hover:border-primary/30 transition-colors"
                   >
                     {SOCIAL_SVGS[platform]}
                   </a>

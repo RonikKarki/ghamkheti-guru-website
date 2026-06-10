@@ -2,12 +2,9 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { TrendingUp, FileText, Shield, ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/Container";
-import { Button } from "@/components/ui/button";
 import { fadeUp, staggerContainer, staggerItem, viewportOnce } from "@/lib/animations";
-
-const HIGHLIGHT_ICONS = [TrendingUp, FileText, Shield, CheckCircle];
 
 const DEFAULT_HIGHLIGHTS = [
   "Stable long-term Power Purchase Agreements with Nepal Electricity Authority",
@@ -48,64 +45,64 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
   const displayHighlights = highlights.length > 0 ? highlights : DEFAULT_HIGHLIGHTS;
 
   return (
-    <section className="py-20 md:py-28 bg-background">
+    <section className="py-24 md:py-32 bg-background border-t border-border">
       <Container>
         <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="relative overflow-hidden rounded-3xl border border-primary/20"
         >
-          <div className="absolute inset-0 bg-linear-to-br from-brand-deep via-brand-mid/40 to-brand-deep" />
-          <div className="absolute inset-0 noise-overlay opacity-20" />
-          <div className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-white/4 blur-3xl" />
-          <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-black/20 blur-3xl" />
-          <div className="absolute top-1/2 right-1/4 h-48 w-48 -translate-y-1/2 rounded-full bg-gold/6 blur-2xl" />
+          {/* Section label */}
+          <div className="section-num mb-0">06 / Investor Relations</div>
 
-          <div className="relative z-10 px-8 py-14 md:px-16 md:py-20">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-              {/* Left */}
-              <div>
-                <span className="inline-block mb-5 px-4 py-1.5 rounded-full text-[0.65rem] font-semibold tracking-[0.14em] uppercase bg-white/10 text-white/90 border border-white/15">
-                  Investor Relations
-                </span>
-                <h2 className="text-display-lg font-display text-white text-balance mb-5">{heading}</h2>
-                <p className="text-white/70 leading-relaxed mb-8">{bodyText}</p>
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+            {/* Left */}
+            <div>
+              <h2 className="text-display-lg font-display text-foreground text-balance tracking-tight mb-6">
+                {heading}
+              </h2>
+              <p className="text-foreground-muted leading-relaxed mb-10 text-[15px]">{bodyText}</p>
 
-                <motion.ul variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-3 mb-10">
-                  {displayHighlights.map((text, i) => {
-                    const Icon = HIGHLIGHT_ICONS[i % HIGHLIGHT_ICONS.length];
-                    return (
-                      <motion.li key={i} variants={staggerItem} className="flex items-start gap-3">
-                        <div className="h-7 w-7 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
-                          <Icon className="h-3.5 w-3.5 text-primary" />
-                        </div>
-                        <span className="text-sm text-white/70 leading-relaxed">{text}</span>
-                      </motion.li>
-                    );
-                  })}
-                </motion.ul>
-
-                <div className="flex flex-wrap gap-3">
-                  <Button asChild size="xl" className="bg-white text-brand-deep font-semibold hover:bg-white/95">
-                    <Link href={primaryHref}>{primaryLabel} <ArrowRight className="h-4 w-4" /></Link>
-                  </Button>
-                  <Button asChild size="xl" className="bg-transparent border border-white/30 text-white hover:bg-white/10">
-                    <Link href={secondHref}>{secondLabel}</Link>
-                  </Button>
-                </div>
-              </div>
-
-              {/* Right — metrics */}
-              <div className="grid grid-cols-2 gap-4">
-                {displayMetrics.map((m, i) => (
-                  <div key={i} className="rounded-2xl bg-white/5 border border-white/10 p-5 text-center">
-                    <p className="text-2xl md:text-3xl font-display font-bold text-white leading-none mb-1">{m.v}</p>
-                    <p className="text-[11px] text-white/60">{m.l}</p>
-                  </div>
+              <motion.ul
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="space-y-4 mb-10"
+              >
+                {displayHighlights.map((text, i) => (
+                  <motion.li key={i} variants={staggerItem} className="flex items-start gap-3">
+                    <span className="mt-2 h-px w-4 bg-primary shrink-0" />
+                    <span className="text-sm text-foreground-muted leading-relaxed">{text}</span>
+                  </motion.li>
                 ))}
+              </motion.ul>
+
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href={primaryHref}
+                  className="inline-flex items-center gap-2.5 px-6 py-3 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
+                >
+                  {primaryLabel} <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href={secondHref}
+                  className="inline-flex items-center gap-2.5 px-6 py-3 text-sm font-semibold border border-border text-foreground-muted hover:text-foreground hover:border-foreground-subtle transition-colors duration-200"
+                >
+                  {secondLabel}
+                </Link>
               </div>
+            </div>
+
+            {/* Right — metrics grid */}
+            <div className="grid grid-cols-2 gap-px bg-border">
+              {displayMetrics.map((m, i) => (
+                <div key={i} className="bg-surface p-6 text-center hover:bg-surface-raised transition-colors duration-300">
+                  <p className="font-mono text-2xl md:text-3xl font-bold text-primary leading-none mb-1.5 tabular-nums">{m.v}</p>
+                  <p className="text-[11px] text-foreground-subtle uppercase tracking-widest">{m.l}</p>
+                </div>
+              ))}
             </div>
           </div>
         </motion.div>

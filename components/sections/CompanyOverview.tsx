@@ -4,30 +4,27 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Droplets, Sun, Sprout, ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/Container";
-import { Section } from "@/components/common/Section";
-import { Button } from "@/components/ui/button";
 import { fadeUp, fadeLeft, fadeRight, viewportOnce } from "@/lib/animations";
 
 const ICON_MAP: Record<string, React.ElementType> = {
-  hydropower: Droplets,
-  solar:      Sun,
+  hydropower:  Droplets,
+  solar:       Sun,
   agriculture: Sprout,
 };
 
-const PILLAR_STYLES: Array<{ color: string; bg: string }> = [
-  { color: "text-teal",    bg: "bg-teal/10 border-teal/20"    },
-  { color: "text-gold",    bg: "bg-gold/10 border-gold/20"    },
-  { color: "text-primary", bg: "bg-primary/10 border-primary/20" },
+const PILLAR_ACCENTS = [
+  { color: "text-teal",    border: "border-teal/20",    bg: "bg-teal/5"    },
+  { color: "text-gold",    border: "border-gold/20",    bg: "bg-gold/5"    },
+  { color: "text-primary", border: "border-primary/20", bg: "bg-primary/5" },
 ];
 
 const DEFAULT_PILLARS = [
-  { label: "Hydropower",    detail: "Run-of-river & storage hydroelectric projects across Nepal's major river systems." },
-  { label: "Solar Energy",  detail: "Ground-mounted and rooftop solar PV installations powering communities and industry." },
-  { label: "Agriculture",   detail: "Modern rice milling with Japanese Satake technology through our subsidiary in Gaindakot, Nawalpur." },
+  { label: "Hydropower",   detail: "Run-of-river & storage hydroelectric projects across Nepal's major river systems." },
+  { label: "Solar Energy", detail: "Ground-mounted and rooftop solar PV installations powering communities and industry." },
+  { label: "Agriculture",  detail: "Modern rice milling with Japanese Satake technology through our subsidiary in Gaindakot, Nawalpur." },
 ];
 
 interface CmsPillar { label?: string; detail?: string; type?: string; text?: string; attribution?: string; }
-
 interface CmsAbout {
   title?:    string;
   body?:     string;
@@ -41,62 +38,75 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
   const paragraph1   = cms?.body     || "";
   const paragraph2   = cms?.subtitle || "";
 
-  const rawItems = cms?.items ?? [];
-  const pillars  = rawItems.filter((i) => !i.type || i.type === "pillar");
-  const quoteItem = rawItems.find((i) => i.type === "quote");
-
+  const rawItems      = cms?.items ?? [];
+  const pillars       = rawItems.filter((i) => !i.type || i.type === "pillar");
+  const quoteItem     = rawItems.find((i) => i.type === "quote");
   const displayPillars = pillars.length > 0 ? pillars : DEFAULT_PILLARS;
-  const quoteText      = quoteItem?.text        || cms?.badge || "";
+  const quoteText      = quoteItem?.text || cms?.badge || "";
   const quoteAttr      = quoteItem?.attribution || "";
 
   return (
-    <Section variant="surface" id="about-overview">
+    <section className="py-24 md:py-32 bg-background">
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
           {/* Left — text */}
           <motion.div variants={fadeLeft} initial="hidden" whileInView="visible" viewport={viewportOnce}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/20 bg-primary/5 mb-6">
-              <span className="h-1 w-1 rounded-full bg-primary" />
-              <span className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-primary">Who We Are</span>
-            </div>
+            <div className="section-num">02 / Who We Are</div>
 
-            <h2 className="text-display-lg font-display text-foreground text-balance tracking-tight mb-5">
+            <h2 className="text-display-lg font-display text-foreground text-balance tracking-tight mb-6">
               {sectionTitle ? (
                 <span>{sectionTitle}</span>
               ) : (
-                <>An Integrated Force in <span className="text-gradient">Nepal&apos;s Growth Story</span></>
+                <>An Integrated Force in Nepal&apos;s <span className="text-gradient">Growth Story</span></>
               )}
             </h2>
 
-            {paragraph1 && <p className="text-foreground-muted leading-relaxed mb-4">{paragraph1}</p>}
-            {paragraph2 && <p className="text-foreground-muted leading-relaxed mb-10">{paragraph2}</p>}
+            {paragraph1 && (
+              <p className="text-foreground-muted leading-relaxed mb-4 text-[15px]">{paragraph1}</p>
+            )}
+            {paragraph2 && (
+              <p className="text-foreground-muted leading-relaxed mb-10 text-[15px]">{paragraph2}</p>
+            )}
+            {!paragraph1 && !paragraph2 && (
+              <p className="text-foreground-muted leading-relaxed mb-10 text-[15px]">
+                Ghamkheti Guru Company Limited is a Kathmandu-based integrated development company delivering clean energy, modern agro-industry, and sustainable tourism across Nepal.
+              </p>
+            )}
 
-            <Button asChild size="lg" variant="gradient">
-              <Link href="/about">Our Full Story <ArrowRight className="h-4 w-4" /></Link>
-            </Button>
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-2.5 px-5 py-2.5 text-sm font-semibold border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+            >
+              Our Full Story <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </motion.div>
 
-          {/* Right — sector cards + quote */}
-          <motion.div variants={fadeRight} initial="hidden" whileInView="visible" viewport={viewportOnce} className="space-y-3">
+          {/* Right — pillar rows + quote */}
+          <motion.div variants={fadeRight} initial="hidden" whileInView="visible" viewport={viewportOnce} className="space-y-2.5">
             {displayPillars.map(({ label = "", detail = "" }, i) => {
-              const style = PILLAR_STYLES[i % PILLAR_STYLES.length];
+              const accent  = PILLAR_ACCENTS[i % PILLAR_ACCENTS.length];
               const iconKey = label.toLowerCase().includes("hydro") ? "hydropower"
                 : label.toLowerCase().includes("solar") ? "solar" : "agriculture";
-              const Icon = ICON_MAP[iconKey] ?? Sprout;
+              const Icon    = ICON_MAP[iconKey] ?? Sprout;
               return (
-                <div
+                <motion.div
                   key={i}
-                  className="flex items-start gap-4 rounded-2xl p-5 border border-border bg-surface-raised hover:border-primary/20 transition-all duration-300 group"
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.06 }}
+                  className={`flex items-start gap-4 p-5 border ${accent.border} ${accent.bg} group hover:border-opacity-50 transition-all duration-300`}
                 >
-                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border ${style.bg} transition-transform duration-300 group-hover:scale-105`}>
-                    <Icon className={`h-5 w-5 ${style.color}`} strokeWidth={1.8} />
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center border ${accent.border}`}>
+                    <Icon className={`h-4.5 w-4.5 ${accent.color}`} strokeWidth={1.8} />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">{label}</h3>
+                    <h3 className="font-semibold text-foreground text-sm mb-1">{label}</h3>
                     <p className="text-sm text-foreground-muted leading-relaxed">{detail}</p>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
 
@@ -106,20 +116,19 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
                 initial="hidden"
                 whileInView="visible"
                 viewport={viewportOnce}
-                className="relative rounded-2xl overflow-hidden p-5"
-                style={{
-                  background: "linear-gradient(135deg, rgba(0,84,42,0.50) 0%, rgba(0,82,30,0.35) 60%, rgba(0,45,20,0.50) 100%)",
-                  border: "1px solid rgba(0,212,106,0.15)",
-                }}
+                className="relative p-5 border border-primary/15"
+                style={{ background: "rgba(0,212,106,0.04)" }}
               >
-                <div className="absolute top-0 right-0 h-24 w-24 blur-2xl pointer-events-none" style={{ background: "rgba(0,212,106,0.15)" }} />
-                <p className="text-sm text-foreground/80 italic leading-relaxed relative z-10">&ldquo;{quoteText}&rdquo;</p>
-                {quoteAttr && <p className="text-xs font-semibold text-primary mt-3 relative z-10">— {quoteAttr}</p>}
+                <p className="text-sm text-foreground/75 italic leading-relaxed">&ldquo;{quoteText}&rdquo;</p>
+                {quoteAttr && (
+                  <p className="text-xs font-semibold text-primary mt-3">— {quoteAttr}</p>
+                )}
               </motion.div>
             )}
           </motion.div>
+
         </div>
       </Container>
-    </Section>
+    </section>
   );
 }
