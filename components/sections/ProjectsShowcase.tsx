@@ -13,6 +13,7 @@ type SectorItem = {
   sector?: string;
   description?: string;
   href?: string;
+  buttonLabel?: string;
   isCenter?: boolean;
 };
 
@@ -180,7 +181,7 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
                     transition: "color 0.3s ease",
                   }}
                 >
-                  View Dossier <ArrowUpRight className="h-3 w-3" />
+                  {s.buttonLabel || "View Dossier"} <ArrowUpRight className="h-3 w-3" />
                 </Link>
               </div>
             </motion.div>
