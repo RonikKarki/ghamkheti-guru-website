@@ -11,6 +11,12 @@ export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ slug: string }> };
 
+function normalizeUrl(url?: string) {
+  if (!url) return url;
+  if (/^https?:\/\//i.test(url)) return url;
+  return `https://${url}`;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   await connectToDatabase();
   const { slug } = await params;
@@ -133,7 +139,7 @@ export default async function SubsidiaryDetailPage({ params }: Props) {
               ))}
               {s.contact?.website && (
                 <a
-                  href={s.contact.website}
+                  href={normalizeUrl(s.contact.website)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-sm text-primary hover:underline mt-2"
@@ -255,7 +261,7 @@ export default async function SubsidiaryDetailPage({ params }: Props) {
               )}
               {s.contact?.website && (
                 <a
-                  href={s.contact.website}
+                  href={normalizeUrl(s.contact.website)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground-muted hover:text-foreground hover:border-primary/30 transition-colors"

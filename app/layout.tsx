@@ -61,6 +61,72 @@ export const viewport: Viewport = {
   ],
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Corporation",
+  "name": "Ghamkheti Guru Company Limited",
+  "alternateName": ["Ghamkheti Guru", "Ghamkheti Guru Co. Ltd."],
+  "url": "https://ghamkhetiguru.com.np",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://ghamkhetiguru.com.np/images/logos/ghamkheti-logo.png",
+    "width": 512,
+    "height": 512,
+  },
+  "image": "https://ghamkhetiguru.com.np/images/logos/ghamkheti-logo.png",
+  "description": siteConfig.description,
+  "foundingDate": "2018",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "2nd Floor, Trade Tower, Thapathali",
+    "addressLocality": "Kathmandu",
+    "postalCode": "44600",
+    "addressCountry": "NP",
+    "addressRegion": "Bagmati Province",
+  },
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+977-9843698536",
+      "contactType": "customer service",
+      "areaServed": "NP",
+      "availableLanguage": ["English", "Nepali"],
+    },
+    {
+      "@type": "ContactPoint",
+      "email": "ghamkhetiguru@gmail.com",
+      "contactType": "customer service",
+    },
+  ],
+  "areaServed": {
+    "@type": "Country",
+    "name": "Nepal",
+  },
+  "sameAs": [
+    "https://www.linkedin.com/company/ghamkheti-guru",
+    "https://www.facebook.com/ghamkhetiguru",
+    "https://twitter.com/ghamkhetiguru",
+  ],
+  "knowsAbout": [
+    "Hydropower",
+    "Solar Energy",
+    "Renewable Energy Nepal",
+    "Rice Milling",
+    "Agribusiness Nepal",
+    "Tourism Nepal",
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Services",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Hydropower Development" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Solar Energy Projects" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Agro-Industrial Enterprises" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Tourism Development" } },
+    ],
+  },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -69,6 +135,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col antialiased bg-background text-foreground">
         <Providers>{children}</Providers>
       </body>

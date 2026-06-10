@@ -213,7 +213,7 @@ function NavItemLink({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.15 }}
-              className="absolute left-0 top-full mt-1.5 w-52 rounded-xl border border-border bg-surface-overlay backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] py-1.5 z-50"
+              className="absolute left-0 top-full mt-1.5 w-52 rounded-xl border border-border bg-card shadow-[0_8px_32px_rgba(0,0,0,0.5)] py-1.5 z-50"
             >
               {item.children!.map((child) => (
                 <Link
