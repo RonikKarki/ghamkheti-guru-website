@@ -186,7 +186,7 @@ export function HomeHero({
       </div>
 
       {/* ── RIGHT PANEL — image slider (desktop) ── */}
-      <div className="hidden lg:block flex-1 relative overflow-hidden">
+      <div className="hidden lg:block flex-1 relative overflow-hidden" style={{ backgroundColor: "#1a1a1a" }}>
         {slides.length > 0 ? (
           slides.map((slide, i) => (
             <div
