@@ -196,7 +196,7 @@ export function HomeHero({
               style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 2 : (i === prevSlide ? 1 : 0) }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={slide.url} alt={slide.alt ?? ""} className="absolute inset-0 w-full h-full object-cover" />
+              <img src={slide.url} alt={slide.alt ?? ""} className="absolute inset-0 w-full h-full object-contain" />
               {/* Left-edge gradient blending with cream left panel */}
               <div
                 className="absolute inset-y-0 left-0 w-16 pointer-events-none"
