@@ -80,17 +80,19 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Corporation",
   "name": "Ghamkheti Guru Company Limited",
-  "alternateName": ["Ghamkheti Guru", "Ghamkheti Guru Co. Ltd."],
+  "alternateName": ["Ghamkheti Guru", "Ghamkheti Guru Co. Ltd.", "Ghamkheti Guru Limited"],
   "url": "https://ghamkhetiguru.com.np",
   "logo": {
     "@type": "ImageObject",
     "url": "https://ghamkhetiguru.com.np/images/logos/ghamkheti-logo.png",
     "width": 512,
     "height": 512,
+    "caption": "Ghamkheti Guru Company Limited Logo",
   },
   "image": "https://ghamkhetiguru.com.np/images/logos/ghamkheti-logo.png",
   "description": siteConfig.description,
   "foundingDate": "2018",
+  "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 10, "maxValue": 50 },
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "2nd Floor, Trade Tower, Thapathali",
@@ -98,6 +100,11 @@ const organizationSchema = {
     "postalCode": "44600",
     "addressCountry": "NP",
     "addressRegion": "Bagmati Province",
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude":  27.6939,
+    "longitude": 85.3157,
   },
   "contactPoint": [
     {
@@ -113,23 +120,13 @@ const organizationSchema = {
       "contactType": "customer service",
     },
   ],
-  "areaServed": {
-    "@type": "Country",
-    "name": "Nepal",
-  },
+  "areaServed": { "@type": "Country", "name": "Nepal" },
   "sameAs": [
     "https://www.linkedin.com/company/ghamkheti-guru",
     "https://www.facebook.com/ghamkhetiguru",
     "https://twitter.com/ghamkhetiguru",
   ],
-  "knowsAbout": [
-    "Hydropower",
-    "Solar Energy",
-    "Renewable Energy Nepal",
-    "Rice Milling",
-    "Agribusiness Nepal",
-    "Tourism Nepal",
-  ],
+  "knowsAbout": ["Hydropower", "Solar Energy", "Renewable Energy Nepal", "Rice Milling", "Agribusiness Nepal", "Tourism Nepal"],
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "Services",
@@ -139,6 +136,19 @@ const organizationSchema = {
       { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Agro-Industrial Enterprises" } },
       { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Tourism Development" } },
     ],
+  },
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Ghamkheti Guru Company Limited",
+  "url": "https://ghamkhetiguru.com.np",
+  "description": siteConfig.description,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": { "@type": "EntryPoint", "urlTemplate": "https://ghamkhetiguru.com.np/media?q={search_term_string}" },
+    "query-input": "required name=search_term_string",
   },
 };
 
@@ -154,6 +164,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
       <body className="min-h-screen flex flex-col antialiased bg-background text-foreground">
