@@ -59,6 +59,14 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   verification: { google: "urnxtEeuS-9e7YBD0YB-dRpiMWOJ5CbfbAI1cgIkUYs" },
+  icons: {
+    icon: [
+      { url: "/favicon.ico",                    sizes: "any" },
+      { url: "/images/logos/ghamkheti-logo.png", type: "image/png" },
+    ],
+    apple:   "/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export const viewport: Viewport = {
