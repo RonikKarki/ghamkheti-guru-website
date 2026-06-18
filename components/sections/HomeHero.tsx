@@ -49,8 +49,6 @@ export function HomeHero({
   const INTERVAL = 5000;
 
   const visible = (heroImages ?? []).filter((s) => s.url && s.isVisible !== false);
-  // Map first 3 uploaded images to Energy / Agriculture / Tourism
-  const sectorImages = SECTORS.map((_, i) => visible[i]?.url ?? null);
 
   const slideCount = visible.length || 1;
 
@@ -74,7 +72,7 @@ export function HomeHero({
     restartTimer();
   };
 
-  const sector       = SECTORS[index];
+  const sector       = SECTORS[index % SECTORS.length];
   const heroStats    = cms?.items?.length ? cms.items : DEFAULT_STATS;
   const body         = cms?.body || cms?.subtitle || "From the Himalayan rivers to the Terai plains — developing world-class hydropower, solar installations, and agro-industrial enterprises for a stronger, greener Nepal.";
   const primaryLabel = cms?.primaryCta?.label  || "Explore Projects";
@@ -365,10 +363,10 @@ export function HomeHero({
 
       {/* Mobile background image */}
       <div className="lg:hidden absolute inset-0 z-0" aria-hidden="true">
-        {sectorImages[index] && (
+        {visible[index]?.url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={sectorImages[index]!}
+            src={visible[index]!.url}
             alt=""
             style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.18 }}
           />
