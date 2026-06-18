@@ -1,16 +1,28 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { staggerContainer, staggerItem, EASE_OUT_BEZIER as E } from "@/lib/animations";
 
+const AMBER = "#E0962F";
+const DARK  = "#0F0D09";
+const CREAM_TEXT = "#ECE6DA";
+const MONO  = "var(--font-space-mono), 'Space Mono', monospace";
+const BRICO = "var(--font-bricolage), 'Bricolage Grotesque', system-ui, sans-serif";
+
+const SECTORS = [
+  { num: "01", word: "Energy",      label: "Hydropower & Solar",    desc: "Clean power for a growing nation" },
+  { num: "02", word: "Agriculture", label: "Agro-Industry",         desc: "Farming, processing & food security" },
+  { num: "03", word: "Tourism",     label: "Tourism & Hospitality", desc: "Destinations across Nepal" },
+];
+
 const DEFAULT_STATS = [
-  { value: "4.9 MW",  label: "Hydropower" },
-  { value: "10 MW",   label: "Solar" },
-  { value: "8 T/Hr",  label: "Rice Mill" },
-  { value: "03",      label: "Sectors" },
+  { value: "4.9 MW", label: "Hydropower" },
+  { value: "10 MW",  label: "Solar"      },
+  { value: "8 T/Hr", label: "Rice Mill"  },
+  { value: "03",     label: "Sectors"    },
 ];
 
 interface CmsHero {
@@ -21,8 +33,7 @@ interface CmsHero {
   secondaryCta?: { label: string; href: string };
   items?:        { value?: string; label?: string }[];
 }
-
-interface HeroImage { url: string; alt?: string; isVisible?: boolean; overlay?: number }
+interface HeroImage { url: string; alt?: string; isVisible?: boolean }
 
 export function HomeHero({
   cms,
@@ -31,35 +42,55 @@ export function HomeHero({
   cms?: CmsHero | null;
   heroImages?: HeroImage[];
 }) {
-  const headline     = cms?.title     || "";
-  const subheadline  = cms?.subtitle  || "From the Himalayan rivers to the Terai plains — developing world-class hydropower, solar installations, and agro-industrial enterprises for a stronger, greener Nepal.";
-  const body         = cms?.body      || "";
+  const [index,   setIndex]   = useState(0);
+  const [animKey, setAnimKey] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const INTERVAL = 5000;
+
+  const visible = (heroImages ?? []).filter((s) => s.url && s.isVisible !== false);
+  // Map first 3 uploaded images to Energy / Agriculture / Tourism
+  const sectorImages = SECTORS.map((_, i) => visible[i]?.url ?? null);
+
+  const slideCount = visible.length || 1;
+
+  const restartTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setIndex((i) => (i + 1) % slideCount);
+      setAnimKey((k) => k + 1);
+    }, INTERVAL);
+  }, [slideCount]);
+
+  useEffect(() => {
+    restartTimer();
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [restartTimer]);
+
+  const go = (k: number) => {
+    const next = ((k % slideCount) + slideCount) % slideCount;
+    setIndex(next);
+    setAnimKey((ak) => ak + 1);
+    restartTimer();
+  };
+
+  const sector       = SECTORS[index];
+  const heroStats    = cms?.items?.length ? cms.items : DEFAULT_STATS;
+  const body         = cms?.body || cms?.subtitle || "From the Himalayan rivers to the Terai plains — developing world-class hydropower, solar installations, and agro-industrial enterprises for a stronger, greener Nepal.";
   const primaryLabel = cms?.primaryCta?.label  || "Explore Projects";
   const primaryHref  = cms?.primaryCta?.href   || "/projects";
   const secondLabel  = cms?.secondaryCta?.label || "Our Story";
   const secondHref   = cms?.secondaryCta?.href  || "/about";
-  const heroStats    = cms?.items?.length ? cms.items : DEFAULT_STATS;
-
-  const slides  = (heroImages ?? []).filter((s) => s.url && s.isVisible !== false);
-  const [current, setCurrent]     = useState(0);
-  const [prevSlide, setPrevSlide] = useState<number | null>(null);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    if (slides.length < 2) return;
-    timerRef.current = setInterval(() => {
-      setCurrent((c) => { setPrevSlide(c); return (c + 1) % slides.length; });
-    }, 6000);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [slides.length]);
 
   return (
-    <section className="relative flex min-h-screen bg-background">
+    <section className="relative flex min-h-screen bg-background overflow-hidden">
 
-      {/* ── LEFT PANEL — cream background, editorial text ── */}
-      <div className="relative z-10 flex flex-col justify-between w-full lg:w-[52%] shrink-0 pt-28 pb-10 px-8 md:px-12 lg:px-16 overflow-hidden">
+      {/* ══════════════════════════════════════════════
+          LEFT PANEL — cream editorial (original design)
+          ══════════════════════════════════════════════ */}
+      <div className="relative z-10 flex flex-col w-full lg:w-[52%] shrink-0 pt-28 pb-10 px-8 md:px-12 lg:px-16 overflow-hidden">
 
-        {/* Ghost watermark text behind content */}
+        {/* Ghost watermark */}
         <div
           className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
           aria-hidden="true"
@@ -103,14 +134,23 @@ export function HomeHero({
               letterSpacing: "-0.04em",
             }}
           >
-            {headline ? (
-              <span className="text-foreground">{headline}</span>
+            {cms?.title ? (
+              <span className="text-foreground">{cms.title}</span>
             ) : (
               <>
-                <span className="text-foreground">The Sun Flows</span>
+                <span className="text-foreground">Powering Nepal&apos;s</span>
                 <br />
-                <span className="text-foreground">Through </span>
-                <span style={{ color: "#e8960a" }}>Grain</span>
+                <span className="text-foreground">Future Through </span>
+                <span
+                  key={`word-${index}-${animKey}`}
+                  style={{
+                    color: "#e8960a",
+                    display: "inline-block",
+                    animation: "ghSwap .7s cubic-bezier(.2,.75,.2,1) both",
+                  }}
+                >
+                  {sector.word}
+                </span>
               </>
             )}
           </motion.h1>
@@ -120,7 +160,7 @@ export function HomeHero({
             variants={staggerItem}
             className="text-[15px] leading-[1.75] mb-10 max-w-136 text-foreground-muted"
           >
-            {body || subheadline}
+            {body}
           </motion.p>
 
           {/* CTAs */}
@@ -145,11 +185,9 @@ export function HomeHero({
             </Link>
           </motion.div>
 
-          {/* Geo metadata tag */}
+          {/* Geo tag */}
           <motion.div variants={staggerItem} className="mb-10">
-            <div
-              className="inline-flex items-center gap-3 px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] border border-foreground/10 text-foreground-subtle"
-            >
+            <div className="inline-flex items-center gap-3 px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] border border-foreground/10 text-foreground-subtle">
               <span>Alt 1,400m</span>
               <span className="opacity-40">·</span>
               <span>27.7172° N</span>
@@ -183,95 +221,166 @@ export function HomeHero({
             </div>
           </motion.div>
         </motion.div>
-      </div>
 
-      {/* ── RIGHT PANEL — image slider (desktop) ── */}
-      <div className="hidden lg:block flex-1 relative overflow-hidden" style={{ backgroundColor: "#1a1a1a" }}>
-        {slides.length > 0 ? (
-          slides.map((slide, i) => (
-            <div
-              key={slide.url}
-              aria-hidden={i !== current}
-              className="absolute inset-0 transition-opacity duration-1800 ease-in-out"
-              style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 2 : (i === prevSlide ? 1 : 0) }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={slide.url} alt={slide.alt ?? ""} className="absolute inset-0 w-full h-full object-contain" />
-              {/* Left-edge gradient blending with cream left panel */}
-              <div
-                className="absolute inset-y-0 left-0 w-16 pointer-events-none"
-                style={{ background: "linear-gradient(to right, #e8e5dc, transparent)", zIndex: 3 }}
-              />
-            </div>
-          ))
-        ) : (
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundColor: "#d4d0c4",
-              backgroundImage: "radial-gradient(circle, rgba(232,150,10,0.08) 0%, transparent 60%)",
-            }}
-          >
-            <div
-              className="absolute inset-0"
+        {/* Mobile sector selector */}
+        <div className="lg:hidden flex items-center gap-3 mt-6 pb-2">
+          {SECTORS.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => go(i)}
               style={{
-                backgroundImage: "radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px)",
-                backgroundSize: "32px 32px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                fontFamily: MONO,
+                fontSize: 10,
+                letterSpacing: "0.12em",
+                color: i === index ? "#e8960a" : "rgba(0,0,0,0.35)",
+                transition: "color 0.3s",
               }}
-            />
-          </div>
-        )}
-
-        {/* Slide indicators — bottom right */}
-        {slides.length > 1 && (
-          <div className="absolute bottom-10 right-10 flex gap-1.5 z-10">
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => { setPrevSlide(current); setCurrent(i); }}
-                aria-label={`Slide ${i + 1}`}
+            >
+              <span
                 style={{
-                  height: "1px",
-                  width: i === current ? "2.5rem" : "1rem",
-                  backgroundColor: i === current ? "rgba(255,255,255,0.80)" : "rgba(255,255,255,0.30)",
-                  border: "none",
-                  cursor: "pointer",
+                  height: 2,
+                  width: i === index ? 24 : 8,
+                  background: i === index ? "#e8960a" : "rgba(0,0,0,0.2)",
+                  borderRadius: 2,
                   transition: "all 0.4s ease",
                   display: "block",
-                  padding: 0,
+                  flexShrink: 0,
                 }}
               />
-            ))}
-          </div>
-        )}
-
-        {/* Slide counter — top right */}
-        {slides.length > 1 && (
-          <div
-            className="absolute top-8 right-8 font-mono text-[10px] tracking-widest z-10"
-            style={{ color: "rgba(255,255,255,0.50)" }}
-          >
-            {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
-          </div>
-        )}
+              {s.num}
+            </button>
+          ))}
+          <span className="ml-auto font-mono text-[10px] text-foreground-subtle">
+            {sector.word.toUpperCase()}
+          </span>
+        </div>
       </div>
 
-      {/* ── MOBILE: image behind text as background ── */}
-      {slides.length > 0 && (
-        <div className="lg:hidden absolute inset-0" aria-hidden="true">
-          {slides.map((slide, i) => (
+      {/* ══════════════════════════════════════════════
+          RIGHT PANEL — diagonal image slider
+          ══════════════════════════════════════════════ */}
+      <div
+        className="hidden lg:block flex-1 relative overflow-hidden"
+      >
+        {/* Diagonal left-edge clip — outer div is transparent so cream shows in the cut */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0% 100%)",
+            overflow: "hidden",
+            backgroundColor: DARK,
+          }}
+        >
+          {/* Images — fade transition through all heroImages */}
+          {visible.length > 0 ? visible.map((slide, i) => (
             <div
               key={slide.url}
-              className="absolute inset-0 transition-opacity duration-1800"
-              style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 1 : 0 }}
+              style={{
+                position: "absolute",
+                inset: 0,
+                transition: "opacity 1.2s cubic-bezier(0.4,0,0.2,1)",
+                opacity: i === index ? 1 : 0,
+                zIndex: i === index ? 2 : 1,
+              }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={slide.url} alt="" className="absolute inset-0 w-full h-full object-cover" />
+              <img
+                src={slide.url}
+                alt={slide.alt ?? ""}
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+              />
             </div>
-          ))}
-          <div className="absolute inset-0 z-10" style={{ background: "rgba(232,229,220,0.88)" }} />
+          )) : (
+            /* No images: amber glow placeholder */
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: `radial-gradient(ellipse at 60% 50%, rgba(224,150,47,0.12) 0%, transparent 65%), ${DARK}`,
+              }}
+            />
+          )}
+
+          {/* Subtle bottom scrim */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(15,13,9,0.5) 0%, transparent 40%)",
+              pointerEvents: "none",
+              zIndex: 3,
+            }}
+          />
+
+          {/* Slide counter — bottom right */}
+          {visible.length > 1 && (
+            <div
+              style={{
+                position: "absolute",
+                bottom: 28,
+                right: 28,
+                zIndex: 6,
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                fontFamily: MONO,
+                fontSize: 11,
+                letterSpacing: "0.16em",
+                color: "rgba(236,230,218,0.5)",
+              }}
+            >
+              <div style={{ display: "flex", gap: 6 }}>
+                {visible.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => go(i)}
+                    aria-label={`Slide ${i + 1}`}
+                    style={{
+                      height: 2,
+                      width: i === index ? 28 : 10,
+                      background: i === index ? AMBER : "rgba(236,230,218,0.3)",
+                      border: "none",
+                      borderRadius: 2,
+                      cursor: "pointer",
+                      padding: 0,
+                      transition: "all 0.4s ease",
+                    }}
+                  />
+                ))}
+              </div>
+              <span>{String(index + 1).padStart(2, "0")} / {String(visible.length).padStart(2, "0")}</span>
+            </div>
+          )}
+
         </div>
-      )}
+      </div>
+
+      {/* Mobile background image */}
+      <div className="lg:hidden absolute inset-0 z-0" aria-hidden="true">
+        {sectorImages[index] && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={sectorImages[index]!}
+            alt=""
+            style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.18 }}
+          />
+        )}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to bottom, #e8e5dc 0%, rgba(232,229,220,0.92) 60%, #e8e5dc 100%)",
+          }}
+        />
+      </div>
     </section>
   );
 }

@@ -1,6 +1,19 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@keyframes ghSwap {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ghNum {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ghProg {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
 /* ================================================================
    GHAMKHETI GURU — Editorial Design System
    Reference: soil-song-studio.lovable.app aesthetic
