@@ -76,7 +76,12 @@ function attachConnectionEvents(instance: typeof mongoose): void {
 
   conn.once("open",  () => console.info(`✅ MongoDB connected [${DB_NAME}]`));
   conn.on("error",   (err) => console.error("❌ MongoDB error:", err.message));
-  conn.on("disconnected", () => console.warn("⚠️  MongoDB disconnected"));
+  conn.on("disconnected", () => {
+    console.warn("⚠️  MongoDB disconnected — clearing cache for reconnect");
+    // Clear the cache so the next request opens a fresh connection
+    cache.conn    = null;
+    cache.promise = null;
+  });
   conn.on("reconnected",  () => console.info("♻️  MongoDB reconnected"));
 }
 
@@ -105,8 +110,14 @@ async function connectWithRetry(
 
 /* ── Main export ─────────────────────────────────────────────────── */
 export async function connectToDatabase(): Promise<typeof mongoose> {
-  // Return cached connection immediately (zero-latency for warm requests)
-  if (cache.conn) return cache.conn;
+  // Only reuse cache if the connection is actually alive (readyState 1 = connected)
+  if (cache.conn && mongoose.connection.readyState === 1) return cache.conn;
+
+  // Stale conn — clear it so we reconnect cleanly
+  if (cache.conn) {
+    cache.conn    = null;
+    cache.promise = null;
+  }
 
   if (!cache.promise) {
     cache.promise = connectWithRetry().catch((err) => {
