@@ -42,7 +42,6 @@ export const metadata: Metadata = {
     siteName: "GHAMKHETI GURU",
     title: siteConfig.name,
     description: siteConfig.description,
-    siteName: siteConfig.name,
     images: [
       {
         url: `${siteConfig.url}/og-image.png`,
