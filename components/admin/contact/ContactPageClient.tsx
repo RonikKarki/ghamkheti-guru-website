@@ -14,14 +14,18 @@ interface SectionDoc {
   subtitle?: string;
   body?:     string;
   embedUrl?: string;
+  email?:    string;
+  phone?:    string;
+  address?:  string;
   items:     Record<string, unknown>[];
 }
 
 const SECTION_TABS = [
-  { value: "page_header", label: "Page Header" },
-  { value: "intro",       label: "Intro Text"  },
-  { value: "offices",     label: "Offices"     },
-  { value: "map",         label: "Map"         },
+  { value: "page_header",   label: "Page Header"  },
+  { value: "contact_info",  label: "Contact Info" },
+  { value: "intro",         label: "Intro Text"   },
+  { value: "offices",       label: "Offices"      },
+  { value: "map",           label: "Map"          },
 ];
 
 function F({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
@@ -69,12 +73,15 @@ export default function ContactPageClient({ initialData }: { initialData: any[] 
 
   function save() {
     startTransition(async () => {
-      const { items, title, subtitle, body, embedUrl } = doc;
+      const { items, title, subtitle, body, embedUrl, email, phone, address } = doc;
       const payload: Record<string, unknown> = { items };
       if (title    !== undefined) payload.title    = title;
       if (subtitle !== undefined) payload.subtitle = subtitle;
       if (body     !== undefined) payload.body     = body;
       if (embedUrl !== undefined) payload.embedUrl = embedUrl;
+      if (email    !== undefined) payload.email    = email;
+      if (phone    !== undefined) payload.phone    = phone;
+      if (address  !== undefined) payload.address  = address;
 
       const res = await fetch(`/api/admin/contact-page/${tab}`, {
         method: "PUT",
@@ -93,6 +100,19 @@ export default function ContactPageClient({ initialData }: { initialData: any[] 
         <p className="text-xs text-foreground-muted">Controls the banner at the top of the Contact Us page.</p>
         <F label="Page Title"><Input value={doc.title ?? ""} onChange={(e) => patch({ title: e.target.value })} placeholder="We'd Love to Hear From You" /></F>
         <F label="Description"><Textarea rows={3} value={doc.body ?? ""} onChange={(e) => patch({ body: e.target.value })} placeholder="Our team is ready to engage with investors, government bodies…" /></F>
+      </div>
+    );
+  }
+
+  function renderContactInfo() {
+    return (
+      <div className="space-y-5">
+        <p className="text-xs text-foreground-muted">
+          These values are used on the Contact page and are also shown in the site footer.
+        </p>
+        <F label="Email Address"><Input type="email" value={doc.email ?? ""} onChange={(e) => patch({ email: e.target.value })} placeholder="ghamkhetiguru@gmail.com" /></F>
+        <F label="Phone Number"><Input value={doc.phone ?? ""} onChange={(e) => patch({ phone: e.target.value })} placeholder="+977-9851266455" /></F>
+        <F label="Office Address"><Textarea rows={2} value={doc.address ?? ""} onChange={(e) => patch({ address: e.target.value })} placeholder="2nd Floor, Trade Tower, Thapathali, Kathmandu 44600, Nepal" /></F>
       </div>
     );
   }
@@ -168,10 +188,11 @@ export default function ContactPageClient({ initialData }: { initialData: any[] 
   }
 
   const editors: Record<string, () => React.ReactNode> = {
-    page_header: renderPageHeader,
-    intro:       renderIntro,
-    offices:     renderOffices,
-    map:         renderMap,
+    page_header:  renderPageHeader,
+    contact_info: renderContactInfo,
+    intro:        renderIntro,
+    offices:      renderOffices,
+    map:          renderMap,
   };
 
   return (

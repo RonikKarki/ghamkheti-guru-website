@@ -7,7 +7,7 @@ import ContactPageClient from "@/components/admin/contact/ContactPageClient";
 
 export const metadata: Metadata = { title: "Contact Page CMS" };
 
-const SECTIONS: ContactSection[] = ["page_header", "intro", "offices", "map"];
+const SECTIONS: ContactSection[] = ["page_header", "contact_info", "intro", "offices", "map"];
 
 export default async function ContactPageCMSPage() {
   await requireRole("admin");

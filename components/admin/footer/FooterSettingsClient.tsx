@@ -1,16 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useCallback } from "react";
-import { Plus, Trash2, Save, GripVertical, Globe, Mail, Phone, MapPin, Check } from "lucide-react";
+import { Plus, Trash2, Save, GripVertical, ArrowUpRight, Check } from "lucide-react";
 
 interface FooterLink { label: string; href: string; }
 interface SocialLink { platform: string; href: string; enabled: boolean; }
 
 interface FooterData {
   _id?: string;
-  email: string;
-  phone: string;
-  address: string;
   companyLinks: FooterLink[];
   sectorLinks: FooterLink[];
   legalLinks: FooterLink[];
@@ -155,29 +153,15 @@ export default function FooterSettingsClient({ initialData }: { initialData: Foo
       {/* Contact */}
       {tab === "Contact" && (
         <div className="space-y-4">
-          <Field icon={<Mail className="h-4 w-4" />} label="Email Address">
-            <input
-              value={data.email}
-              onChange={(e) => set("email", e.target.value)}
-              type="email"
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary/50"
-            />
-          </Field>
-          <Field icon={<Phone className="h-4 w-4" />} label="Phone Number">
-            <input
-              value={data.phone}
-              onChange={(e) => set("phone", e.target.value)}
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary/50"
-            />
-          </Field>
-          <Field icon={<MapPin className="h-4 w-4" />} label="Office Address">
-            <textarea
-              value={data.address}
-              onChange={(e) => set("address", e.target.value)}
-              rows={2}
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary/50 resize-none"
-            />
-          </Field>
+          <Link
+            href="/admin/contact-page"
+            className="flex items-center justify-between gap-3 rounded-lg border border-border bg-surface px-4 py-3 text-sm hover:border-primary/50 transition-colors"
+          >
+            <span className="text-foreground-muted">
+              Email, phone, and address are now managed from <span className="font-medium text-foreground">Contact Page CMS → Contact Info</span> and shown here automatically.
+            </span>
+            <ArrowUpRight className="h-4 w-4 shrink-0 text-primary" />
+          </Link>
           <Field icon={null} label="Copyright Text (optional — leave blank to use default)">
             <input
               value={data.copyrightText}

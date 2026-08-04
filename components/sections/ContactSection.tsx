@@ -11,37 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/config";
 import { fadeLeft, fadeRight, viewportOnce } from "@/lib/animations";
 
-const contactPoints = [
-  {
-    icon: Building2,
-    label: "Headquarters",
-    value: siteConfig.address,
-    sub: "Kathmandu, Nepal",
-    href: "#map",
-  },
-  {
-    icon: Phone,
-    label: "Main Office",
-    value: siteConfig.phone,
-    sub: "Mon–Fri · 9:00 AM – 5:00 PM NPT",
-    href: `tel:${siteConfig.phone}`,
-  },
-  {
-    icon: Mail,
-    label: "General Enquiries",
-    value: siteConfig.email,
-    sub: "We respond within 24 hours",
-    href: `mailto:${siteConfig.email}`,
-  },
-  {
-    icon: Clock,
-    label: "Business Hours",
-    value: "Sun – Fri · 9:00 AM – 5:00 PM",
-    sub: "Nepal Standard Time (NPT / UTC+5:45)",
-    href: "#",
-  },
-];
-
 const enquiryTypes = [
   { value: "general",     label: "General Enquiry" },
   { value: "investment",  label: "Investment Opportunity" },
@@ -60,13 +29,49 @@ const DEFAULT_OFFICES = [
 ];
 
 interface CmsData {
-  intro?:   { title?: string; body?: string };
+  intro?:        { title?: string; body?: string };
+  contact_info?: { email?: string; phone?: string; address?: string };
   offices?: { title?: string; subtitle?: string; items?: { name?: string; city?: string; address?: string }[] };
   map?:     { title?: string; subtitle?: string; body?: string; embedUrl?: string };
 }
 
 export function ContactSection({ cms }: { cms?: CmsData }) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const email   = cms?.contact_info?.email   || siteConfig.email;
+  const phone   = cms?.contact_info?.phone   || siteConfig.phone;
+  const address = cms?.contact_info?.address || siteConfig.address;
+
+  const contactPoints = [
+    {
+      icon: Building2,
+      label: "Headquarters",
+      value: address,
+      sub: "Kathmandu, Nepal",
+      href: "#map",
+    },
+    {
+      icon: Phone,
+      label: "Main Office",
+      value: phone,
+      sub: "Mon–Fri · 9:00 AM – 5:00 PM NPT",
+      href: `tel:${phone}`,
+    },
+    {
+      icon: Mail,
+      label: "General Enquiries",
+      value: email,
+      sub: "We respond within 24 hours",
+      href: `mailto:${email}`,
+    },
+    {
+      icon: Clock,
+      label: "Business Hours",
+      value: "Sun – Fri · 9:00 AM – 5:00 PM",
+      sub: "Nepal Standard Time (NPT / UTC+5:45)",
+      href: "#",
+    },
+  ];
 
   const introHeading = cms?.intro?.title || "Let's Start a Conversation";
   const introBody    = cms?.intro?.body  || "Whether you're a potential investor, government counterpart, media professional, or community partner — our team is ready to engage. We aim to respond to all enquiries within one business day.";

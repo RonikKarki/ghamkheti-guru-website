@@ -12,9 +12,6 @@ export interface ISocialLink {
 }
 
 export interface IFooterSettings extends Document {
-  email:            string;
-  phone:            string;
-  address:          string;
   companyLinks:     IFooterLink[];
   sectorLinks:      IFooterLink[];
   legalLinks:       IFooterLink[];
@@ -40,9 +37,6 @@ const SocialSchema = new Schema<ISocialLink>(
 
 const FooterSettingsSchema = new Schema<IFooterSettings>(
   {
-    email:             { type: String, default: "ghamkhetiguru@gmail.com" },
-    phone:             { type: String, default: "+977-9851266455" },
-    address:           { type: String, default: "2nd Floor, Trade Tower, Thapathali, Kathmandu 44600, Nepal" },
     companyLinks:      { type: [LinkSchema], default: [] },
     sectorLinks:       { type: [LinkSchema], default: [] },
     legalLinks:        { type: [LinkSchema], default: [] },

@@ -7,9 +7,6 @@ import FooterSettingsClient from "@/components/admin/footer/FooterSettingsClient
 export const metadata: Metadata = { title: "Footer Settings" };
 
 const DEFAULTS = {
-  email:   "ghamkhetiguru@gmail.com",
-  phone:   "+977-9851266455",
-  address: "2nd Floor, Trade Tower, Thapathali, Kathmandu 44600, Nepal",
   companyLinks: [
     { label: "About Us",           href: "/about" },
     { label: "Projects",           href: "/projects" },

@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-export type ContactSection = "page_header" | "intro" | "offices" | "map";
+export type ContactSection = "page_header" | "contact_info" | "intro" | "offices" | "map";
 
 export interface IContactContent extends Document {
   section:    ContactSection;
@@ -9,6 +9,9 @@ export interface IContactContent extends Document {
   subtitle?:  string;
   body?:      string;
   embedUrl?:  string;
+  email?:     string;
+  phone?:     string;
+  address?:   string;
   items:      mongoose.Types.Array<Record<string, unknown>>;
   updatedBy?: string;
   createdAt:  Date;
@@ -21,13 +24,16 @@ const ContactContentSchema = new Schema<IContactContent>(
       type:     String,
       required: true,
       unique:   true,
-      enum:     ["page_header", "intro", "offices", "map"],
+      enum:     ["page_header", "contact_info", "intro", "offices", "map"],
     },
     isActive:  { type: Boolean, default: true },
     title:     { type: String, trim: true },
     subtitle:  { type: String, trim: true },
     body:      { type: String },
     embedUrl:  { type: String },
+    email:     { type: String, trim: true },
+    phone:     { type: String, trim: true },
+    address:   { type: String, trim: true },
     items:     { type: [Schema.Types.Mixed], default: [] },
     updatedBy: { type: String },
   },

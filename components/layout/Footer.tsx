@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowUpRight, MapPin, Phone } from "lucide-react";
 import { siteConfig } from "@/config";
 import { Container } from "@/components/common/Container";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { connectToDatabase } from "@/lib/mongodb";
 import FooterSettings from "@/models/FooterSettings";
+import ContactContent from "@/models/ContactContent";
 
 const SOCIAL_SVGS: Record<string, React.ReactNode> = {
   twitter: (
@@ -36,9 +37,6 @@ const SOCIAL_SVGS: Record<string, React.ReactNode> = {
 };
 
 const FALLBACK = {
-  email:   siteConfig.email,
-  phone:   siteConfig.phone,
-  address: siteConfig.address,
   companyLinks: [
     { label: "About Us",           href: "/about" },
     { label: "Projects",           href: "/projects" },
@@ -67,18 +65,35 @@ const FALLBACK = {
   copyrightText: "",
 };
 
-type FooterData = typeof FALLBACK;
+type FooterLinksData = typeof FALLBACK;
+type ContactInfo = { email: string; phone: string; address: string };
 
 export async function Footer() {
-  let settings: FooterData = FALLBACK;
+  let linksData: FooterLinksData = FALLBACK;
+  let contactInfo: ContactInfo = {
+    email:   siteConfig.email,
+    phone:   siteConfig.phone,
+    address: siteConfig.address,
+  };
   try {
     await connectToDatabase();
-    const raw = await FooterSettings.findOne().lean() as FooterData | null;
-    if (raw) settings = raw;
+    const [rawSettings, rawContact] = await Promise.all([
+      FooterSettings.findOne().lean() as Promise<FooterLinksData | null>,
+      ContactContent.findOne({ section: "contact_info" }).lean() as Promise<Partial<ContactInfo> | null>,
+    ]);
+    if (rawSettings) linksData = rawSettings;
+    if (rawContact) {
+      contactInfo = {
+        email:   rawContact.email   || contactInfo.email,
+        phone:   rawContact.phone   || contactInfo.phone,
+        address: rawContact.address || contactInfo.address,
+      };
+    }
   } catch {
     // use fallback
   }
 
+  const settings  = { ...linksData, ...contactInfo };
   const year      = new Date().getFullYear();
   const copyright = settings.copyrightText || `© ${year} ${siteConfig.name}. All rights reserved.`;
   const activeSocials = settings.socialLinks.filter((s) => s.enabled && s.href);
@@ -112,9 +127,17 @@ export async function Footer() {
             />
           </a>
 
-          <div className="mt-6 flex items-center gap-3" style={{ color: "rgba(255,255,255,0.30)" }}>
-            <MapPin className="h-3.5 w-3.5 shrink-0" />
-            <span className="text-sm">{settings.address}</span>
+          <div className="mt-6 flex flex-col gap-2" style={{ color: "rgba(255,255,255,0.30)" }}>
+            <div className="flex items-center gap-3">
+              <MapPin className="h-3.5 w-3.5 shrink-0" />
+              <span className="text-sm">{settings.address}</span>
+            </div>
+            {settings.phone && (
+              <a href={`tel:${settings.phone}`} className="flex items-center gap-3 hover:text-white/70 transition-colors w-fit">
+                <Phone className="h-3.5 w-3.5 shrink-0" />
+                <span className="text-sm">{settings.phone}</span>
+              </a>
+            )}
           </div>
         </Container>
       </div>

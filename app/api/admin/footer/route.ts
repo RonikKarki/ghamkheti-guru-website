@@ -6,9 +6,6 @@ import { connectToDatabase } from "@/lib/mongodb";
 import FooterSettings from "@/models/FooterSettings";
 
 const DEFAULTS = {
-  email:   "ghamkhetiguru@gmail.com",
-  phone:   "+977-9851266455",
-  address: "2nd Floor, Trade Tower, Thapathali, Kathmandu 44600, Nepal",
   companyLinks: [
     { label: "About Us",           href: "/about" },
     { label: "Projects",           href: "/projects" },
