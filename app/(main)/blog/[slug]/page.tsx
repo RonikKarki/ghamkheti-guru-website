@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { connectToDatabase } from "@/lib/mongodb";
 import News from "@/models/News";
@@ -100,7 +101,15 @@ export default async function ArticlePage({ params }: Props) {
       </div>
 
       {/* Content */}
-      <Container className="py-16">
+      <div className="relative overflow-hidden">
+        <div
+          className="absolute pointer-events-none select-none"
+          aria-hidden="true"
+          style={{ top: "8%", right: "-6%", width: "clamp(220px, 22vw, 380px)", height: "clamp(220px, 22vw, 380px)", opacity: 0.06 }}
+        >
+          <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+        </div>
+        <Container className="relative py-16">
         <div className="max-w-3xl mx-auto">
           <article className="prose prose-invert prose-lg max-w-none">
             {paragraphs.map((para, i) => {
@@ -131,7 +140,8 @@ export default async function ArticlePage({ params }: Props) {
             </Link>
           </div>
         </div>
-      </Container>
+        </Container>
+      </div>
     </main>
   );
 }

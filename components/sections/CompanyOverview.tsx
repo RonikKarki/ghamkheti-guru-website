@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/Container";
 import { fadeUp, viewportOnce } from "@/lib/animations";
 
-interface CmsPillar { label?: string; detail?: string; type?: string; text?: string; attribution?: string; }
+interface CmsPillar { label?: string; detail?: string; type?: string; text?: string; attribution?: string; url?: string; alt?: string; }
 interface CmsAbout {
   title?:    string;
   body?:     string;
@@ -20,6 +20,7 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
   const sectionTitle = cms?.title    || "An Integrated\nForce in\nNepal's Growth";
   const paragraph1   = cms?.body     || "Ghamkheti Guru Company Limited is a Kathmandu-based integrated development company delivering clean energy, modern agro-industry, and sustainable tourism across Nepal.";
   const paragraph2   = cms?.subtitle || "";
+  const sideImages   = (cms?.items ?? []).filter((i) => i.type === "image" && i.url).slice(0, 2);
 
   return (
     <section className="relative overflow-hidden py-24 md:py-32 bg-background border-t border-border" id="about">
@@ -33,7 +34,7 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
           transform: "translateY(-50%)",
           width: "clamp(280px, 30vw, 480px)",
           height: "clamp(280px, 30vw, 480px)",
-          opacity: 0.04,
+          opacity: 0.1,
         }}
       >
         <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
@@ -63,6 +64,25 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
               >
                 {sectionTitle}
               </h2>
+
+              {/* Small accent photos beside the headline */}
+              {sideImages.length > 0 && (
+                <div className="flex items-end gap-4 mt-8">
+                  {sideImages.map((img, i) => (
+                    <div
+                      key={img.url}
+                      className="relative overflow-hidden rounded-xl border border-border shadow-lg"
+                      style={{
+                        width: i === 0 ? "8.5rem" : "6.5rem",
+                        height: i === 0 ? "10.5rem" : "8rem",
+                        transform: i === 1 ? "translateY(0.75rem) rotate(2deg)" : "rotate(-1.5deg)",
+                      }}
+                    >
+                      <Image src={img.url!} alt={img.alt ?? ""} fill className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* RIGHT: body paragraphs + CTA */}

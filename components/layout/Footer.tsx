@@ -104,17 +104,17 @@ export async function Footer() {
 
       {/* ── Editorial email CTA band ── */}
       <div className="relative border-b overflow-hidden" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-        {/* Watermark — large, faint brand emblem bleeding off the right edge */}
+        {/* Watermark — large, visible brand emblem bleeding off the right edge */}
         <div
           className="absolute pointer-events-none select-none"
-          style={{ top: "50%", right: "-4%", transform: "translateY(-50%)", width: "clamp(280px, 30vw, 460px)", height: "clamp(280px, 30vw, 460px)", opacity: 0.05, filter: "grayscale(1) brightness(3)" }}
+          style={{ top: "50%", right: "-4%", transform: "translateY(-50%)", width: "clamp(220px, 24vw, 380px)", height: "clamp(220px, 24vw, 380px)", opacity: 0.16 }}
           aria-hidden="true"
         >
           <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
         </div>
 
-        <Container className="relative py-16 md:py-20">
-          <div className="flex items-center gap-2.5 mb-8" style={{ color: "rgba(255,255,255,0.30)" }}>
+        <Container className="relative py-9 md:py-11">
+          <div className="flex items-center gap-2.5 mb-4" style={{ color: "rgba(255,255,255,0.30)" }}>
             <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "rgba(255,255,255,0.20)" }} />
             <span className="text-[10px] font-mono tracking-[0.20em] uppercase">Get In Touch</span>
           </div>
@@ -126,17 +126,17 @@ export async function Footer() {
           >
             <span
               className="font-display font-bold text-white text-balance leading-none tracking-tight"
-              style={{ fontSize: "clamp(1.8rem, 3.5vw, 3.5rem)" }}
+              style={{ fontSize: "clamp(1.4rem, 2.4vw, 2.4rem)" }}
             >
               {settings.email}
             </span>
             <ArrowUpRight
-              className="mb-1 shrink-0 text-white/40 group-hover:text-white transition-colors"
-              style={{ width: "clamp(1.5rem, 2.5vw, 2.5rem)", height: "clamp(1.5rem, 2.5vw, 2.5rem)" }}
+              className="mb-0.5 shrink-0 text-white/40 group-hover:text-white transition-colors"
+              style={{ width: "clamp(1.1rem, 1.8vw, 1.6rem)", height: "clamp(1.1rem, 1.8vw, 1.6rem)" }}
             />
           </a>
 
-          <div className="mt-6 flex flex-col gap-2" style={{ color: "rgba(255,255,255,0.30)" }}>
+          <div className="mt-4 flex flex-col gap-1.5" style={{ color: "rgba(255,255,255,0.30)" }}>
             <div className="flex items-center gap-3">
               <MapPin className="h-3.5 w-3.5 shrink-0" />
               <span className="text-sm">{settings.address}</span>

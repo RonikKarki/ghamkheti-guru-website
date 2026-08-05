@@ -99,7 +99,7 @@ export function PageBanner({
           transform: "translateY(-50%)",
           width: "clamp(240px, 24vw, 400px)",
           height: "clamp(240px, 24vw, 400px)",
-          opacity: 0.05,
+          opacity: 0.11,
         }}
       >
         <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />

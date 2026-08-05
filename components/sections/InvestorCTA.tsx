@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/Container";
@@ -19,7 +20,7 @@ const DEFAULT_METRICS = [
   { v: "8 T/Hr",  l: "Rice Mill Capacity" },
 ];
 
-interface CmsItem { type?: string; v?: string; l?: string; text?: string; }
+interface CmsItem { type?: string; v?: string; l?: string; text?: string; url?: string; alt?: string; }
 interface CmsInvestorCta {
   title?:        string;
   subtitle?:     string;
@@ -39,13 +40,30 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
   const allItems   = cms?.items ?? [];
   const metrics    = allItems.filter((i) => i.type === "metric" || i.v).slice(0, 4);
   const highlights = allItems.filter((i) => i.type === "highlight" || i.text).map((i) => i.text ?? "").filter(Boolean);
+  const image      = allItems.find((i) => i.type === "image" && i.url);
 
   const displayMetrics    = metrics.length    > 0 ? metrics    : DEFAULT_METRICS;
   const displayHighlights = highlights.length > 0 ? highlights : DEFAULT_HIGHLIGHTS;
 
   return (
-    <section className="py-24 md:py-32 bg-background border-t border-border" id="invest">
-      <Container>
+    <section className="relative overflow-hidden py-24 md:py-32 bg-background border-t border-border" id="invest">
+      {/* Brand emblem watermark */}
+      <div
+        className="absolute pointer-events-none select-none"
+        aria-hidden="true"
+        style={{
+          top: "50%",
+          right: "-6%",
+          transform: "translateY(-50%)",
+          width: "clamp(280px, 30vw, 480px)",
+          height: "clamp(280px, 30vw, 480px)",
+          opacity: 0.1,
+        }}
+      >
+        <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+      </div>
+
+      <Container className="relative">
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportOnce}>
           <div className="section-num">Investor Relations</div>
 
@@ -88,15 +106,31 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
               </div>
             </div>
 
-            {/* Right — metrics 2×2 grid */}
-            <div className="grid grid-cols-2 gap-px bg-border">
-              {displayMetrics.map((m, i) => (
-                <div key={i} className="bg-background hover:bg-surface transition-colors duration-300 p-8 text-center">
-                  <p className="font-mono text-3xl md:text-4xl font-bold text-foreground leading-none mb-2 tabular-nums">{m.v}</p>
-                  <p className="text-[10px] text-foreground-subtle uppercase tracking-widest">{m.l}</p>
+            {/* Right — project photo with metrics overlay, or plain grid if no photo set */}
+            {image ? (
+              <div className="relative aspect-4/5 lg:aspect-square w-full overflow-hidden rounded-2xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={image.url} alt={image.alt ?? ""} className="absolute inset-0 h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 grid grid-cols-2 gap-px bg-white/10 backdrop-blur-sm">
+                  {displayMetrics.map((m, i) => (
+                    <div key={i} className="p-5 text-center">
+                      <p className="font-mono text-2xl md:text-3xl font-bold text-white leading-none mb-1.5 tabular-nums">{m.v}</p>
+                      <p className="text-[9px] text-white/70 uppercase tracking-widest">{m.l}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-px bg-border">
+                {displayMetrics.map((m, i) => (
+                  <div key={i} className="bg-background hover:bg-surface transition-colors duration-300 p-8 text-center">
+                    <p className="font-mono text-3xl md:text-4xl font-bold text-foreground leading-none mb-2 tabular-nums">{m.v}</p>
+                    <p className="text-[10px] text-foreground-subtle uppercase tracking-widest">{m.l}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div>
       </Container>

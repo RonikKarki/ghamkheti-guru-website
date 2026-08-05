@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { staggerContainer, staggerItem, EASE_OUT_BEZIER as E } from "@/lib/animations";
@@ -132,23 +131,6 @@ export function HomeHero({
             background: "linear-gradient(to top, rgba(10,9,6,0.78) 0%, transparent 34%)",
           }}
         />
-
-        {/* Faint brand emblem behind the headline */}
-        <div
-          className="pointer-events-none select-none"
-          style={{
-            position: "absolute",
-            zIndex: 4,
-            left: "-6%",
-            top: "48%",
-            transform: "translateY(-50%)",
-            width: "clamp(320px, 38vw, 560px)",
-            height: "clamp(320px, 38vw, 560px)",
-            opacity: 0.06,
-          }}
-        >
-          <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
-        </div>
       </div>
 
       {/* ══ Content ══ */}

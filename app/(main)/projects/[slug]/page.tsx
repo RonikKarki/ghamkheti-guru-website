@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowLeft, MapPin, Zap, Calendar, DollarSign,
   CheckCircle, Circle, FileText, Download, Image as ImageIcon,
@@ -350,24 +351,33 @@ export default async function ProjectDetailPage({ params }: Props) {
       {/* Footer CTA */}
       <Section>
         <Container>
-          <div className="rounded-2xl bg-card border border-border p-8 text-center">
-            <h3 className="text-xl font-display font-bold text-foreground mb-2">Interested in this project?</h3>
-            <p className="text-sm text-foreground-muted mb-6 max-w-md mx-auto">
-              Contact our team to learn about investment opportunities, partnerships, or to request detailed project documentation.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-              >
-                Contact Our Team
-              </Link>
-              <Link
-                href="/investor-relations"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground-muted hover:text-foreground hover:border-primary/30 transition-colors"
-              >
-                Investor Relations
-              </Link>
+          <div className="relative overflow-hidden rounded-2xl bg-card border border-border p-8 text-center">
+            <div
+              className="absolute pointer-events-none select-none"
+              aria-hidden="true"
+              style={{ top: "50%", right: "-4%", transform: "translateY(-50%)", width: "clamp(160px, 18vw, 260px)", height: "clamp(160px, 18vw, 260px)", opacity: 0.08 }}
+            >
+              <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+            </div>
+            <div className="relative">
+              <h3 className="text-xl font-display font-bold text-foreground mb-2">Interested in this project?</h3>
+              <p className="text-sm text-foreground-muted mb-6 max-w-md mx-auto">
+                Contact our team to learn about investment opportunities, partnerships, or to request detailed project documentation.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Contact Our Team
+                </Link>
+                <Link
+                  href="/investor-relations"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground-muted hover:text-foreground hover:border-primary/30 transition-colors"
+                >
+                  Investor Relations
+                </Link>
+              </div>
             </div>
           </div>
         </Container>

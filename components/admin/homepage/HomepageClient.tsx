@@ -204,10 +204,23 @@ export default function HomepageClient({ initialData }: { initialData: any[] }) 
   }
 
   function renderAbout() {
-    type Pillar = { label?: string; detail?: string; type?: string; text?: string; attribution?: string };
+    type Pillar = { label?: string; detail?: string; type?: string; text?: string; attribution?: string; url?: string; alt?: string };
     const allItems  = (doc.items ?? []) as Pillar[];
     const pillars   = allItems.filter((i) => !i.type || i.type === "pillar");
     const quoteItem = allItems.find((i) => i.type === "quote") ?? { type: "quote", text: "", attribution: "" };
+    const images    = allItems.filter((i) => i.type === "image");
+
+    function updateSideImage(i: number, field: "url" | "alt", val: string) {
+      const imageIndices = allItems.reduce<number[]>((acc, item, idx) => (item.type === "image" ? [...acc, idx] : acc), []);
+      const next = [...allItems] as Record<string, unknown>[];
+      next[imageIndices[i]] = { ...next[imageIndices[i]], [field]: val };
+      patch({ items: next });
+    }
+    function removeSideImage(i: number) {
+      const imageIndices = allItems.reduce<number[]>((acc, item, idx) => (item.type === "image" ? [...acc, idx] : acc), []);
+      patch({ items: allItems.filter((_, idx) => idx !== imageIndices[i]) as Record<string, unknown>[] });
+    }
+    function addSideImage() { patch({ items: [...allItems, { type: "image", url: "", alt: "" }] as Record<string, unknown>[] }); }
 
     function updatePillar(i: number, field: "label" | "detail", val: string) {
       const pillarIndices = allItems.reduce<number[]>((acc, item, idx) => (!item.type || item.type === "pillar" ? [...acc, idx] : acc), []);
@@ -258,6 +271,23 @@ export default function HomepageClient({ initialData }: { initialData: any[] }) 
           <p className="text-xs font-semibold text-foreground">Quote Card <span className="text-foreground-subtle font-normal">(green card at the bottom)</span></p>
           <F label="Quote Text"><Textarea rows={3} value={quoteItem.text ?? ""} onChange={(e) => updateQuote("text", e.target.value)} placeholder="Our mandate is not just commercial success…" /></F>
           <F label="Attribution"><Input value={quoteItem.attribution ?? ""} onChange={(e) => updateQuote("attribution", e.target.value)} placeholder="Chairman, Ghamkheti Guru Co. Ltd." /></F>
+        </div>
+
+        <div>
+          <p className="text-xs font-medium text-foreground mb-3">Side Photos <span className="text-foreground-subtle font-normal">(up to 2 small accent photos next to the headline)</span></p>
+          <div className="space-y-3">
+            {images.map((img, i) => (
+              <div key={i} className="rounded-xl border border-border p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-foreground">Photo {i + 1}</p>
+                  <RemoveBtn onClick={() => removeSideImage(i)} />
+                </div>
+                <FileUpload kind="image" value={img.url ?? ""} onChange={(url) => updateSideImage(i, "url", url)} />
+                <F label="Alt text"><Input value={img.alt ?? ""} onChange={(e) => updateSideImage(i, "alt", e.target.value)} placeholder="Solar panel installation, Solukhumbu" /></F>
+              </div>
+            ))}
+          </div>
+          {images.length < 2 && <div className="mt-3"><AddBtn onClick={addSideImage} label="Add Photo" /></div>}
         </div>
       </div>
     );
@@ -431,10 +461,19 @@ export default function HomepageClient({ initialData }: { initialData: any[] }) 
   }
 
   function renderCta() {
-    type CtaItem = { type?: string; v?: string; l?: string; text?: string };
+    type CtaItem = { type?: string; v?: string; l?: string; text?: string; url?: string; alt?: string };
     const allItems  = (doc.items ?? []) as CtaItem[];
     const metrics   = allItems.filter((i) => i.type === "metric" || i.v);
     const highlights = allItems.filter((i) => i.type === "highlight" || (i.text && i.type !== "metric"));
+    const imageItem = allItems.find((i) => i.type === "image") ?? { type: "image", url: "", alt: "" };
+
+    function updateImage(field: "url" | "alt", val: string) {
+      const withoutImage = allItems.filter((i) => i.type !== "image");
+      patch({ items: [...withoutImage, { ...imageItem, type: "image", [field]: val }] as Record<string, unknown>[] });
+    }
+    function removeImage() {
+      patch({ items: allItems.filter((i) => i.type !== "image") as Record<string, unknown>[] });
+    }
 
     function updateMetric(i: number, field: "v" | "l", val: string) {
       const metricIndices = allItems.reduce<number[]>((acc, item, idx) => (item.type === "metric" || item.v ? [...acc, idx] : acc), []);
@@ -469,6 +508,15 @@ export default function HomepageClient({ initialData }: { initialData: any[] }) 
           <CtaRow heading="Secondary Button" value={doc.secondaryCta} onChange={(v) => patch({ secondaryCta: v })} />
         </div>
 
+        <div className="rounded-xl border border-border p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-medium text-foreground">Project Photo <span className="text-foreground-subtle font-normal">(right side — replaces the plain stat grid with a photo + stats overlay)</span></p>
+            {imageItem.url && <RemoveBtn onClick={removeImage} />}
+          </div>
+          <FileUpload kind="image" value={imageItem.url ?? ""} onChange={(url) => updateImage("url", url)} />
+          <F label="Alt text"><Input value={imageItem.alt ?? ""} onChange={(e) => updateImage("alt", e.target.value)} placeholder="Sisakhola Hydropower Project construction site" /></F>
+        </div>
+
         <div>
           <p className="text-xs font-medium text-foreground mb-3">Bullet Points <span className="text-foreground-subtle font-normal">(left side, below body text)</span></p>
           <div className="space-y-2">
@@ -483,7 +531,7 @@ export default function HomepageClient({ initialData }: { initialData: any[] }) 
         </div>
 
         <div>
-          <p className="text-xs font-medium text-foreground mb-3">Metric Boxes <span className="text-foreground-subtle font-normal">(right side, 4 boxes max)</span></p>
+          <p className="text-xs font-medium text-foreground mb-3">Metric Boxes <span className="text-foreground-subtle font-normal">(right side, 4 boxes max — overlaid on the photo above if one is set)</span></p>
           <div className="space-y-3">
             {metrics.slice(0, 4).map((m, i) => (
               <div key={i} className="rounded-xl border border-border p-3 space-y-2">

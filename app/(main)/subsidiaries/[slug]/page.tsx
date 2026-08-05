@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, MapPin, Phone, Mail, Globe, Building2, Package, Layers } from "lucide-react";
 import { connectToDatabase } from "@/lib/mongodb";
 import Subsidiary from "@/models/Subsidiary";
@@ -237,44 +238,53 @@ export default async function SubsidiaryDetailPage({ params }: Props) {
       {/* CTA */}
       <Section>
         <Container>
-          <div className="rounded-2xl bg-card border border-border p-8 text-center">
-            <h3 className="text-xl font-display font-bold text-foreground mb-2">Get in touch with {s.name}</h3>
-            <p className="text-sm text-foreground-muted mb-6 max-w-md mx-auto">
-              For business inquiries, partnerships, or product information, reach out directly or through Ghamkheti Guru Company Limited.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              {s.contact?.phone && (
-                <a
-                  href={`tel:${s.contact.phone}`}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-                >
-                  <Phone className="h-4 w-4" /> {s.contact.phone}
-                </a>
-              )}
-              {s.contact?.email && (
-                <a
-                  href={`mailto:${s.contact.email}`}
+          <div className="relative overflow-hidden rounded-2xl bg-card border border-border p-8 text-center">
+            <div
+              className="absolute pointer-events-none select-none"
+              aria-hidden="true"
+              style={{ top: "50%", right: "-4%", transform: "translateY(-50%)", width: "clamp(160px, 18vw, 260px)", height: "clamp(160px, 18vw, 260px)", opacity: 0.08 }}
+            >
+              <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+            </div>
+            <div className="relative">
+              <h3 className="text-xl font-display font-bold text-foreground mb-2">Get in touch with {s.name}</h3>
+              <p className="text-sm text-foreground-muted mb-6 max-w-md mx-auto">
+                For business inquiries, partnerships, or product information, reach out directly or through Ghamkheti Guru Company Limited.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {s.contact?.phone && (
+                  <a
+                    href={`tel:${s.contact.phone}`}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+                  >
+                    <Phone className="h-4 w-4" /> {s.contact.phone}
+                  </a>
+                )}
+                {s.contact?.email && (
+                  <a
+                    href={`mailto:${s.contact.email}`}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground-muted hover:text-foreground hover:border-primary/30 transition-colors"
+                  >
+                    <Mail className="h-4 w-4" /> {s.contact.email}
+                  </a>
+                )}
+                {s.contact?.website && (
+                  <a
+                    href={normalizeUrl(s.contact.website)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground-muted hover:text-foreground hover:border-primary/30 transition-colors"
+                  >
+                    <Globe className="h-4 w-4" /> Visit Website
+                  </a>
+                )}
+                <Link
+                  href="/contact"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground-muted hover:text-foreground hover:border-primary/30 transition-colors"
                 >
-                  <Mail className="h-4 w-4" /> {s.contact.email}
-                </a>
-              )}
-              {s.contact?.website && (
-                <a
-                  href={normalizeUrl(s.contact.website)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground-muted hover:text-foreground hover:border-primary/30 transition-colors"
-                >
-                  <Globe className="h-4 w-4" /> Visit Website
-                </a>
-              )}
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground-muted hover:text-foreground hover:border-primary/30 transition-colors"
-              >
-                Contact Ghamkheti Guru
-              </Link>
+                  Contact Ghamkheti Guru
+                </Link>
+              </div>
             </div>
           </div>
         </Container>
