@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteConfig.url,
-    siteName: "GHAMKHETI GURU",
+    siteName: siteConfig.shortName,
     title: siteConfig.name,
     description: siteConfig.description,
     images: [
@@ -156,7 +156,7 @@ const organizationSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "GHAMKHETI GURU",
+  "name": siteConfig.shortName,
   "url": "https://ghamkhetiguru.com.np",
   "description": siteConfig.description,
   "potentialAction": {
