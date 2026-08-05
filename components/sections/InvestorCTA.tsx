@@ -109,14 +109,14 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
               <div className="relative grid grid-cols-2 rounded-2xl border border-border overflow-hidden">
                 {/* Brand emblem watermark — centered behind the stats */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
-                  <div className="relative" style={{ width: "62%", height: "62%", opacity: 0.13 }}>
+                  <div className="relative" style={{ width: "82%", height: "82%", opacity: 0.16 }}>
                     <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
                   </div>
                 </div>
                 {displayMetrics.map((m, i) => (
-                  <div key={i} className="relative bg-transparent hover:bg-surface/50 transition-colors duration-300 p-8 text-center border-border/60 odd:border-r not-nth-last-[-n+2]:border-b">
-                    <p className="font-mono text-3xl md:text-4xl font-bold text-foreground leading-none mb-2 tabular-nums">{m.v}</p>
-                    <p className="text-[10px] text-foreground-subtle uppercase tracking-widest">{m.l}</p>
+                  <div key={i} className="relative bg-transparent hover:bg-surface/50 transition-colors duration-300 p-10 text-center border-border/60 odd:border-r not-nth-last-[-n+2]:border-b">
+                    <p className="font-mono text-4xl md:text-5xl font-bold text-foreground leading-none mb-3 tabular-nums">{m.v}</p>
+                    <p className="text-xs text-foreground-subtle uppercase tracking-widest">{m.l}</p>
                   </div>
                 ))}
               </div>

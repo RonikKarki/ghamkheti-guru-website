@@ -54,7 +54,7 @@ export function StatsSection({ cms }: { cms?: CmsStats | null }) {
             >
               {heading}
             </h2>
-            <div className="relative mt-8 h-16 w-16">
+            <div className="relative mx-auto mt-10 h-28 w-28">
               <Image src="/images/logos/ghamkheti-emblem.png" alt="Ghamkheti Guru" fill className="object-contain" />
             </div>
           </div>
