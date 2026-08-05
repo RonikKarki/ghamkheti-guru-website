@@ -13,6 +13,10 @@
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
 }
+@keyframes ghCaptionIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
 
 /* ================================================================
    GHAMKHETI GURU — Editorial Design System

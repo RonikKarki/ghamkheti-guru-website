@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, FolderOpen, Newspaper, Images, FileText,
-  Home, MessageSquare, Users, UserRound, Settings, LogOut, Zap, ChevronRight, LayoutTemplate, Building2, PanelBottom,
+  Home, MessageSquare, Users, UserRound, Settings, LogOut, ChevronRight, LayoutTemplate, Building2, PanelBottom,
 } from "lucide-react";
 import { ROLE_LABELS, ROLE_COLORS, canManageUsers, canAccessSettings, canDelete } from "@/lib/role-utils";
 import type { UserRole } from "@/lib/role-utils";
@@ -68,8 +69,10 @@ export function AdminSidebar({ userName, userRole }: Props) {
     <aside className="flex h-full w-64 shrink-0 flex-col border-r border-border bg-card">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-border">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary shadow-md shadow-primary/30">
-          <Zap className="h-4 w-4 text-white" strokeWidth={2.5} />
+        <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-primary/15 via-gold/10 to-transparent ring-1 ring-primary/20 shadow-md shadow-primary/10">
+          <div className="relative h-7 w-7">
+            <Image src="/images/logos/ghamkheti-emblem.png" alt="Ghamkheti Guru" fill className="object-contain" />
+          </div>
         </div>
         <div className="min-w-0">
           <p className="text-sm font-bold text-foreground truncate leading-tight">Ghamkheti Guru</p>

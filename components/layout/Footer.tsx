@@ -103,8 +103,17 @@ export async function Footer() {
     <footer style={{ backgroundColor: "#0a0a0a" }}>
 
       {/* ── Editorial email CTA band ── */}
-      <div className="border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-        <Container className="py-16 md:py-20">
+      <div className="relative border-b overflow-hidden" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
+        {/* Watermark — large, faint brand emblem bleeding off the right edge */}
+        <div
+          className="absolute pointer-events-none select-none"
+          style={{ top: "50%", right: "-4%", transform: "translateY(-50%)", width: "clamp(280px, 30vw, 460px)", height: "clamp(280px, 30vw, 460px)", opacity: 0.05, filter: "grayscale(1) brightness(3)" }}
+          aria-hidden="true"
+        >
+          <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+        </div>
+
+        <Container className="relative py-16 md:py-20">
           <div className="flex items-center gap-2.5 mb-8" style={{ color: "rgba(255,255,255,0.30)" }}>
             <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "rgba(255,255,255,0.20)" }} />
             <span className="text-[10px] font-mono tracking-[0.20em] uppercase">Get In Touch</span>
@@ -148,14 +157,16 @@ export async function Footer() {
 
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
-              <div className="relative h-7 w-7">
-                <Image
-                  src="/images/logos/ghamkheti-logo.png"
-                  alt="Ghamkheti Guru Logo"
-                  fill
-                  className="object-contain"
-                />
+            <Link href="/" className="inline-flex items-center gap-2.5 mb-6 group">
+              <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/95 shadow-[0_0_0_1px_rgba(255,255,255,0.15)] transition-transform duration-200 group-hover:scale-105">
+                <div className="relative h-8 w-8">
+                  <Image
+                    src="/images/logos/ghamkheti-emblem.png"
+                    alt="Ghamkheti Guru Logo"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
               </div>
               <span className="text-xs font-semibold tracking-wide text-white/60">
                 {siteConfig.shortName}

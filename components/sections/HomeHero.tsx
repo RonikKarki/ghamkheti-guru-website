@@ -318,6 +318,34 @@ export function HomeHero({
             }}
           />
 
+          {/* Caption — bottom left, shows what the photo depicts */}
+          {visible[index]?.alt && (
+            <div
+              key={`caption-${index}-${animKey}`}
+              style={{
+                position: "absolute",
+                left: 28,
+                bottom: 28,
+                zIndex: 6,
+                maxWidth: "60%",
+                animation: "ghCaptionIn .6s cubic-bezier(.2,.75,.2,1) both",
+              }}
+            >
+              <div className="flex items-center gap-2 mb-2" style={{ color: "rgba(236,230,218,0.55)" }}>
+                <span style={{ display: "inline-block", width: "1.25rem", height: "1px", background: "currentColor" }} />
+                <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase" }}>
+                  {sector.label}
+                </span>
+              </div>
+              <p
+                className="font-display font-semibold"
+                style={{ color: CREAM_TEXT, fontSize: "clamp(0.95rem, 1.3vw, 1.15rem)", lineHeight: 1.35 }}
+              >
+                {visible[index]!.alt}
+              </p>
+            </div>
+          )}
+
           {/* Slide counter — bottom right */}
           {visible.length > 1 && (
             <div

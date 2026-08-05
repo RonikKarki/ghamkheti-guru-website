@@ -60,14 +60,16 @@ export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="relative h-7 w-7">
-              <Image
-                src="/images/logos/ghamkheti-logo.png"
-                alt="Ghamkheti Guru Logo"
-                fill
-                className="object-contain"
-                priority
-              />
+            <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-linear-to-br from-primary/12 via-gold/10 to-transparent ring-1 ring-primary/15 transition-transform duration-200 group-hover:scale-105">
+              <div className="relative h-8 w-8">
+                <Image
+                  src="/images/logos/ghamkheti-emblem.png"
+                  alt="Ghamkheti Guru Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
             </div>
             <span className="hidden sm:block text-xs font-semibold tracking-[0.08em] uppercase text-foreground-muted group-hover:text-foreground transition-colors">
               {siteConfig.shortName}
