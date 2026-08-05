@@ -69,7 +69,7 @@ export function ChairmanSection({ cms }: { cms?: CmsChairman | null }) {
 
           {/* Message */}
           <motion.div variants={fadeRight} initial="hidden" whileInView="visible" viewport={viewportOnce} className="lg:pt-2">
-            <div className="section-num">04 / Leadership</div>
+            <div className="section-num">Leadership</div>
 
             <h2 className="text-display-lg font-display text-foreground text-balance tracking-tight mb-8">
               {headline ?? (

@@ -41,7 +41,7 @@ export function StatsSection({ cms }: { cms?: CmsStats | null }) {
 
           {/* LEFT: section label + stacked heading */}
           <div>
-            <div className="section-num mb-8">03 / Network Integrity</div>
+            <div className="section-num mb-8">Our Impact</div>
             <h2
               className="font-display font-bold text-foreground tracking-tight"
               style={{

@@ -27,7 +27,7 @@ export function SustainabilitySection({ cms }: { cms?: CmsSustainability | null 
     <section className="py-24 md:py-32 bg-surface border-t border-border" id="sustainability">
       <Container>
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportOnce} className="mb-16">
-          <div className="section-num">05 / Sustainability &amp; Vision</div>
+          <div className="section-num">Sustainability &amp; Vision</div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
             <h2 className="text-display-lg font-display text-foreground text-balance tracking-tight">
               {sectionTitle}

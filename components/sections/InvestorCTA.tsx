@@ -47,7 +47,7 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
     <section className="py-24 md:py-32 bg-background border-t border-border" id="invest">
       <Container>
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportOnce}>
-          <div className="section-num">06 / Investor Relations</div>
+          <div className="section-num">Investor Relations</div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-start mt-10">
             {/* Left */}

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/Container";
@@ -21,7 +22,23 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
   const paragraph2   = cms?.subtitle || "";
 
   return (
-    <section className="py-24 md:py-32 bg-background border-t border-border" id="about">
+    <section className="relative overflow-hidden py-24 md:py-32 bg-background border-t border-border" id="about">
+      {/* Brand emblem watermark behind the title */}
+      <div
+        className="absolute pointer-events-none select-none"
+        aria-hidden="true"
+        style={{
+          top: "50%",
+          left: "-6%",
+          transform: "translateY(-50%)",
+          width: "clamp(280px, 30vw, 480px)",
+          height: "clamp(280px, 30vw, 480px)",
+          opacity: 0.04,
+        }}
+      >
+        <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+      </div>
+
       <Container>
         <motion.div
           variants={fadeUp}
@@ -33,8 +50,8 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
           <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-16 lg:gap-24 items-start">
 
             {/* LEFT: section label + huge stacked condensed title */}
-            <div>
-              <div className="section-num mb-8">01 / Who We Are</div>
+            <div className="relative">
+              <div className="section-num mb-8">Who We Are</div>
               <h2
                 className="font-display font-bold text-foreground tracking-tight"
                 style={{

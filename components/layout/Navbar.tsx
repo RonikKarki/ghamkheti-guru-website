@@ -11,15 +11,6 @@ import { navItems, siteConfig } from "@/config";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import type { NavItem } from "@/types";
 
-const NAV_NUMBERS: Record<string, string> = {
-  "About Us":           "01",
-  "Projects":           "02",
-  "Subsidiaries":       "03",
-  "Investor Relations": "04",
-  "News & Notices":     "05",
-  "Gallery":            "06",
-};
-
 interface NavbarProps {
   projectLinks?:    Array<{ label: string; href: string }>;
   subsidiaryLinks?: Array<{ label: string; href: string }>;
@@ -28,6 +19,7 @@ interface NavbarProps {
 export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
   const [isOpen, setIsOpen]             = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [scrolled, setScrolled]         = useState(false);
   const pathname                        = usePathname();
   const dropdownRef                     = useRef<HTMLDivElement>(null);
 
@@ -44,6 +36,13 @@ export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
   useEffect(() => { setIsOpen(false); setOpenDropdown(null); }, [pathname]);
 
   useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setOpenDropdown(null);
@@ -53,14 +52,29 @@ export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Transparent white-text navbar while sitting on top of the homepage hero photo
+  const overHero = pathname === "/" && !scrolled && !isOpen;
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background">
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-colors duration-300",
+        overHero ? "bg-transparent" : "bg-background shadow-sm"
+      )}
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex h-14 items-center justify-between">
+        <div className="flex h-16 items-center justify-between">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-linear-to-br from-primary/12 via-gold/10 to-transparent ring-1 ring-primary/15 transition-transform duration-200 group-hover:scale-105">
+            <div
+              className={cn(
+                "relative flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-105",
+                overHero
+                  ? "bg-white/95 shadow-lg"
+                  : "bg-linear-to-br from-primary/12 via-gold/10 to-transparent ring-1 ring-primary/15"
+              )}
+            >
               <div className="relative h-8 w-8">
                 <Image
                   src="/images/logos/ghamkheti-emblem.png"
@@ -71,19 +85,34 @@ export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
                 />
               </div>
             </div>
-            <span className="hidden sm:block text-xs font-semibold tracking-[0.08em] uppercase text-foreground-muted group-hover:text-foreground transition-colors">
-              {siteConfig.shortName}
-            </span>
+            <div className="hidden sm:block leading-tight">
+              <p
+                className={cn(
+                  "text-sm font-bold tracking-wide transition-colors duration-300",
+                  overHero ? "text-white" : "text-foreground"
+                )}
+              >
+                {siteConfig.shortName}
+              </p>
+              <p
+                className={cn(
+                  "text-[9px] font-medium tracking-[0.18em] uppercase transition-colors duration-300",
+                  overHero ? "text-white/60" : "text-foreground-subtle"
+                )}
+              >
+                Company Limited
+              </p>
+            </div>
           </Link>
 
-          {/* Desktop nav — numbered links */}
-          <nav className="hidden lg:flex items-center gap-0" ref={dropdownRef}>
-            {resolvedNavItems.map((item, idx) => (
+          {/* Desktop nav */}
+          <nav className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
+            {resolvedNavItems.map((item) => (
               <NavItemLink
                 key={item.href}
                 item={item}
-                index={idx}
                 pathname={pathname}
+                overHero={overHero}
                 openDropdown={openDropdown}
                 setOpenDropdown={setOpenDropdown}
               />
@@ -95,9 +124,14 @@ export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
             <ThemeToggle />
             <Link
               href="/contact"
-              className="text-xs font-medium tracking-[0.12em] uppercase text-foreground-muted hover:text-foreground transition-colors border-b border-foreground/20 hover:border-foreground pb-0.5"
+              className={cn(
+                "inline-flex h-9 items-center rounded-md px-4 text-xs font-semibold tracking-wide transition-colors duration-200",
+                overHero
+                  ? "bg-white text-[#0F0D09] hover:bg-white/90"
+                  : "bg-primary text-primary-foreground hover:bg-primary/90"
+              )}
             >
-              Contact
+              Contact Us
             </Link>
           </div>
 
@@ -107,7 +141,10 @@ export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
             <button
               aria-label="Toggle menu"
               onClick={() => setIsOpen((o) => !o)}
-              className="p-1.5 text-foreground-muted hover:text-foreground transition-colors"
+              className={cn(
+                "p-1.5 transition-colors",
+                overHero ? "text-white/80 hover:text-white" : "text-foreground-muted hover:text-foreground"
+              )}
             >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -115,8 +152,8 @@ export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
         </div>
       </div>
 
-      {/* Bottom border */}
-      <div className="h-px w-full bg-border" />
+      {/* Bottom border — hidden while transparent over the hero */}
+      <div className={cn("h-px w-full bg-border transition-opacity duration-300", overHero ? "opacity-0" : "opacity-100")} />
 
       {/* Mobile menu */}
       <AnimatePresence>
@@ -130,15 +167,15 @@ export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
             className="lg:hidden overflow-hidden bg-background border-b border-border"
           >
             <div className="px-6 py-5 space-y-0.5">
-              {resolvedNavItems.map((item, idx) => (
-                <MobileNavItem key={item.href} item={item} index={idx} pathname={pathname} />
+              {resolvedNavItems.map((item) => (
+                <MobileNavItem key={item.href} item={item} pathname={pathname} />
               ))}
               <div className="pt-4 border-t border-border mt-4">
                 <Link
                   href="/contact"
-                  className="block text-xs font-medium tracking-[0.12em] uppercase text-foreground-muted hover:text-foreground transition-colors py-2"
+                  className="inline-flex h-10 items-center rounded-md bg-primary px-5 text-xs font-semibold tracking-wide text-primary-foreground"
                 >
-                  Contact
+                  Contact Us
                 </Link>
               </div>
             </div>
@@ -150,19 +187,20 @@ export function Navbar({ projectLinks, subsidiaryLinks }: NavbarProps) {
 }
 
 function NavItemLink({
-  item, index, pathname, openDropdown, setOpenDropdown,
+  item, pathname, overHero, openDropdown, setOpenDropdown,
 }: {
-  item: NavItem; index: number; pathname: string;
+  item: NavItem; pathname: string; overHero: boolean;
   openDropdown: string | null; setOpenDropdown: (v: string | null) => void;
 }) {
   const isActive    = pathname === item.href || pathname.startsWith(item.href + "/");
   const hasChildren = item.children && item.children.length > 0;
   const isOpen      = openDropdown === item.href;
-  const num         = NAV_NUMBERS[item.label] ?? String(index + 1).padStart(2, "0");
 
   const linkClass = cn(
-    "flex items-center gap-1.5 px-4 py-1 text-xs tracking-[0.06em] transition-colors duration-200",
-    isActive ? "text-foreground font-semibold" : "text-foreground-muted hover:text-foreground"
+    "flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium transition-colors duration-200",
+    overHero
+      ? isActive ? "text-white font-semibold" : "text-white/75 hover:text-white"
+      : isActive ? "text-foreground font-semibold" : "text-foreground-muted hover:text-foreground"
   );
 
   if (hasChildren) {
@@ -170,11 +208,10 @@ function NavItemLink({
       <div className="relative">
         <button
           onClick={() => setOpenDropdown(isOpen ? null : item.href)}
-          className={cn(linkClass, "gap-2")}
+          className={linkClass}
         >
-          <span className="text-[10px] text-primary font-mono font-semibold">{num}</span>
           {item.label}
-          <ChevronDown className={cn("h-2.5 w-2.5 transition-transform duration-200", isOpen && "rotate-180")} />
+          <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", isOpen && "rotate-180")} />
         </button>
         <AnimatePresence>
           {isOpen && (
@@ -183,15 +220,14 @@ function NavItemLink({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.14 }}
-              className="absolute left-0 top-full mt-1 w-52 py-1.5 z-50 bg-background border border-border shadow-sm"
+              className="absolute left-0 top-full mt-1 w-52 py-1.5 z-50 bg-background border border-border shadow-md rounded-md"
             >
               {item.children!.map((child) => (
                 <Link
                   key={child.href}
                   href={child.href}
-                  className="flex items-center gap-3 px-4 py-2.5 text-xs text-foreground-muted hover:text-foreground transition-colors"
+                  className="flex items-center gap-3 px-4 py-2.5 text-xs text-foreground-muted hover:text-foreground hover:bg-surface transition-colors"
                 >
-                  <span className="h-px w-3 bg-border-strong" />
                   {child.label}
                 </Link>
               ))}
@@ -204,17 +240,15 @@ function NavItemLink({
 
   return (
     <Link href={item.href} className={linkClass}>
-      <span className="text-[10px] text-primary font-mono font-semibold">{num}</span>
       {item.label}
     </Link>
   );
 }
 
-function MobileNavItem({ item, index, pathname }: { item: NavItem; index: number; pathname: string }) {
+function MobileNavItem({ item, pathname }: { item: NavItem; pathname: string }) {
   const [open, setOpen] = useState(false);
   const isActive        = pathname === item.href;
   const hasChildren     = item.children && item.children.length > 0;
-  const num             = NAV_NUMBERS[item.label] ?? String(index + 1).padStart(2, "0");
 
   return (
     <div>
@@ -223,14 +257,11 @@ function MobileNavItem({ item, index, pathname }: { item: NavItem; index: number
           <button
             onClick={() => setOpen((o) => !o)}
             className={cn(
-              "flex items-center justify-between w-full px-0 py-2.5 text-xs tracking-[0.06em]",
+              "flex items-center justify-between w-full px-0 py-2.5 text-sm",
               isActive ? "text-foreground font-semibold" : "text-foreground-muted hover:text-foreground"
             )}
           >
-            <span className="flex items-center gap-2">
-              <span className="text-[10px] text-primary font-mono font-semibold">{num}</span>
-              {item.label}
-            </span>
+            {item.label}
             <ChevronDown className={cn("h-3 w-3 transition-transform", open && "rotate-180")} />
           </button>
           <AnimatePresence>
@@ -239,13 +270,13 @@ function MobileNavItem({ item, index, pathname }: { item: NavItem; index: number
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden pl-6 border-l border-border ml-2"
+                className="overflow-hidden pl-4 border-l border-border ml-1"
               >
                 {item.children!.map((child) => (
                   <Link
                     key={child.href}
                     href={child.href}
-                    className="block py-2 text-xs text-foreground-muted hover:text-foreground transition-colors"
+                    className="block py-2 text-sm text-foreground-muted hover:text-foreground transition-colors"
                   >
                     {child.label}
                   </Link>
@@ -258,11 +289,10 @@ function MobileNavItem({ item, index, pathname }: { item: NavItem; index: number
         <Link
           href={item.href}
           className={cn(
-            "flex items-center gap-2 py-2.5 text-xs tracking-[0.06em] transition-colors",
+            "block py-2.5 text-sm transition-colors",
             isActive ? "text-foreground font-semibold" : "text-foreground-muted hover:text-foreground"
           )}
         >
-          <span className="text-[10px] text-primary font-mono font-semibold">{num}</span>
           {item.label}
         </Link>
       )}

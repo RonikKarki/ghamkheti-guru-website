@@ -77,7 +77,7 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
             style={{ color: "rgba(255,255,255,0.30)" }}
           >
             <span style={{ display: "inline-block", width: "2rem", height: "1px", backgroundColor: "rgba(255,255,255,0.20)" }} />
-            <span className="text-[10px] font-mono tracking-[0.20em] uppercase">02 / Our Sectors</span>
+            <span className="text-[10px] font-mono tracking-[0.20em] uppercase">Our Sectors</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
             <h2

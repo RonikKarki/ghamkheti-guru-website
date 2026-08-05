@@ -89,6 +89,22 @@ export function PageBanner({
         }}
       />
 
+      {/* Brand emblem watermark — faint, behind the text */}
+      <div
+        className="absolute pointer-events-none select-none"
+        aria-hidden="true"
+        style={{
+          top: "50%",
+          right: "-5%",
+          transform: "translateY(-50%)",
+          width: "clamp(240px, 24vw, 400px)",
+          height: "clamp(240px, 24vw, 400px)",
+          opacity: 0.05,
+        }}
+      >
+        <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+      </div>
+
       <Container>
         <motion.div
           variants={staggerContainer}
