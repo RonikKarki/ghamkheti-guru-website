@@ -24,22 +24,6 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
 
   return (
     <section className="relative overflow-hidden py-24 md:py-32 bg-background border-t border-border" id="about">
-      {/* Brand emblem watermark behind the title */}
-      <div
-        className="absolute pointer-events-none select-none"
-        aria-hidden="true"
-        style={{
-          top: "50%",
-          left: "-6%",
-          transform: "translateY(-50%)",
-          width: "clamp(280px, 30vw, 480px)",
-          height: "clamp(280px, 30vw, 480px)",
-          opacity: 0.1,
-        }}
-      >
-        <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
-      </div>
-
       <Container>
         <motion.div
           variants={fadeUp}
@@ -52,37 +36,55 @@ export function CompanyOverview({ cms }: { cms?: CmsAbout | null }) {
 
             {/* LEFT: section label + huge stacked condensed title */}
             <div className="relative">
-              <div className="section-num mb-8">Who We Are</div>
-              <h2
-                className="font-display font-bold text-foreground tracking-tight"
+              {/* Brand emblem watermark — centered directly behind the headline */}
+              <div
+                className="absolute pointer-events-none select-none"
+                aria-hidden="true"
                 style={{
-                  fontSize: "clamp(2.8rem, 5vw, 5.5rem)",
-                  lineHeight: 1,
-                  whiteSpace: "pre-line",
-                  letterSpacing: "-0.03em",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "clamp(240px, 26vw, 400px)",
+                  height: "clamp(240px, 26vw, 400px)",
+                  opacity: 0.12,
                 }}
               >
-                {sectionTitle}
-              </h2>
+                <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+              </div>
 
-              {/* Small accent photos beside the headline */}
-              {sideImages.length > 0 && (
-                <div className="flex items-end gap-4 mt-8">
-                  {sideImages.map((img, i) => (
-                    <div
-                      key={img.url}
-                      className="relative overflow-hidden rounded-xl border border-border shadow-lg"
-                      style={{
-                        width: i === 0 ? "8.5rem" : "6.5rem",
-                        height: i === 0 ? "10.5rem" : "8rem",
-                        transform: i === 1 ? "translateY(0.75rem) rotate(2deg)" : "rotate(-1.5deg)",
-                      }}
-                    >
-                      <Image src={img.url!} alt={img.alt ?? ""} fill className="object-cover" />
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="relative">
+                <div className="section-num mb-8">Who We Are</div>
+                <h2
+                  className="font-display font-bold text-foreground tracking-tight"
+                  style={{
+                    fontSize: "clamp(2.8rem, 5vw, 5.5rem)",
+                    lineHeight: 1,
+                    whiteSpace: "pre-line",
+                    letterSpacing: "-0.03em",
+                  }}
+                >
+                  {sectionTitle}
+                </h2>
+
+                {/* Small accent photos beside the headline */}
+                {sideImages.length > 0 && (
+                  <div className="flex items-end gap-4 mt-8">
+                    {sideImages.map((img, i) => (
+                      <div
+                        key={img.url}
+                        className="relative overflow-hidden rounded-xl border border-border shadow-lg"
+                        style={{
+                          width: i === 0 ? "8.5rem" : "6.5rem",
+                          height: i === 0 ? "10.5rem" : "8rem",
+                          transform: i === 1 ? "translateY(0.75rem) rotate(2deg)" : "rotate(-1.5deg)",
+                        }}
+                      >
+                        <Image src={img.url!} alt={img.alt ?? ""} fill className="object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* RIGHT: body paragraphs + CTA */}

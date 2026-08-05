@@ -105,7 +105,7 @@ export default async function ArticlePage({ params }: Props) {
         <div
           className="absolute pointer-events-none select-none"
           aria-hidden="true"
-          style={{ top: "8%", right: "-6%", width: "clamp(220px, 22vw, 380px)", height: "clamp(220px, 22vw, 380px)", opacity: 0.06 }}
+          style={{ top: "10%", left: "50%", transform: "translateX(-50%)", width: "clamp(220px, 22vw, 380px)", height: "clamp(220px, 22vw, 380px)", opacity: 0.06 }}
         >
           <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
         </div>

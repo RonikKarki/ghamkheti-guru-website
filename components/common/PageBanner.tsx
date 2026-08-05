@@ -89,14 +89,14 @@ export function PageBanner({
         }}
       />
 
-      {/* Brand emblem watermark — faint, behind the text */}
+      {/* Brand emblem watermark — centered behind the text */}
       <div
         className="absolute pointer-events-none select-none"
         aria-hidden="true"
         style={{
           top: "50%",
-          right: "-5%",
-          transform: "translateY(-50%)",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
           width: "clamp(240px, 24vw, 400px)",
           height: "clamp(240px, 24vw, 400px)",
           opacity: 0.11,

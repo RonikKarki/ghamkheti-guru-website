@@ -355,7 +355,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             <div
               className="absolute pointer-events-none select-none"
               aria-hidden="true"
-              style={{ top: "50%", right: "-4%", transform: "translateY(-50%)", width: "clamp(160px, 18vw, 260px)", height: "clamp(160px, 18vw, 260px)", opacity: 0.08 }}
+              style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "clamp(160px, 18vw, 260px)", height: "clamp(160px, 18vw, 260px)", opacity: 0.08 }}
             >
               <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
             </div>

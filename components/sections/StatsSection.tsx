@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Container } from "@/components/common/Container";
 
 interface CmsStat {
@@ -53,6 +54,9 @@ export function StatsSection({ cms }: { cms?: CmsStats | null }) {
             >
               {heading}
             </h2>
+            <div className="relative mt-8 h-16 w-16">
+              <Image src="/images/logos/ghamkheti-emblem.png" alt="Ghamkheti Guru" fill className="object-contain" />
+            </div>
           </div>
 
           {/* RIGHT: vertical stat rows — large ghost-style numbers, amber on hover */}

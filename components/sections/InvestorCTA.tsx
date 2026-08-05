@@ -47,22 +47,6 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
 
   return (
     <section className="relative overflow-hidden py-24 md:py-32 bg-background border-t border-border" id="invest">
-      {/* Brand emblem watermark */}
-      <div
-        className="absolute pointer-events-none select-none"
-        aria-hidden="true"
-        style={{
-          top: "50%",
-          right: "-6%",
-          transform: "translateY(-50%)",
-          width: "clamp(280px, 30vw, 480px)",
-          height: "clamp(280px, 30vw, 480px)",
-          opacity: 0.1,
-        }}
-      >
-        <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
-      </div>
-
       <Container className="relative">
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportOnce}>
           <div className="section-num">Investor Relations</div>
@@ -122,9 +106,15 @@ export function InvestorCTA({ cms }: { cms?: CmsInvestorCta | null }) {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-px bg-border">
+              <div className="relative grid grid-cols-2 rounded-2xl border border-border overflow-hidden">
+                {/* Brand emblem watermark — centered behind the stats */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
+                  <div className="relative" style={{ width: "62%", height: "62%", opacity: 0.13 }}>
+                    <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+                  </div>
+                </div>
                 {displayMetrics.map((m, i) => (
-                  <div key={i} className="bg-background hover:bg-surface transition-colors duration-300 p-8 text-center">
+                  <div key={i} className="relative bg-transparent hover:bg-surface/50 transition-colors duration-300 p-8 text-center border-border/60 odd:border-r not-nth-last-[-n+2]:border-b">
                     <p className="font-mono text-3xl md:text-4xl font-bold text-foreground leading-none mb-2 tabular-nums">{m.v}</p>
                     <p className="text-[10px] text-foreground-subtle uppercase tracking-widest">{m.l}</p>
                   </div>

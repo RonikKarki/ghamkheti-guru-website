@@ -104,16 +104,16 @@ export async function Footer() {
 
       {/* ── Editorial email CTA band ── */}
       <div className="relative border-b overflow-hidden" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-        {/* Watermark — large, visible brand emblem bleeding off the right edge */}
-        <div
-          className="absolute pointer-events-none select-none"
-          style={{ top: "50%", right: "-4%", transform: "translateY(-50%)", width: "clamp(220px, 24vw, 380px)", height: "clamp(220px, 24vw, 380px)", opacity: 0.16 }}
-          aria-hidden="true"
-        >
-          <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
-        </div>
-
         <Container className="relative py-9 md:py-11">
+          {/* Watermark — centered behind the email text */}
+          <div
+            className="absolute pointer-events-none select-none"
+            style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "clamp(220px, 24vw, 380px)", height: "clamp(220px, 24vw, 380px)", opacity: 0.16 }}
+            aria-hidden="true"
+          >
+            <Image src="/images/logos/ghamkheti-emblem.png" alt="" fill className="object-contain" />
+          </div>
+
           <div className="flex items-center gap-2.5 mb-4" style={{ color: "rgba(255,255,255,0.30)" }}>
             <span style={{ display: "inline-block", width: "2rem", height: "1px", background: "rgba(255,255,255,0.20)" }} />
             <span className="text-[10px] font-mono tracking-[0.20em] uppercase">Get In Touch</span>
