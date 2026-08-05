@@ -3,7 +3,8 @@
 import { useState } from "react";
 
 export function NewsletterForm() {
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus]     = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,10 +18,16 @@ export function NewsletterForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      if (!res.ok) throw new Error();
+      const json = await res.json().catch(() => null);
+      if (!res.ok) {
+        setErrorMsg(json?.error || "Something went wrong. Try again.");
+        setStatus("error");
+        return;
+      }
       setStatus("success");
       form.reset();
     } catch {
+      setErrorMsg("Something went wrong. Try again.");
       setStatus("error");
     }
   }
@@ -50,7 +57,7 @@ export function NewsletterForm() {
         {status === "loading" ? "Subscribing…" : "Subscribe"}
       </button>
       {status === "error" && (
-        <p className="text-xs text-red-400">Something went wrong. Try again.</p>
+        <p className="text-xs text-red-400">{errorMsg}</p>
       )}
     </form>
   );
