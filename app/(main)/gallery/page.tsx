@@ -5,7 +5,8 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Gallery from "@/models/Gallery";
 import { getPageBanner } from "@/lib/get-page-banner";
 
-export const revalidate = 1800;
+// Always fetch fresh data — admin-uploaded photos should appear immediately
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Gallery",
