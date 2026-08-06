@@ -105,9 +105,10 @@
   --space-section-lg: 8rem;
 
   /* --- Typography --- */
-  --font-display: var(--font-barlow-condensed), "Barlow Condensed", "Space Grotesk", system-ui, sans-serif;
+  /* Single unified typeface across the entire site — headings, body, and labels. */
+  --font-display: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
   --font-sans:    var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
-  --font-mono:    var(--font-geist-mono), "Courier New", monospace;
+  --font-mono:    var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
 
   /* --- Z-index --- */
   --z-base:    0;

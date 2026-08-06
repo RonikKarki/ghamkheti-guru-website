@@ -51,6 +51,8 @@ export default async function AboutPage() {
   const introPara2 = intro.subtitle || "";
   const introPara3 = intro.title    || "";
   const facts: { label: string; value: string }[] = intro.items?.length ? intro.items as { label: string; value: string }[] : [];
+  const introImage    = intro.image    || "";
+  const introImageAlt = intro.imageAlt || "Ghamkheti Guru project site";
 
   const mission = missionVision.body     || "";
   const vision  = missionVision.subtitle || "";
@@ -102,13 +104,20 @@ export default async function AboutPage() {
                 {introPara3 && <p className="text-foreground-muted leading-relaxed">{introPara3}</p>}
               </div>
               {facts.length > 0 && (
-                <div className="space-y-0 divide-y divide-border">
-                  {facts.map(({ label, value }) => (
-                    <div key={label} className="flex justify-between items-center py-3">
-                      <span className="text-sm text-foreground-subtle">{label}</span>
-                      <span className="text-sm font-semibold text-foreground text-right">{value}</span>
+                <div>
+                  <div className="space-y-0 divide-y divide-border">
+                    {facts.map(({ label, value }) => (
+                      <div key={label} className="flex justify-between items-center py-3">
+                        <span className="text-sm text-foreground-subtle">{label}</span>
+                        <span className="text-sm font-semibold text-foreground text-right">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {introImage && (
+                    <div className="relative mt-8 aspect-4/3 w-full overflow-hidden rounded-2xl border border-border">
+                      <Image src={introImage} alt={introImageAlt} fill className="object-cover" sizes="(min-width: 1024px) 50vw, 100vw" />
                     </div>
-                  ))}
+                  )}
                 </div>
               )}
             </div>

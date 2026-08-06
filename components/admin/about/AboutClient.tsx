@@ -14,6 +14,8 @@ interface SectionDoc {
   title?:    string;
   subtitle?: string;
   body?:     string;
+  image?:    string;
+  imageAlt?: string;
   items:     Record<string, unknown>[];
 }
 
@@ -85,11 +87,13 @@ export default function AboutClient({ initialData }: { initialData: any[] }) {
 
   function save() {
     startTransition(async () => {
-      const { items, title, subtitle, body } = doc;
+      const { items, title, subtitle, body, image, imageAlt } = doc;
       const payload: Record<string, unknown> = { items };
       if (title    !== undefined) payload.title    = title;
       if (subtitle !== undefined) payload.subtitle = subtitle;
       if (body     !== undefined) payload.body     = body;
+      if (image    !== undefined) payload.image    = image;
+      if (imageAlt !== undefined) payload.imageAlt = imageAlt;
 
       const res = await fetch(`/api/admin/about/${tab}`, {
         method: "PUT",
@@ -157,6 +161,12 @@ export default function AboutClient({ initialData }: { initialData: any[] }) {
             ))}
           </div>
           <div className="mt-3"><AddBtn onClick={addFact} label="Add Fact" /></div>
+        </div>
+
+        <div className="rounded-xl border border-border p-4 space-y-3">
+          <p className="text-xs font-semibold text-foreground">Project Photo <span className="text-foreground-subtle font-normal">(shown below the facts, right column)</span></p>
+          <FileUpload kind="image" value={doc.image ?? ""} onChange={(url) => patch({ image: url })} />
+          <F label="Alt text"><Input value={doc.imageAlt ?? ""} onChange={(e) => patch({ imageAlt: e.target.value })} placeholder="Sisakhola Hydropower Project site" /></F>
         </div>
       </div>
     );

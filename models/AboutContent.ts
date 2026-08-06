@@ -15,6 +15,8 @@ export interface IAboutContent extends Document {
   title?:     string;
   subtitle?:  string;
   body?:      string;
+  image?:     string;
+  imageAlt?:  string;
   items:      mongoose.Types.Array<Record<string, unknown>>;
   updatedBy?: string;
   createdAt:  Date;
@@ -33,6 +35,8 @@ const AboutContentSchema = new Schema<IAboutContent>(
     title:     { type: String, trim: true },
     subtitle:  { type: String, trim: true },
     body:      { type: String },
+    image:     { type: String },
+    imageAlt:  { type: String, trim: true },
     items:     { type: [Schema.Types.Mixed], default: [] },
     updatedBy: { type: String },
   },

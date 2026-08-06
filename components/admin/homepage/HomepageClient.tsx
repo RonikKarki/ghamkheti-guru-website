@@ -294,7 +294,7 @@ export default function HomepageClient({ initialData }: { initialData: any[] }) 
   }
 
   function renderPortfolio() {
-    type Sector = { num?: string; label?: string; sector?: string; description?: string; href?: string; buttonLabel?: string; isCenter?: boolean };
+    type Sector = { num?: string; label?: string; sector?: string; description?: string; href?: string; buttonLabel?: string; isCenter?: boolean; image?: string };
     const sectors = (doc.items ?? []) as Sector[];
 
     function updateSector(i: number, field: keyof Sector, val: string | boolean) {
@@ -337,6 +337,9 @@ export default function HomepageClient({ initialData }: { initialData: any[] }) 
                 </div>
                 <F label="Column Title"><Input value={s.label ?? ""} onChange={(e) => updateSector(i, "label", e.target.value)} placeholder="Hydraulic Force" /></F>
                 <F label="Description"><Textarea rows={2} value={s.description ?? ""} onChange={(e) => updateSector(i, "description", e.target.value)} placeholder="Run-of-river hydroelectric project…" /></F>
+                <F label="Background Photo" hint="optional — column shows a photo with the text overlaid instead of a flat color">
+                  <FileUpload kind="image" value={s.image ?? ""} onChange={(url) => updateSector(i, "image", url)} />
+                </F>
                 <div className="grid grid-cols-2 gap-3">
                   <F label="Link URL"><Input value={s.href ?? ""} onChange={(e) => updateSector(i, "href", e.target.value)} placeholder="/projects" /></F>
                   <F label="Button Name" hint="e.g. View Dossier"><Input value={s.buttonLabel ?? ""} onChange={(e) => updateSector(i, "buttonLabel", e.target.value)} placeholder="View Dossier" /></F>

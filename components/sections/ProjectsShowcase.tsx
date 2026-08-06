@@ -15,6 +15,7 @@ type SectorItem = {
   href?: string;
   buttonLabel?: string;
   isCenter?: boolean;
+  image?: string;
 };
 
 const DEFAULT_SECTORS: SectorItem[] = [
@@ -115,26 +116,51 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
         style={{ borderTop: "1px solid rgba(255,255,255,0.07)", minHeight: "520px" }}
       >
         {sectors.map((s, idx) => {
-          const amber = isAmber(idx, s);
+          const amber    = isAmber(idx, s);
+          const hasImage = Boolean(s.image);
           return (
             <motion.div
               key={idx}
               variants={staggerItem}
               onMouseEnter={() => setHovered(String(idx))}
               onMouseLeave={() => setHovered(null)}
-              className="flex flex-col justify-between p-10 lg:p-14 border-b md:border-b-0 md:border-r last:border-r-0 cursor-default"
+              className="relative flex flex-col justify-between overflow-hidden p-10 lg:p-14 border-b md:border-b-0 md:border-r last:border-r-0 cursor-default"
               style={{
-                backgroundColor: amber ? "#e8960a" : "transparent",
+                backgroundColor: hasImage ? "#0a0a0a" : (amber ? "#e8960a" : "transparent"),
                 borderColor: "rgba(255,255,255,0.07)",
                 transition: "background-color 0.3s ease",
               }}
             >
+              {hasImage && (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={s.image}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover"
+                    style={{ transform: amber ? "scale(1.06)" : "scale(1)", transition: "transform 0.6s ease" }}
+                  />
+                  {/* Scrim — keeps text legible over the photo, warms up on hover */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: amber
+                        ? "linear-gradient(to top, rgba(10,7,2,0.92) 0%, rgba(232,150,10,0.30) 48%, rgba(10,7,2,0.30) 100%)"
+                        : "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 48%, rgba(0,0,0,0.25) 100%)",
+                      transition: "background 0.4s ease",
+                    }}
+                  />
+                </>
+              )}
+
               {/* Large ghost number at top */}
               <div
-                className="font-display font-black select-none leading-none mb-8"
+                className="relative font-display font-black select-none leading-none mb-8"
                 style={{
                   fontSize: "clamp(5rem, 10vw, 10rem)",
-                  color: amber ? "rgba(0,0,0,0.10)" : "rgba(255,255,255,0.05)",
+                  color: hasImage
+                    ? (amber ? "rgba(232,150,10,0.35)" : "rgba(255,255,255,0.10)")
+                    : (amber ? "rgba(0,0,0,0.10)" : "rgba(255,255,255,0.05)"),
                   lineHeight: 1,
                   transition: "color 0.3s ease",
                 }}
@@ -143,11 +169,13 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
               </div>
 
               {/* Content block at bottom */}
-              <div className="mt-auto">
+              <div className="relative mt-auto">
                 <p
                   className="text-[10px] font-mono tracking-[0.18em] uppercase mb-4"
                   style={{
-                    color: amber ? "rgba(0,0,0,0.50)" : "rgba(255,255,255,0.35)",
+                    color: hasImage
+                      ? (amber ? "#f0b955" : "rgba(255,255,255,0.55)")
+                      : (amber ? "rgba(0,0,0,0.50)" : "rgba(255,255,255,0.35)"),
                     transition: "color 0.3s ease",
                   }}
                 >
@@ -157,7 +185,7 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
                   className="font-display font-bold uppercase tracking-tight mb-4"
                   style={{
                     fontSize: "clamp(1.4rem, 2.2vw, 2rem)",
-                    color: amber ? "#0a0a0a" : "white",
+                    color: hasImage ? "white" : (amber ? "#0a0a0a" : "white"),
                     lineHeight: 1.1,
                     transition: "color 0.3s ease",
                   }}
@@ -167,7 +195,7 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
                 <p
                   className="text-sm leading-relaxed mb-8"
                   style={{
-                    color: amber ? "rgba(0,0,0,0.65)" : "rgba(255,255,255,0.45)",
+                    color: hasImage ? "rgba(255,255,255,0.75)" : (amber ? "rgba(0,0,0,0.65)" : "rgba(255,255,255,0.45)"),
                     transition: "color 0.3s ease",
                   }}
                 >
@@ -177,7 +205,9 @@ export function ProjectsShowcase({ cms }: { cms?: CmsPortfolio | null }) {
                   href={s.href || "/projects"}
                   className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-opacity hover:opacity-70"
                   style={{
-                    color: amber ? "#0a0a0a" : "rgba(255,255,255,0.50)",
+                    color: hasImage
+                      ? (amber ? "#f0b955" : "rgba(255,255,255,0.75)")
+                      : (amber ? "#0a0a0a" : "rgba(255,255,255,0.50)"),
                     transition: "color 0.3s ease",
                   }}
                 >
