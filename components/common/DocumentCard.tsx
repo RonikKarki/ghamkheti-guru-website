@@ -19,9 +19,9 @@ interface DocumentCardProps {
 }
 
 const accentMap = {
-  green: { icon: "bg-primary/10 text-primary", badge: "text-primary border-primary/20 bg-primary/5" },
-  gold:  { icon: "bg-gold/10 text-gold",       badge: "text-gold border-gold/20 bg-gold/5" },
-  teal:  { icon: "bg-teal/10 text-teal",       badge: "text-teal border-teal/20 bg-teal/5" },
+  green: { icon: "border border-primary/30 text-primary", badge: "text-primary border-primary/20 bg-primary/5" },
+  gold:  { icon: "border border-gold/35 text-gold",       badge: "text-gold border-gold/20 bg-gold/5" },
+  teal:  { icon: "border border-teal/35 text-teal",       badge: "text-teal border-teal/20 bg-teal/5" },
 };
 
 export function DocumentCard({

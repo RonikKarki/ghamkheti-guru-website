@@ -134,8 +134,8 @@ export default async function AboutPage() {
               {mission && (
                 <GlassCard animated padding="lg">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="h-10 w-10 rounded-lg bg-primary/15 flex items-center justify-center">
-                      <Target className="h-5 w-5 text-primary" />
+                    <div className="h-10 w-10 shrink-0 rounded-lg border border-primary/25 flex items-center justify-center">
+                      <Target className="h-4.5 w-4.5 text-primary" strokeWidth={1.75} />
                     </div>
                     <h3 className="font-display font-semibold text-xl text-foreground">Our Mission</h3>
                   </div>
@@ -145,8 +145,8 @@ export default async function AboutPage() {
               {vision && (
                 <GlassCard animated padding="lg" gold>
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="h-10 w-10 rounded-lg bg-gold/15 flex items-center justify-center">
-                      <Eye className="h-5 w-5 text-gold" />
+                    <div className="h-10 w-10 shrink-0 rounded-lg border border-gold/30 flex items-center justify-center">
+                      <Eye className="h-4.5 w-4.5 text-gold" strokeWidth={1.75} />
                     </div>
                     <h3 className="font-display font-semibold text-xl text-foreground">Our Vision</h3>
                   </div>
@@ -216,8 +216,8 @@ export default async function AboutPage() {
                 return (
                   <GlassCard key={v.title} animated padding="default">
                     <div className="flex items-start gap-4">
-                      <div className="h-10 w-10 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Icon className="h-5 w-5 text-primary" strokeWidth={1.8} />
+                      <div className="h-10 w-10 shrink-0 rounded-lg border border-primary/25 flex items-center justify-center">
+                        <Icon className="h-4.5 w-4.5 text-primary" strokeWidth={1.75} />
                       </div>
                       <div>
                         <h4 className="font-semibold text-foreground mb-1.5">{v.title}</h4>

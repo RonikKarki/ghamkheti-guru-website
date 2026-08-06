@@ -319,8 +319,8 @@ export default async function ProjectDetailPage({ params }: Props) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 rounded-xl bg-card border border-border hover:border-primary/30 hover:bg-primary/5 transition-colors group"
                 >
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                    <FileText className="h-4 w-4 text-primary" />
+                  <div className="h-10 w-10 rounded-lg border border-primary/30 flex items-center justify-center shrink-0">
+                    <FileText className="h-4 w-4 text-primary" strokeWidth={1.75} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">{doc.name}</p>

@@ -83,8 +83,8 @@ export function HydropowerSection() {
                     className="flex items-start justify-between gap-4 rounded-2xl bg-card border border-border p-5 hover:border-teal/30 transition-colors"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="h-10 w-10 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center shrink-0 mt-0.5">
-                        <Droplets className="h-4.5 w-4.5 text-teal" strokeWidth={1.8} />
+                      <div className="h-10 w-10 rounded-xl border border-teal/30 flex items-center justify-center shrink-0 mt-0.5">
+                        <Droplets className="h-4.5 w-4.5 text-teal" strokeWidth={1.75} />
                       </div>
                       <div>
                         <div className="flex flex-wrap items-center gap-2 mb-1">

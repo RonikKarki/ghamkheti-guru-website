@@ -19,11 +19,11 @@ interface FeatureCardProps {
 }
 
 const accentMap: Record<AccentColor, { icon: string; badge: string; border: string }> = {
-  green:   { icon: "bg-primary/15 text-primary",    badge: "bg-primary/10",    border: "hover:border-primary/30" },
-  gold:    { icon: "bg-gold/15 text-gold",           badge: "bg-gold/10",       border: "hover:border-gold/30" },
-  teal:    { icon: "bg-teal/15 text-teal",           badge: "bg-teal/10",       border: "hover:border-teal/30" },
-  earth:   { icon: "bg-earth/15 text-earth",         badge: "bg-earth/10",      border: "hover:border-earth/30" },
-  default: { icon: "bg-surface-raised text-foreground-muted", badge: "bg-surface-raised", border: "hover:border-border-strong" },
+  green:   { icon: "border border-primary/30 text-primary", badge: "bg-primary/10",    border: "hover:border-primary/30" },
+  gold:    { icon: "border border-gold/35 text-gold",       badge: "bg-gold/10",       border: "hover:border-gold/30" },
+  teal:    { icon: "border border-teal/35 text-teal",       badge: "bg-teal/10",       border: "hover:border-teal/30" },
+  earth:   { icon: "border border-earth/35 text-earth",     badge: "bg-earth/10",      border: "hover:border-earth/30" },
+  default: { icon: "border border-border-strong text-foreground-muted", badge: "bg-surface-raised", border: "hover:border-border-strong" },
 };
 
 export function FeatureCard({
